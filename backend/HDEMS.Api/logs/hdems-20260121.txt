@@ -1,0 +1,322 @@
+2026-01-21 15:42:46.030 +08:00 [INF] 开始初始化种子数据...
+2026-01-21 15:42:47.241 +08:00 [INF] 初始化医院数据: 10 条
+2026-01-21 15:42:47.384 +08:00 [INF] 初始化科室数据: 20 条
+2026-01-21 15:42:47.533 +08:00 [INF] 初始化班次数据: 10 条
+2026-01-21 15:42:47.625 +08:00 [INF] 初始化人员职级数据: 14 条
+2026-01-21 15:42:47.707 +08:00 [INF] 初始化人员职称数据: 12 条
+2026-01-21 15:42:48.138 +08:00 [INF] 初始化物资阈值数据: 5 条
+2026-01-21 15:42:48.239 +08:00 [INF] 系统初始化密钥已生成: 6fd68421d4db4ed3ad5d449abf3d6af167d1a19994b6470a (请妥善保管)
+2026-01-21 15:42:48.308 +08:00 [INF] 种子数据初始化完成
+2026-01-21 15:42:49.130 +08:00 [INF] User profile is available. Using 'C:\Users\SY\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-01-21 15:42:51.120 +08:00 [WRN] The ASP.NET Core developer certificate is not trusted. For information about trusting the ASP.NET Core developer certificate, see https://aka.ms/aspnet/https-trust-dev-cert
+2026-01-21 15:42:51.620 +08:00 [INF] Now listening on: https://localhost:57355
+2026-01-21 15:42:51.676 +08:00 [INF] Now listening on: http://localhost:57356
+2026-01-21 15:42:52.602 +08:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-01-21 15:42:52.655 +08:00 [INF] Hosting environment: Development
+2026-01-21 15:42:52.659 +08:00 [INF] Content root path: D:\Project\HDEMS\backend\HDEMS.Api
+2026-01-21 15:43:00.860 +08:00 [INF] Request starting HTTP/2 GET https://localhost:57355/ - null null
+2026-01-21 15:43:01.635 +08:00 [INF] Request starting HTTP/2 GET https://localhost:57355/ - null null
+2026-01-21 15:43:05.612 +08:00 [INF] Request finished HTTP/2 GET https://localhost:57355/ - 404 0 null 3960.7248ms
+2026-01-21 15:43:05.627 +08:00 [INF] Request finished HTTP/2 GET https://localhost:57355/ - 499 null null 4811.0255ms
+2026-01-21 15:43:07.245 +08:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:57355/, Response status code: 404
+2026-01-21 15:43:07.296 +08:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:57355/, Response status code: 499
+2026-01-21 15:43:28.846 +08:00 [INF] Request starting HTTP/2 GET https://localhost:57355/ - null null
+2026-01-21 15:43:28.877 +08:00 [INF] Request finished HTTP/2 GET https://localhost:57355/ - 404 0 null 30.9032ms
+2026-01-21 15:43:28.932 +08:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:57355/, Response status code: 404
+2026-01-21 15:44:11.094 +08:00 [INF] Request starting HTTP/2 GET https://localhost:57355/ - null null
+2026-01-21 15:44:11.121 +08:00 [INF] Request finished HTTP/2 GET https://localhost:57355/ - 404 0 null 26.9347ms
+2026-01-21 15:44:11.210 +08:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:57355/, Response status code: 404
+2026-01-21 15:44:26.787 +08:00 [INF] Request starting HTTP/2 GET https://localhost:57355/ - null null
+2026-01-21 15:44:26.838 +08:00 [INF] Request finished HTTP/2 GET https://localhost:57355/ - 404 0 null 50.5316ms
+2026-01-21 15:44:26.924 +08:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:57355/, Response status code: 404
+2026-01-21 15:46:30.126 +08:00 [INF] 开始初始化种子数据...
+2026-01-21 15:46:30.879 +08:00 [INF] 系统初始化密钥已生成: 5401b428bf51473f9992f50f70d1c25a8bb9dbe948b74c6a (请妥善保管)
+2026-01-21 15:46:30.882 +08:00 [INF] 种子数据初始化完成
+2026-01-21 15:46:31.090 +08:00 [INF] User profile is available. Using 'C:\Users\SY\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-01-21 15:46:31.408 +08:00 [INF] Now listening on: https://localhost:57355
+2026-01-21 15:46:31.410 +08:00 [INF] Now listening on: http://localhost:57356
+2026-01-21 15:46:31.490 +08:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-01-21 15:46:31.493 +08:00 [INF] Hosting environment: Development
+2026-01-21 15:46:31.495 +08:00 [INF] Content root path: D:\Project\HDEMS\backend\HDEMS.Api
+2026-01-21 15:46:33.020 +08:00 [INF] Request starting HTTP/2 GET https://localhost:57355/ - null null
+2026-01-21 15:46:34.052 +08:00 [INF] Request finished HTTP/2 GET https://localhost:57355/ - 404 0 null 1052.5185ms
+2026-01-21 15:46:34.101 +08:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:57355/, Response status code: 404
+2026-01-21 15:46:35.553 +08:00 [INF] Request starting HTTP/2 GET https://localhost:57355/ - null null
+2026-01-21 15:46:35.570 +08:00 [INF] Request finished HTTP/2 GET https://localhost:57355/ - 404 0 null 17.6421ms
+2026-01-21 15:46:35.586 +08:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:57355/, Response status code: 404
+2026-01-21 15:52:38.035 +08:00 [INF] 开始初始化种子数据...
+2026-01-21 15:52:39.416 +08:00 [INF] 系统初始化密钥已生成: 17d0539421e14e0cb13995b4ede94ee0736d7ccaf19f4418 (请妥善保管)
+2026-01-21 15:52:39.450 +08:00 [INF] 种子数据初始化完成
+2026-01-21 15:52:40.133 +08:00 [INF] User profile is available. Using 'C:\Users\SY\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-01-21 15:52:41.575 +08:00 [INF] Now listening on: https://localhost:57355
+2026-01-21 15:52:41.603 +08:00 [INF] Now listening on: http://localhost:57356
+2026-01-21 15:52:42.424 +08:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-01-21 15:52:43.544 +08:00 [INF] Hosting environment: Development
+2026-01-21 15:52:43.555 +08:00 [INF] Request starting HTTP/2 GET https://localhost:57355/ - null null
+2026-01-21 15:52:44.820 +08:00 [INF] Content root path: D:\Project\HDEMS\backend\HDEMS.Api
+2026-01-21 15:52:51.105 +08:00 [INF] Request finished HTTP/2 GET https://localhost:57355/ - 404 0 null 7569.9888ms
+2026-01-21 15:52:51.240 +08:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:57355/, Response status code: 404
+2026-01-21 15:53:04.530 +08:00 [INF] Request starting HTTP/2 GET https://localhost:57355/ - null null
+2026-01-21 15:53:05.091 +08:00 [INF] Request finished HTTP/2 GET https://localhost:57355/ - 404 0 null 561.2537ms
+2026-01-21 15:53:05.233 +08:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:57355/, Response status code: 404
+2026-01-21 15:53:45.084 +08:00 [INF] Request starting HTTP/2 GET https://localhost:57355/swagger/index.html - null null
+2026-01-21 15:53:45.324 +08:00 [INF] Request starting HTTP/2 GET https://localhost:57355/swagger/swagger-ui.css - null null
+2026-01-21 15:53:45.385 +08:00 [INF] Request starting HTTP/2 GET https://localhost:57355/swagger/swagger-ui-standalone-preset.js - null null
+2026-01-21 15:53:45.325 +08:00 [INF] Request starting HTTP/2 GET https://localhost:57355/swagger/swagger-ui-bundle.js - null null
+2026-01-21 15:53:45.442 +08:00 [INF] Request finished HTTP/2 GET https://localhost:57355/swagger/index.html - 200 null text/html;charset=utf-8 382.1988ms
+2026-01-21 15:53:45.557 +08:00 [INF] Sending file. Request path: '/swagger-ui-standalone-preset.js'. Physical path: 'N/A'
+2026-01-21 15:53:45.583 +08:00 [INF] Sending file. Request path: '/swagger-ui.css'. Physical path: 'N/A'
+2026-01-21 15:53:45.583 +08:00 [INF] Request finished HTTP/2 GET https://localhost:57355/swagger/swagger-ui-standalone-preset.js - 200 312163 text/javascript 198.7025ms
+2026-01-21 15:53:45.631 +08:00 [INF] Request finished HTTP/2 GET https://localhost:57355/swagger/swagger-ui.css - 200 144929 text/css 306.2265ms
+2026-01-21 15:53:45.634 +08:00 [INF] Sending file. Request path: '/swagger-ui-bundle.js'. Physical path: 'N/A'
+2026-01-21 15:53:45.652 +08:00 [INF] Request finished HTTP/2 GET https://localhost:57355/swagger/swagger-ui-bundle.js - 200 1061536 text/javascript 326.0768ms
+2026-01-21 15:53:47.637 +08:00 [INF] Request starting HTTP/2 GET https://localhost:57355/_vs/browserLink - null null
+2026-01-21 15:53:47.637 +08:00 [INF] Request starting HTTP/2 GET https://localhost:57355/_framework/aspnetcore-browser-refresh.js - null null
+2026-01-21 15:53:47.668 +08:00 [INF] Request finished HTTP/2 GET https://localhost:57355/_framework/aspnetcore-browser-refresh.js - 200 13770 application/javascript; charset=utf-8 30.9521ms
+2026-01-21 15:53:47.943 +08:00 [INF] Request finished HTTP/2 GET https://localhost:57355/_vs/browserLink - 200 null text/javascript; charset=UTF-8 305.881ms
+2026-01-21 15:53:48.866 +08:00 [INF] Request starting HTTP/2 GET https://localhost:57355/swagger/v1/swagger.json - null null
+2026-01-21 15:53:48.899 +08:00 [INF] Request starting HTTP/2 GET https://localhost:57355/swagger/favicon-32x32.png - null null
+2026-01-21 15:53:48.929 +08:00 [INF] Sending file. Request path: '/favicon-32x32.png'. Physical path: 'N/A'
+2026-01-21 15:53:48.932 +08:00 [INF] Request finished HTTP/2 GET https://localhost:57355/swagger/favicon-32x32.png - 200 628 image/png 32.7301ms
+2026-01-21 15:53:49.040 +08:00 [INF] Request finished HTTP/2 GET https://localhost:57355/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 174.6296ms
+2026-01-21 15:54:46.892 +08:00 [INF] Request starting HTTP/2 GET https://localhost:57355/api/Auth/current-user - null null
+2026-01-21 15:54:46.987 +08:00 [INF] Authorization failed. These requirements were not met:
+DenyAnonymousAuthorizationRequirement: Requires an authenticated user.
+2026-01-21 15:54:46.998 +08:00 [INF] AuthenticationScheme: Bearer was challenged.
+2026-01-21 15:54:47.000 +08:00 [INF] Request finished HTTP/2 GET https://localhost:57355/api/Auth/current-user - 401 0 null 108.3804ms
+2026-01-21 15:54:55.886 +08:00 [INF] Request starting HTTP/2 GET https://localhost:57355/api/Auth/current-user - null null
+2026-01-21 15:54:56.242 +08:00 [INF] Authorization failed. These requirements were not met:
+DenyAnonymousAuthorizationRequirement: Requires an authenticated user.
+2026-01-21 15:54:56.247 +08:00 [INF] AuthenticationScheme: Bearer was challenged.
+2026-01-21 15:54:56.255 +08:00 [INF] Request finished HTTP/2 GET https://localhost:57355/api/Auth/current-user - 401 0 null 369.2554ms
+2026-01-21 15:57:52.289 +08:00 [INF] Request starting HTTP/2 POST https://localhost:57355/api/Auth/login - application/json 49
+2026-01-21 15:57:52.315 +08:00 [INF] CORS policy execution successful.
+2026-01-21 15:57:52.323 +08:00 [INF] Executing endpoint 'HDEMS.Api.Controllers.AuthController.Login (HDEMS.Api)'
+2026-01-21 15:57:52.392 +08:00 [INF] Route matched with {action = "Login", controller = "Auth"}. Executing controller action with signature System.Threading.Tasks.Task`1[HDEMS.Application.DTOs.ApiResponse`1[HDEMS.Application.DTOs.LoginResponse]] Login(HDEMS.Application.DTOs.LoginRequest) on controller HDEMS.Api.Controllers.AuthController (HDEMS.Api).
+2026-01-21 15:57:52.742 +08:00 [INF] Executing ObjectResult, writing value of type 'HDEMS.Application.DTOs.ApiResponse`1[[HDEMS.Application.DTOs.LoginResponse, HDEMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-01-21 15:57:52.795 +08:00 [INF] Executed action HDEMS.Api.Controllers.AuthController.Login (HDEMS.Api) in 391.4276ms
+2026-01-21 15:57:52.806 +08:00 [INF] Executed endpoint 'HDEMS.Api.Controllers.AuthController.Login (HDEMS.Api)'
+2026-01-21 15:57:52.824 +08:00 [INF] Request finished HTTP/2 POST https://localhost:57355/api/Auth/login - 200 null application/json; charset=utf-8 535.5235ms
+2026-01-21 15:58:13.054 +08:00 [INF] Request starting HTTP/2 POST https://localhost:57355/api/Auth/login - application/json 49
+2026-01-21 15:58:13.071 +08:00 [INF] CORS policy execution successful.
+2026-01-21 15:58:13.074 +08:00 [INF] Executing endpoint 'HDEMS.Api.Controllers.AuthController.Login (HDEMS.Api)'
+2026-01-21 15:58:13.077 +08:00 [INF] Route matched with {action = "Login", controller = "Auth"}. Executing controller action with signature System.Threading.Tasks.Task`1[HDEMS.Application.DTOs.ApiResponse`1[HDEMS.Application.DTOs.LoginResponse]] Login(HDEMS.Application.DTOs.LoginRequest) on controller HDEMS.Api.Controllers.AuthController (HDEMS.Api).
+2026-01-21 15:58:13.085 +08:00 [INF] Executing ObjectResult, writing value of type 'HDEMS.Application.DTOs.ApiResponse`1[[HDEMS.Application.DTOs.LoginResponse, HDEMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-01-21 15:58:13.087 +08:00 [INF] Executed action HDEMS.Api.Controllers.AuthController.Login (HDEMS.Api) in 7.2797ms
+2026-01-21 15:58:13.091 +08:00 [INF] Executed endpoint 'HDEMS.Api.Controllers.AuthController.Login (HDEMS.Api)'
+2026-01-21 15:58:13.094 +08:00 [INF] Request finished HTTP/2 POST https://localhost:57355/api/Auth/login - 200 null application/json; charset=utf-8 40.5625ms
+2026-01-21 15:58:34.777 +08:00 [INF] Request starting HTTP/2 POST https://localhost:57355/api/Auth/login - application/json 49
+2026-01-21 15:58:34.789 +08:00 [INF] CORS policy execution successful.
+2026-01-21 15:58:34.792 +08:00 [INF] Executing endpoint 'HDEMS.Api.Controllers.AuthController.Login (HDEMS.Api)'
+2026-01-21 15:58:34.796 +08:00 [INF] Route matched with {action = "Login", controller = "Auth"}. Executing controller action with signature System.Threading.Tasks.Task`1[HDEMS.Application.DTOs.ApiResponse`1[HDEMS.Application.DTOs.LoginResponse]] Login(HDEMS.Application.DTOs.LoginRequest) on controller HDEMS.Api.Controllers.AuthController (HDEMS.Api).
+2026-01-21 15:58:34.816 +08:00 [INF] Executing ObjectResult, writing value of type 'HDEMS.Application.DTOs.ApiResponse`1[[HDEMS.Application.DTOs.LoginResponse, HDEMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-01-21 15:58:34.882 +08:00 [INF] Executed action HDEMS.Api.Controllers.AuthController.Login (HDEMS.Api) in 75.3884ms
+2026-01-21 15:58:34.885 +08:00 [INF] Executed endpoint 'HDEMS.Api.Controllers.AuthController.Login (HDEMS.Api)'
+2026-01-21 15:58:34.887 +08:00 [INF] Request finished HTTP/2 POST https://localhost:57355/api/Auth/login - 200 null application/json; charset=utf-8 110.4817ms
+2026-01-21 15:59:37.212 +08:00 [INF] Request starting HTTP/2 POST https://localhost:57355/api/Auth/reset-admin-password - application/json 8
+2026-01-21 15:59:37.236 +08:00 [INF] CORS policy execution successful.
+2026-01-21 15:59:37.241 +08:00 [INF] Executing endpoint 'HDEMS.Api.Controllers.AuthController.ResetAdminPassword (HDEMS.Api)'
+2026-01-21 15:59:37.259 +08:00 [INF] Route matched with {action = "ResetAdminPassword", controller = "Auth"}. Executing controller action with signature System.Threading.Tasks.Task`1[HDEMS.Application.DTOs.ApiResponse] ResetAdminPassword(System.String) on controller HDEMS.Api.Controllers.AuthController (HDEMS.Api).
+2026-01-21 15:59:38.083 +08:00 [INF] Executing ObjectResult, writing value of type 'HDEMS.Application.DTOs.ApiResponse'.
+2026-01-21 15:59:38.088 +08:00 [INF] Executed action HDEMS.Api.Controllers.AuthController.ResetAdminPassword (HDEMS.Api) in 817.746ms
+2026-01-21 15:59:38.091 +08:00 [INF] Executed endpoint 'HDEMS.Api.Controllers.AuthController.ResetAdminPassword (HDEMS.Api)'
+2026-01-21 15:59:38.093 +08:00 [INF] Request finished HTTP/2 POST https://localhost:57355/api/Auth/reset-admin-password - 200 null application/json; charset=utf-8 882.1374ms
+2026-01-21 15:59:44.926 +08:00 [INF] Request starting HTTP/2 POST https://localhost:57355/api/Auth/login - application/json 49
+2026-01-21 15:59:44.930 +08:00 [INF] CORS policy execution successful.
+2026-01-21 15:59:44.932 +08:00 [INF] Executing endpoint 'HDEMS.Api.Controllers.AuthController.Login (HDEMS.Api)'
+2026-01-21 15:59:44.935 +08:00 [INF] Route matched with {action = "Login", controller = "Auth"}. Executing controller action with signature System.Threading.Tasks.Task`1[HDEMS.Application.DTOs.ApiResponse`1[HDEMS.Application.DTOs.LoginResponse]] Login(HDEMS.Application.DTOs.LoginRequest) on controller HDEMS.Api.Controllers.AuthController (HDEMS.Api).
+2026-01-21 15:59:45.575 +08:00 [INF] Executing ObjectResult, writing value of type 'HDEMS.Application.DTOs.ApiResponse`1[[HDEMS.Application.DTOs.LoginResponse, HDEMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-01-21 15:59:45.590 +08:00 [INF] Executed action HDEMS.Api.Controllers.AuthController.Login (HDEMS.Api) in 651.1509ms
+2026-01-21 15:59:45.602 +08:00 [INF] Executed endpoint 'HDEMS.Api.Controllers.AuthController.Login (HDEMS.Api)'
+2026-01-21 15:59:45.612 +08:00 [INF] Request finished HTTP/2 POST https://localhost:57355/api/Auth/login - 200 null application/json; charset=utf-8 685.931ms
+2026-01-21 16:00:52.205 +08:00 [INF] Request starting HTTP/2 POST https://localhost:57355/api/BasicData/departments - application/json 109
+2026-01-21 16:00:52.311 +08:00 [INF] CORS policy execution successful.
+2026-01-21 16:00:52.327 +08:00 [INF] Authorization failed. These requirements were not met:
+DenyAnonymousAuthorizationRequirement: Requires an authenticated user.
+2026-01-21 16:00:52.331 +08:00 [INF] AuthenticationScheme: Bearer was challenged.
+2026-01-21 16:00:52.337 +08:00 [INF] Request finished HTTP/2 POST https://localhost:57355/api/BasicData/departments - 401 0 null 144.3941ms
+2026-01-21 16:03:28.324 +08:00 [INF] Request starting HTTP/2 POST https://localhost:57355/api/BasicData/departments - application/json 109
+2026-01-21 16:03:28.335 +08:00 [INF] CORS policy execution successful.
+2026-01-21 16:03:28.559 +08:00 [INF] Executing endpoint 'HDEMS.Api.Controllers.BasicDataController.CreateDepartment (HDEMS.Api)'
+2026-01-21 16:03:28.575 +08:00 [INF] Route matched with {action = "CreateDepartment", controller = "BasicData"}. Executing controller action with signature System.Threading.Tasks.Task`1[HDEMS.Application.DTOs.ApiResponse`1[HDEMS.Application.DTOs.DepartmentDto]] CreateDepartment(HDEMS.Application.DTOs.DepartmentDto) on controller HDEMS.Api.Controllers.BasicDataController (HDEMS.Api).
+2026-01-21 16:03:29.081 +08:00 [ERR] 未捕获的异常: Missing type map configuration or unsupported mapping.
+
+Mapping types:
+DepartmentDto -> Department
+HDEMS.Application.DTOs.DepartmentDto -> HDEMS.Domain.Entities.Department
+AutoMapper.AutoMapperMappingException: Missing type map configuration or unsupported mapping.
+
+Mapping types:
+DepartmentDto -> Department
+HDEMS.Application.DTOs.DepartmentDto -> HDEMS.Domain.Entities.Department
+   at lambda_method51(Closure, Object, Department, ResolutionContext)
+   at HDEMS.Application.Services.BasicDataService.CreateDepartmentAsync(DepartmentDto dto)
+   at HDEMS.Api.Controllers.BasicDataController.CreateDepartment(DepartmentDto dto) in D:\Project\HDEMS\backend\HDEMS.Api\Controllers\BasicDataController.cs:line 100
+   at lambda_method46(Closure, Object)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeNextExceptionFilterAsync>g__Awaited|26_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+2026-01-21 16:03:29.208 +08:00 [INF] Executing ObjectResult, writing value of type '<>f__AnonymousType0`4[[System.Int32, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Int64, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-01-21 16:03:29.214 +08:00 [INF] Executed action HDEMS.Api.Controllers.BasicDataController.CreateDepartment (HDEMS.Api) in 625.6378ms
+2026-01-21 16:03:29.216 +08:00 [INF] Executed endpoint 'HDEMS.Api.Controllers.BasicDataController.CreateDepartment (HDEMS.Api)'
+2026-01-21 16:03:29.217 +08:00 [INF] Request finished HTTP/2 POST https://localhost:57355/api/BasicData/departments - 500 null application/json; charset=utf-8 892.9676ms
+2026-01-21 16:06:20.584 +08:00 [INF] Request starting HTTP/2 POST https://localhost:57355/api/Auth/login - application/json 49
+2026-01-21 16:06:20.909 +08:00 [INF] CORS policy execution successful.
+2026-01-21 16:06:20.930 +08:00 [INF] Executing endpoint 'HDEMS.Api.Controllers.AuthController.Login (HDEMS.Api)'
+2026-01-21 16:06:20.946 +08:00 [INF] Route matched with {action = "Login", controller = "Auth"}. Executing controller action with signature System.Threading.Tasks.Task`1[HDEMS.Application.DTOs.ApiResponse`1[HDEMS.Application.DTOs.LoginResponse]] Login(HDEMS.Application.DTOs.LoginRequest) on controller HDEMS.Api.Controllers.AuthController (HDEMS.Api).
+2026-01-21 16:06:21.404 +08:00 [INF] Executing ObjectResult, writing value of type 'HDEMS.Application.DTOs.ApiResponse`1[[HDEMS.Application.DTOs.LoginResponse, HDEMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-01-21 16:06:21.983 +08:00 [INF] Executed action HDEMS.Api.Controllers.AuthController.Login (HDEMS.Api) in 996.433ms
+2026-01-21 16:06:22.444 +08:00 [INF] Executed endpoint 'HDEMS.Api.Controllers.AuthController.Login (HDEMS.Api)'
+2026-01-21 16:06:22.606 +08:00 [INF] Request finished HTTP/2 POST https://localhost:57355/api/Auth/login - 200 null application/json; charset=utf-8 2021.2105ms
+2026-01-21 16:06:48.039 +08:00 [INF] Request starting HTTP/2 POST https://localhost:57355/api/BasicData/departments - application/json 109
+2026-01-21 16:06:48.048 +08:00 [INF] CORS policy execution successful.
+2026-01-21 16:06:48.050 +08:00 [INF] Executing endpoint 'HDEMS.Api.Controllers.BasicDataController.CreateDepartment (HDEMS.Api)'
+2026-01-21 16:06:48.057 +08:00 [INF] Route matched with {action = "CreateDepartment", controller = "BasicData"}. Executing controller action with signature System.Threading.Tasks.Task`1[HDEMS.Application.DTOs.ApiResponse`1[HDEMS.Application.DTOs.DepartmentDto]] CreateDepartment(HDEMS.Application.DTOs.DepartmentDto) on controller HDEMS.Api.Controllers.BasicDataController (HDEMS.Api).
+2026-01-21 16:06:48.394 +08:00 [ERR] 未捕获的异常: Missing type map configuration or unsupported mapping.
+
+Mapping types:
+DepartmentDto -> Department
+HDEMS.Application.DTOs.DepartmentDto -> HDEMS.Domain.Entities.Department
+AutoMapper.AutoMapperMappingException: Missing type map configuration or unsupported mapping.
+
+Mapping types:
+DepartmentDto -> Department
+HDEMS.Application.DTOs.DepartmentDto -> HDEMS.Domain.Entities.Department
+   at lambda_method51(Closure, Object, Department, ResolutionContext)
+   at HDEMS.Application.Services.BasicDataService.CreateDepartmentAsync(DepartmentDto dto)
+   at HDEMS.Api.Controllers.BasicDataController.CreateDepartment(DepartmentDto dto) in D:\Project\HDEMS\backend\HDEMS.Api\Controllers\BasicDataController.cs:line 100
+   at lambda_method46(Closure, Object)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeNextExceptionFilterAsync>g__Awaited|26_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+2026-01-21 16:06:48.406 +08:00 [INF] Executing ObjectResult, writing value of type '<>f__AnonymousType0`4[[System.Int32, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Int64, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-01-21 16:06:48.410 +08:00 [INF] Executed action HDEMS.Api.Controllers.BasicDataController.CreateDepartment (HDEMS.Api) in 324.4156ms
+2026-01-21 16:06:48.415 +08:00 [INF] Executed endpoint 'HDEMS.Api.Controllers.BasicDataController.CreateDepartment (HDEMS.Api)'
+2026-01-21 16:06:48.418 +08:00 [INF] Request finished HTTP/2 POST https://localhost:57355/api/BasicData/departments - 500 null application/json; charset=utf-8 378.1993ms
+2026-01-21 16:07:58.089 +08:00 [INF] 开始初始化种子数据...
+2026-01-21 16:07:58.759 +08:00 [INF] 系统初始化密钥已生成: 39adab1f76d7433584d000c1f3e50184241a93c10995428a (请妥善保管)
+2026-01-21 16:07:58.775 +08:00 [INF] 种子数据初始化完成
+2026-01-21 16:07:59.039 +08:00 [INF] User profile is available. Using 'C:\Users\SY\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-01-21 16:07:59.444 +08:00 [INF] Now listening on: http://localhost:57356
+2026-01-21 16:07:59.761 +08:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-01-21 16:08:00.024 +08:00 [INF] Hosting environment: Development
+2026-01-21 16:08:00.261 +08:00 [INF] Content root path: D:\Project\HDEMS\backend\HDEMS.Api
+2026-01-21 16:08:01.317 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/ - null null
+2026-01-21 16:08:05.226 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/ - 404 0 null 3938.2038ms
+2026-01-21 16:08:05.314 +08:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET http://localhost:57356/, Response status code: 404
+2026-01-21 16:08:22.003 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/swagger/index.html - null null
+2026-01-21 16:08:22.130 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/swagger/index.html - 200 null text/html;charset=utf-8 127.4548ms
+2026-01-21 16:08:22.167 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/swagger/swagger-ui.css - null null
+2026-01-21 16:08:22.221 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/swagger/swagger-ui-bundle.js - null null
+2026-01-21 16:08:22.222 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/swagger/swagger-ui-standalone-preset.js - null null
+2026-01-21 16:08:22.333 +08:00 [INF] Sending file. Request path: '/swagger-ui.css'. Physical path: 'N/A'
+2026-01-21 16:08:22.333 +08:00 [INF] Sending file. Request path: '/swagger-ui-standalone-preset.js'. Physical path: 'N/A'
+2026-01-21 16:08:22.340 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/swagger/swagger-ui.css - 200 144929 text/css 173.2699ms
+2026-01-21 16:08:22.344 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/swagger/swagger-ui-standalone-preset.js - 200 312163 text/javascript 147.2066ms
+2026-01-21 16:08:22.398 +08:00 [INF] Sending file. Request path: '/swagger-ui-bundle.js'. Physical path: 'N/A'
+2026-01-21 16:08:22.401 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/swagger/swagger-ui-bundle.js - 200 1061536 text/javascript 203.6816ms
+2026-01-21 16:08:23.643 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/_vs/browserLink - null null
+2026-01-21 16:08:23.643 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/_framework/aspnetcore-browser-refresh.js - null null
+2026-01-21 16:08:23.650 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/_framework/aspnetcore-browser-refresh.js - 200 13770 application/javascript; charset=utf-8 6.9548ms
+2026-01-21 16:08:23.718 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/_vs/browserLink - 200 null text/javascript; charset=UTF-8 74.2248ms
+2026-01-21 16:08:24.575 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/swagger/v1/swagger.json - null null
+2026-01-21 16:08:24.615 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/swagger/favicon-32x32.png - null null
+2026-01-21 16:08:24.661 +08:00 [INF] Sending file. Request path: '/favicon-32x32.png'. Physical path: 'N/A'
+2026-01-21 16:08:24.699 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/swagger/favicon-32x32.png - 200 628 image/png 82.8457ms
+2026-01-21 16:08:24.776 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 201.3873ms
+2026-01-21 16:08:51.186 +08:00 [INF] Request starting HTTP/1.1 POST http://localhost:57356/api/Auth/reset-admin-password - application/json 8
+2026-01-21 16:08:51.245 +08:00 [INF] CORS policy execution successful.
+2026-01-21 16:08:51.325 +08:00 [INF] Executing endpoint 'HDEMS.Api.Controllers.AuthController.ResetAdminPassword (HDEMS.Api)'
+2026-01-21 16:08:51.403 +08:00 [INF] Route matched with {action = "ResetAdminPassword", controller = "Auth"}. Executing controller action with signature System.Threading.Tasks.Task`1[HDEMS.Application.DTOs.ApiResponse] ResetAdminPassword(System.String) on controller HDEMS.Api.Controllers.AuthController (HDEMS.Api).
+2026-01-21 16:08:52.980 +08:00 [WRN] 管理员密码已重置为: JNtYRK3D
+2026-01-21 16:08:52.997 +08:00 [INF] Executing ObjectResult, writing value of type 'HDEMS.Application.DTOs.ApiResponse'.
+2026-01-21 16:08:53.025 +08:00 [INF] Executed action HDEMS.Api.Controllers.AuthController.ResetAdminPassword (HDEMS.Api) in 1602.7972ms
+2026-01-21 16:08:53.028 +08:00 [INF] Executed endpoint 'HDEMS.Api.Controllers.AuthController.ResetAdminPassword (HDEMS.Api)'
+2026-01-21 16:08:53.032 +08:00 [INF] Request finished HTTP/1.1 POST http://localhost:57356/api/Auth/reset-admin-password - 200 null application/json; charset=utf-8 1846.6651ms
+2026-01-21 16:09:03.902 +08:00 [INF] Request starting HTTP/1.1 POST http://localhost:57356/api/Auth/reset-admin-password - application/json 8
+2026-01-21 16:09:03.908 +08:00 [INF] CORS policy execution successful.
+2026-01-21 16:09:03.911 +08:00 [INF] Executing endpoint 'HDEMS.Api.Controllers.AuthController.ResetAdminPassword (HDEMS.Api)'
+2026-01-21 16:09:03.913 +08:00 [INF] Route matched with {action = "ResetAdminPassword", controller = "Auth"}. Executing controller action with signature System.Threading.Tasks.Task`1[HDEMS.Application.DTOs.ApiResponse] ResetAdminPassword(System.String) on controller HDEMS.Api.Controllers.AuthController (HDEMS.Api).
+2026-01-21 16:09:04.288 +08:00 [WRN] 管理员密码已重置为: PmktcSKA
+2026-01-21 16:09:04.295 +08:00 [INF] Executing ObjectResult, writing value of type 'HDEMS.Application.DTOs.ApiResponse'.
+2026-01-21 16:09:04.306 +08:00 [INF] Executed action HDEMS.Api.Controllers.AuthController.ResetAdminPassword (HDEMS.Api) in 389.8052ms
+2026-01-21 16:09:04.311 +08:00 [INF] Executed endpoint 'HDEMS.Api.Controllers.AuthController.ResetAdminPassword (HDEMS.Api)'
+2026-01-21 16:09:04.314 +08:00 [INF] Request finished HTTP/1.1 POST http://localhost:57356/api/Auth/reset-admin-password - 200 null application/json; charset=utf-8 411.6668ms
+2026-01-21 16:09:32.174 +08:00 [INF] Request starting HTTP/1.1 POST http://localhost:57356/api/Auth/login - application/json 49
+2026-01-21 16:09:32.179 +08:00 [INF] CORS policy execution successful.
+2026-01-21 16:09:32.180 +08:00 [INF] Executing endpoint 'HDEMS.Api.Controllers.AuthController.Login (HDEMS.Api)'
+2026-01-21 16:09:32.192 +08:00 [INF] Route matched with {action = "Login", controller = "Auth"}. Executing controller action with signature System.Threading.Tasks.Task`1[HDEMS.Application.DTOs.ApiResponse`1[HDEMS.Application.DTOs.LoginResponse]] Login(HDEMS.Application.DTOs.LoginRequest) on controller HDEMS.Api.Controllers.AuthController (HDEMS.Api).
+2026-01-21 16:09:32.619 +08:00 [INF] Executing ObjectResult, writing value of type 'HDEMS.Application.DTOs.ApiResponse`1[[HDEMS.Application.DTOs.LoginResponse, HDEMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-01-21 16:09:32.660 +08:00 [INF] Executed action HDEMS.Api.Controllers.AuthController.Login (HDEMS.Api) in 391.9638ms
+2026-01-21 16:09:32.664 +08:00 [INF] Executed endpoint 'HDEMS.Api.Controllers.AuthController.Login (HDEMS.Api)'
+2026-01-21 16:09:32.666 +08:00 [INF] Request finished HTTP/1.1 POST http://localhost:57356/api/Auth/login - 200 null application/json; charset=utf-8 492.6032ms
+2026-01-21 16:09:41.955 +08:00 [INF] Request starting HTTP/1.1 POST http://localhost:57356/api/Auth/login - application/json 51
+2026-01-21 16:09:41.958 +08:00 [INF] CORS policy execution successful.
+2026-01-21 16:09:41.962 +08:00 [INF] Executing endpoint 'HDEMS.Api.Controllers.AuthController.Login (HDEMS.Api)'
+2026-01-21 16:09:41.964 +08:00 [INF] Route matched with {action = "Login", controller = "Auth"}. Executing controller action with signature System.Threading.Tasks.Task`1[HDEMS.Application.DTOs.ApiResponse`1[HDEMS.Application.DTOs.LoginResponse]] Login(HDEMS.Application.DTOs.LoginRequest) on controller HDEMS.Api.Controllers.AuthController (HDEMS.Api).
+2026-01-21 16:09:42.442 +08:00 [INF] Executing ObjectResult, writing value of type 'HDEMS.Application.DTOs.ApiResponse`1[[HDEMS.Application.DTOs.LoginResponse, HDEMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-01-21 16:09:42.448 +08:00 [INF] Executed action HDEMS.Api.Controllers.AuthController.Login (HDEMS.Api) in 479.9997ms
+2026-01-21 16:09:42.450 +08:00 [INF] Executed endpoint 'HDEMS.Api.Controllers.AuthController.Login (HDEMS.Api)'
+2026-01-21 16:09:42.451 +08:00 [INF] Request finished HTTP/1.1 POST http://localhost:57356/api/Auth/login - 200 null application/json; charset=utf-8 496.5302ms
+2026-01-21 16:10:23.488 +08:00 [INF] Request starting HTTP/1.1 POST http://localhost:57356/api/BasicData/departments - application/json 109
+2026-01-21 16:10:23.495 +08:00 [INF] CORS policy execution successful.
+2026-01-21 16:10:23.643 +08:00 [INF] Executing endpoint 'HDEMS.Api.Controllers.BasicDataController.CreateDepartment (HDEMS.Api)'
+2026-01-21 16:10:23.648 +08:00 [INF] Route matched with {action = "CreateDepartment", controller = "BasicData"}. Executing controller action with signature System.Threading.Tasks.Task`1[HDEMS.Application.DTOs.ApiResponse`1[HDEMS.Application.DTOs.DepartmentDto]] CreateDepartment(HDEMS.Application.DTOs.DepartmentDto) on controller HDEMS.Api.Controllers.BasicDataController (HDEMS.Api).
+2026-01-21 16:10:23.889 +08:00 [INF] Executing ObjectResult, writing value of type 'HDEMS.Application.DTOs.ApiResponse`1[[HDEMS.Application.DTOs.DepartmentDto, HDEMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-01-21 16:10:23.893 +08:00 [INF] Executed action HDEMS.Api.Controllers.BasicDataController.CreateDepartment (HDEMS.Api) in 243.8223ms
+2026-01-21 16:10:23.895 +08:00 [INF] Executed endpoint 'HDEMS.Api.Controllers.BasicDataController.CreateDepartment (HDEMS.Api)'
+2026-01-21 16:10:23.896 +08:00 [INF] Request finished HTTP/1.1 POST http://localhost:57356/api/BasicData/departments - 200 null application/json; charset=utf-8 414.4664ms
+2026-01-21 16:11:34.286 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/api/BasicData/departments - null null
+2026-01-21 16:11:34.309 +08:00 [INF] Executing endpoint 'HDEMS.Api.Controllers.BasicDataController.GetDepartments (HDEMS.Api)'
+2026-01-21 16:11:34.316 +08:00 [INF] Route matched with {action = "GetDepartments", controller = "BasicData"}. Executing controller action with signature System.Threading.Tasks.Task`1[HDEMS.Application.DTOs.ApiResponse`1[System.Collections.Generic.List`1[HDEMS.Application.DTOs.DepartmentDto]]] GetDepartments() on controller HDEMS.Api.Controllers.BasicDataController (HDEMS.Api).
+2026-01-21 16:11:34.358 +08:00 [INF] Executing ObjectResult, writing value of type 'HDEMS.Application.DTOs.ApiResponse`1[[System.Collections.Generic.List`1[[HDEMS.Application.DTOs.DepartmentDto, HDEMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-01-21 16:11:34.365 +08:00 [INF] Executed action HDEMS.Api.Controllers.BasicDataController.GetDepartments (HDEMS.Api) in 35.3202ms
+2026-01-21 16:11:34.368 +08:00 [INF] Executed endpoint 'HDEMS.Api.Controllers.BasicDataController.GetDepartments (HDEMS.Api)'
+2026-01-21 16:11:34.371 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/api/BasicData/departments - 200 null application/json; charset=utf-8 85.1805ms
+2026-01-21 16:11:59.452 +08:00 [INF] 开始初始化种子数据...
+2026-01-21 16:12:00.496 +08:00 [INF] 系统初始化密钥已生成: 80d3d57358014130b21b39fad75846d112f2630e824b40ab (请妥善保管)
+2026-01-21 16:12:00.506 +08:00 [INF] 种子数据初始化完成
+2026-01-21 16:12:00.857 +08:00 [INF] User profile is available. Using 'C:\Users\SY\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-01-21 16:12:01.178 +08:00 [ERR] Hosting failed to start
+System.InvalidOperationException: A path base can only be configured using IApplicationBuilder.UsePathBase().
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.AddressBinder.ParseAddress(String address, Boolean& https)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.AddressBinder.AddressesStrategy.BindAsync(AddressBindContext context, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServerImpl.BindAsync(CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServerImpl.StartAsync[TContext](IHttpApplication`1 application, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Hosting.GenericWebHostService.StartAsync(CancellationToken cancellationToken)
+   at Microsoft.Extensions.Hosting.Internal.Host.<StartAsync>b__14_1(IHostedService service, CancellationToken token)
+   at Microsoft.Extensions.Hosting.Internal.Host.ForeachService[T](IEnumerable`1 services, CancellationToken token, Boolean concurrent, Boolean abortOnFirstException, List`1 exceptions, Func`3 operation)
+2026-01-21 16:12:28.593 +08:00 [INF] 开始初始化种子数据...
+2026-01-21 16:12:29.278 +08:00 [INF] 系统初始化密钥已生成: 0dcbd49a9a144eb7921c731ea30a7f8fceb81848979649ae (请妥善保管)
+2026-01-21 16:12:29.294 +08:00 [INF] 种子数据初始化完成
+2026-01-21 16:12:29.562 +08:00 [INF] User profile is available. Using 'C:\Users\SY\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-01-21 16:12:30.059 +08:00 [ERR] Hosting failed to start
+System.InvalidOperationException: A path base can only be configured using IApplicationBuilder.UsePathBase().
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.AddressBinder.ParseAddress(String address, Boolean& https)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.AddressBinder.AddressesStrategy.BindAsync(AddressBindContext context, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServerImpl.BindAsync(CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServerImpl.StartAsync[TContext](IHttpApplication`1 application, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Hosting.GenericWebHostService.StartAsync(CancellationToken cancellationToken)
+   at Microsoft.Extensions.Hosting.Internal.Host.<StartAsync>b__14_1(IHostedService service, CancellationToken token)
+   at Microsoft.Extensions.Hosting.Internal.Host.ForeachService[T](IEnumerable`1 services, CancellationToken token, Boolean concurrent, Boolean abortOnFirstException, List`1 exceptions, Func`3 operation)
+2026-01-21 16:12:47.185 +08:00 [INF] 开始初始化种子数据...
+2026-01-21 16:12:48.386 +08:00 [INF] 系统初始化密钥已生成: bce852a32c034fa68f5ac99dc4c7f2fc17bf456819b74f5b (请妥善保管)
+2026-01-21 16:12:48.393 +08:00 [INF] 种子数据初始化完成
+2026-01-21 16:12:48.652 +08:00 [INF] User profile is available. Using 'C:\Users\SY\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-01-21 16:12:48.985 +08:00 [INF] Now listening on: http://localhost:57356
+2026-01-21 16:12:49.253 +08:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-01-21 16:12:49.262 +08:00 [INF] Hosting environment: Development
+2026-01-21 16:12:49.273 +08:00 [INF] Content root path: D:\Project\HDEMS\backend\HDEMS.Api
+2026-01-21 16:12:50.369 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/ - null null
+2026-01-21 16:12:51.150 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/ - 404 0 null 800.8027ms
+2026-01-21 16:12:51.510 +08:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET http://localhost:57356/, Response status code: 404
