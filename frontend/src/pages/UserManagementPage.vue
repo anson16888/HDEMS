@@ -30,10 +30,10 @@
                 style="width: 100%"
                 @change="handleRoleFilter"
               >
-                <a-select-option value="">全部</a-select-option>
-                <a-select-option value="SYSTEM_ADMIN">系统管理员</a-select-option>
-                <a-select-option value="DUTY_ADMIN">值班管理员</a-select-option>
-                <a-select-option value="MATERIAL_ADMIN">物资管理员</a-select-option>
+                <a-select-option :value="undefined">全部</a-select-option>
+                <a-select-option :value="1">系统管理员</a-select-option>
+                <a-select-option :value="2">值班管理员</a-select-option>
+                <a-select-option :value="3">物资管理员</a-select-option>
               </a-select>
             </a-form-item>
           </a-col>
@@ -46,9 +46,10 @@
                 style="width: 100%"
                 @change="handleStatusFilter"
               >
-                <a-select-option value="">全部</a-select-option>
-                <a-select-option value="ACTIVE">启用</a-select-option>
-                <a-select-option value="INACTIVE">禁用</a-select-option>
+                <a-select-option :value="undefined">全部</a-select-option>
+                <a-select-option :value="1">正常</a-select-option>
+                <a-select-option :value="2">停用</a-select-option>
+                <a-select-option :value="3">锁定</a-select-option>
               </a-select>
             </a-form-item>
           </a-col>
@@ -93,12 +94,12 @@
         >
           <!-- 姓名 -->
           <template #bodyCell="{ column, record }">
-            <template v-if="column.key === 'real_name'">
+            <template v-if="column.key === 'realName'">
               <a-space>
                 <a-avatar :size="32" style="background-color: #1890ff;">
-                  {{ record.real_name?.substring(0, 1) || '用' }}
+                  {{ record.realName?.substring(0, 1) || '用' }}
                 </a-avatar>
-                <span>{{ record.real_name }}</span>
+                <span>{{ record.realName }}</span>
               </a-space>
             </template>
 
@@ -112,7 +113,7 @@
             <!-- 状态 -->
             <template v-else-if="column.key === 'status'">
               <a-badge
-                :status="record.status === 'ACTIVE' ? 'success' : 'error'"
+                :status="getStatusBadgeStatus(record.status)"
                 :text="getStatusDisplayName(record.status)"
               />
             </template>
@@ -132,7 +133,7 @@
                   </a-button>
                 </a-tooltip>
 
-                <a-tooltip v-if="record.login_attempts >= 5" title="解锁账号">
+                <a-tooltip v-if="record.status === 3" title="解锁账号">
                   <a-button type="text" size="small" danger @click="unlockAccount(record)">
                     <template #icon><UnlockOutlined /></template>
                   </a-button>
@@ -162,12 +163,12 @@
         </a-table>
 
         <!-- Pagination -->
-        <div v-if="filteredUsers.length > 0" class="pagination-wrapper">
+        <div v-if="userStore.pagination.total > 0" class="pagination-wrapper">
           <a-pagination
             v-model:current="currentPage"
             v-model:page-size="pageSize"
             :page-size-options="['10', '20', '50', '100']"
-            :total="filteredUsers.length"
+            :total="userStore.pagination.total"
             :show-total="(total) => `共 ${total} 条`"
             show-size-changer
             show-quick-jumper
@@ -232,7 +233,7 @@ import DeleteConfirmModal from '@/components/modals/DeleteConfirmModal.vue'
 import UserDetailModal from '@/components/modals/UserDetailModal.vue'
 
 const userStore = useUserStore()
-const { users, loading, error } = storeToRefs(userStore)
+const { users, loading, error, pagination } = storeToRefs(userStore)
 
 // State
 const searchKeyword = ref('')
@@ -254,7 +255,7 @@ const modalState = reactive({
 const columns = [
   {
     title: '姓名',
-    key: 'real_name',
+    key: 'realName',
     width: 200,
     fixed: 'left'
   },
@@ -290,50 +291,47 @@ const columns = [
   }
 ]
 
-// Computed
-const filteredUsers = computed(() => {
-  let result = users.value || []
-
-  if (searchKeyword.value) {
-    const keyword = searchKeyword.value.toLowerCase()
-    result = result.filter(user =>
-      user.real_name.toLowerCase().includes(keyword) ||
-      user.username.toLowerCase().includes(keyword)
-    )
-  }
-
-  if (roleFilter.value) {
-    result = result.filter(user => user.roles.includes(roleFilter.value))
-  }
-
-  if (statusFilter.value) {
-    result = result.filter(user => user.status === statusFilter.value)
-  }
-
-  return result
-})
-
+// Computed - Note: filtering is now done on backend
 const paginatedUsers = computed(() => {
-  const start = (currentPage.value - 1) * pageSize.value
-  const end = start + pageSize.value
-  return filteredUsers.value.slice(start, end)
+  return users.value || []
 })
 
 const hasActiveFilters = computed(() => {
-  return searchKeyword.value || roleFilter.value || statusFilter.value
+  return searchKeyword.value || roleFilter.value !== undefined || statusFilter.value !== undefined
 })
 
 // Methods
 const handleSearch = () => {
   currentPage.value = 1
+  userStore.setFilters({
+    keyword: searchKeyword.value,
+    role: roleFilter.value,
+    status: statusFilter.value
+  })
+  userStore.setPagination({ page: currentPage.value, pageSize: pageSize.value })
+  userStore.fetchUsers()
 }
 
 const handleRoleFilter = () => {
   currentPage.value = 1
+  userStore.setFilters({
+    keyword: searchKeyword.value,
+    role: roleFilter.value,
+    status: statusFilter.value
+  })
+  userStore.setPagination({ page: currentPage.value, pageSize: pageSize.value })
+  userStore.fetchUsers()
 }
 
 const handleStatusFilter = () => {
   currentPage.value = 1
+  userStore.setFilters({
+    keyword: searchKeyword.value,
+    role: roleFilter.value,
+    status: statusFilter.value
+  })
+  userStore.setPagination({ page: currentPage.value, pageSize: pageSize.value })
+  userStore.fetchUsers()
 }
 
 const resetFilters = () => {
@@ -341,10 +339,14 @@ const resetFilters = () => {
   roleFilter.value = undefined
   statusFilter.value = undefined
   currentPage.value = 1
+  userStore.clearFilters()
+  userStore.setPagination({ page: 1, pageSize: pageSize.value })
+  userStore.fetchUsers()
 }
 
 const handlePageChange = () => {
-  // Handle pagination
+  userStore.setPagination({ page: currentPage.value, pageSize: pageSize.value })
+  userStore.fetchUsers()
 }
 
 const openCreateModal = () => {
@@ -404,7 +406,7 @@ const handlePasswordResetResult = () => {
 
 const unlockAccount = async (user) => {
   try {
-    await userStore.unlockAccount(user.id)
+    await userStore.unlockAccount(user.id, user)
     message.success('账号已解锁')
     await userStore.fetchUsers()
   } catch (error) {
@@ -414,24 +416,38 @@ const unlockAccount = async (user) => {
 
 const getRoleDisplayName = (role) => {
   const roleNames = {
-    SYSTEM_ADMIN: '系统管理员',
-    DUTY_ADMIN: '值班管理员',
-    MATERIAL_ADMIN: '物资管理员'
+    "SYSTEM_ADMIN": '系统管理员',
+    "SCHEDULE_ADMIN": '值班管理员',
+    "MATERIAL_ADMIN": '物资管理员'
   }
   return roleNames[role] || role
 }
 
 const getRoleColor = (role) => {
   const colors = {
-    SYSTEM_ADMIN: 'blue',
-    DUTY_ADMIN: 'green',
-    MATERIAL_ADMIN: 'orange'
+    1: 'blue',
+    2: 'green',
+    3: 'orange'
   }
   return colors[role] || 'default'
 }
 
 const getStatusDisplayName = (status) => {
-  return status === 'ACTIVE' ? '启用' : '禁用'
+  const statusNames = {
+    1: '正常',
+    2: '停用',
+    3: '锁定'
+  }
+  return statusNames[status] || status
+}
+
+const getStatusBadgeStatus = (status) => {
+  const badgeStatus = {
+    1: 'success',
+    2: 'error',
+    3: 'warning'
+  }
+  return badgeStatus[status] || 'default'
 }
 
 // Error handling
@@ -441,6 +457,9 @@ if (error.value) {
 
 // Lifecycle
 onMounted(() => {
+  // Initialize pagination from store
+  currentPage.value = pagination.value.page
+  pageSize.value = pagination.value.pageSize
   userStore.fetchUsers()
 })
 </script>

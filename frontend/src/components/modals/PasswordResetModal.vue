@@ -12,7 +12,7 @@
   >
     <a-space direction="vertical" :size="16" style="width: 100%">
       <!-- User Info -->
-      <a-alert :message="`用户：${user.real_name} (${user.username})`" type="info" show-icon />
+      <a-alert :message="`用户：${user.realName} (${user.username})`" type="info" show-icon />
 
       <!-- Password Input Form (if not reset yet) -->
       <div v-if="!isSuccess">

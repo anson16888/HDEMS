@@ -23,7 +23,7 @@
       <a-card size="small">
         <a-descriptions :column="1" size="small">
           <a-descriptions-item label="姓名">
-            {{ user.real_name }}
+            {{ user.realName }}
           </a-descriptions-item>
           <a-descriptions-item label="账号">
             {{ user.username }}

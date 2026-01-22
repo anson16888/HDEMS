@@ -1,48 +1,52 @@
 /**
  * UserService - User management business logic
- * Handles CRUD operations for users
+ * Handles CRUD operations for users using backend API
  */
 
-import { userStore } from '../mock/user-store.js'
-import { sha256 } from '../mock/crypto.js'
+import * as userApi from '../api/user.api.js'
+import { USER_ROLES, USER_STATUS } from '../config/api.config.js'
 
 export class UserService {
   /**
-   * Initialize user store
+   * Initialize user service (no-op for API version)
    * @returns {Promise<void>}
    */
   async initialize() {
-    await userStore.initialize()
+    // No initialization needed when using API
   }
 
   /**
-   * Get all users
-   * @param {object} filters - Optional filters { role, status, keyword }
-   * @returns {Promise<Array>} List of users
+   * Get all users with pagination and filters
+   * @param {object} filters - Optional filters { role, status, keyword, page, pageSize }
+   * @returns {Promise<object>} Paginated user list { items: [], total, page, pageSize, totalPages }
    */
   async getUsers(filters = {}) {
-    await new Promise(resolve => setTimeout(resolve, 200)) // Simulate delay
+    // Convert role from string to number if needed
+    const params = { ...filters }
 
-    let users = userStore.getUsers()
-
-    // Apply filters
-    if (filters.role) {
-      users = users.filter(u => u.roles.includes(filters.role))
+    if (filters.role && typeof filters.role === 'string') {
+      // Convert role name to role number if needed
+      const roleMap = {
+        'SYSTEM_ADMIN': USER_ROLES.SYSTEM_ADMIN,
+        'SCHEDULE_ADMIN': USER_ROLES.SCHEDULE_ADMIN,
+        'MATERIAL_ADMIN': USER_ROLES.MATERIAL_ADMIN
+      }
+      params.roles = [roleMap[filters.role]]
+      delete params.role
     }
 
-    if (filters.status) {
-      users = users.filter(u => u.status === filters.status)
+    if (filters.status && typeof filters.status === 'string') {
+      // Convert status name to status number if needed
+      const statusMap = {
+        'ACTIVE': USER_STATUS.ACTIVE,
+        'INACTIVE': USER_STATUS.INACTIVE,
+        'LOCKED': USER_STATUS.LOCKED
+      }
+      params.status = statusMap[filters.status]
     }
 
-    if (filters.keyword) {
-      const keyword = filters.keyword.toLowerCase()
-      users = users.filter(u =>
-        u.real_name.toLowerCase().includes(keyword) ||
-        u.username.toLowerCase().includes(keyword)
-      )
-    }
-
-    return users
+    const response = await userApi.getUsers(params)
+    return response.data
   }
 
   /**
@@ -51,14 +55,8 @@ export class UserService {
    * @returns {Promise<object>} User object
    */
   async getUserById(id) {
-    await new Promise(resolve => setTimeout(resolve, 100))
-
-    const user = userStore.getUserById(id)
-    if (!user) {
-      throw { code: 'USER_NOT_FOUND', message: '用户不存在' }
-    }
-
-    return user
+    const response = await userApi.getUserById(id)
+    return response.data
   }
 
   /**
@@ -67,23 +65,29 @@ export class UserService {
    * @returns {Promise<object>} Created user
    */
   async createUser(userData) {
-    await new Promise(resolve => setTimeout(resolve, 300))
+    // Convert roles and status if needed (in case they come as strings)
+    const data = { ...userData }
 
-    // Validate required fields
-    this.validateUserData(userData)
+    if (data.roles && Array.isArray(data.roles)) {
+      // Convert role names to role numbers if they are strings
+      data.roles = data.roles.map(role => {
+        if (typeof role === 'string') {
+          const roleMap = {
+            'SYSTEM_ADMIN': USER_ROLES.SYSTEM_ADMIN,
+            'SCHEDULE_ADMIN': USER_ROLES.SCHEDULE_ADMIN,
+            'MATERIAL_ADMIN': USER_ROLES.MATERIAL_ADMIN
+          }
+          return roleMap[role] || role
+        }
+        return role
+      })
+    }
 
-    // Hash password
-    const hashedPassword = await sha256(userData.password)
+    // Validate required fields after conversion
+    this.validateUserData(data)
 
-    // Create user
-    const newUser = userStore.createUser({
-      ...userData,
-      password: hashedPassword
-    })
-
-    // Remove password from response
-    const { password, ...userResponse } = newUser
-    return userResponse
+    const response = await userApi.createUser(data)
+    return response.data
   }
 
   /**
@@ -93,23 +97,35 @@ export class UserService {
    * @returns {Promise<object>} Updated user
    */
   async updateUser(id, updates) {
-    await new Promise(resolve => setTimeout(resolve, 300))
+    // Convert status if needed
+    const data = { ...updates }
 
-    // If updating password, hash it
-    if (updates.password) {
-      updates.password = await sha256(updates.password)
+    if (updates.status && typeof updates.status === 'string') {
+      const statusMap = {
+        'ACTIVE': USER_STATUS.ACTIVE,
+        'INACTIVE': USER_STATUS.INACTIVE,
+        'LOCKED': USER_STATUS.LOCKED
+      }
+      data.status = statusMap[updates.status]
     }
 
-    // Validate updates
-    if (updates.username) {
-      throw { code: 'VALIDATION_ERROR', message: '不能修改用户名' }
+    // Convert roles if needed
+    if (updates.roles && Array.isArray(updates.roles)) {
+      data.roles = updates.roles.map(role => {
+        if (typeof role === 'string') {
+          const roleMap = {
+            'SYSTEM_ADMIN': USER_ROLES.SYSTEM_ADMIN,
+            'SCHEDULE_ADMIN': USER_ROLES.SCHEDULE_ADMIN,
+            'MATERIAL_ADMIN': USER_ROLES.MATERIAL_ADMIN
+          }
+          return roleMap[role] || role
+        }
+        return role
+      })
     }
 
-    const updatedUser = userStore.updateUser(id, updates)
-
-    // Remove password from response
-    const { password, ...userResponse } = updatedUser
-    return userResponse
+    const response = await userApi.updateUser(id, data)
+    return response.data
   }
 
   /**
@@ -118,30 +134,16 @@ export class UserService {
    * @returns {Promise<void>}
    */
   async deleteUser(id) {
-    await new Promise(resolve => setTimeout(resolve, 200))
-
-    const user = userStore.getUserById(id)
-    if (!user) {
-      throw { code: 'USER_NOT_FOUND', message: '用户不存在' }
-    }
-
-    userStore.deleteUser(id)
+    await userApi.deleteUser(id)
   }
 
   /**
    * Reset user password
    * @param {string} id - User ID
    * @param {string} newPassword - New password to set
-   * @returns {Promise<object>} Object containing password
+   * @returns {Promise<object>} Response object
    */
   async resetPassword(id, newPassword) {
-    await new Promise(resolve => setTimeout(resolve, 300))
-
-    const user = userStore.getUserById(id)
-    if (!user) {
-      throw { code: 'USER_NOT_FOUND', message: '用户不存在' }
-    }
-
     // Validate password
     if (!newPassword) {
       throw { code: 'VALIDATION_ERROR', message: '新密码不能为空' }
@@ -153,39 +155,35 @@ export class UserService {
       throw { code: 'VALIDATION_ERROR', message: '密码必须包含字母和数字' }
     }
 
-    // Hash password
-    const hashedPassword = await sha256(newPassword)
-
-    userStore.resetPassword(id, hashedPassword)
-
-    return { password: newPassword }
+    const response = await userApi.resetPassword(id, newPassword)
+    return response
   }
 
   /**
-   * Unlock user account
+   * Unlock user account (update status to ACTIVE)
    * @param {string} id - User ID
-   * @returns {Promise<void>}
+   * @param {object} user - Full user object to send
+   * @returns {Promise<object>} Updated user
    */
-  async unlockAccount(id) {
-    await new Promise(resolve => setTimeout(resolve, 200))
-
-    const user = userStore.getUserById(id)
-    if (!user) {
-      throw { code: 'USER_NOT_FOUND', message: '用户不存在' }
+  async unlockAccount(id, user) {
+    // Send complete user data with status set to ACTIVE
+    const updateData = {
+      ...user,
+      status: USER_STATUS.ACTIVE
     }
 
-    userStore.unlockAccount(id)
+    const response = await userApi.updateUser(id, updateData)
+    return response.data
   }
 
   /**
-   * Get login logs for user
+   * Get login logs for user - Not implemented in backend yet
    * @param {string} userId - User ID
-   * @returns {Promise<Array>} Login logs
+   * @returns {Promise<Array>} Empty array (not implemented)
    */
   async getLoginLogs(userId) {
-    await new Promise(resolve => setTimeout(resolve, 200))
-
-    return userStore.getLoginLogs(userId)
+    // This feature is not implemented in the backend yet
+    return []
   }
 
   /**
@@ -205,22 +203,24 @@ export class UserService {
       throw { code: 'VALIDATION_ERROR', message: '账号只能包含字母、数字和下划线' }
     }
 
-    // Password
-    if (!data.password) {
-      throw { code: 'VALIDATION_ERROR', message: '密码不能为空' }
-    }
-    if (data.password.length < 8) {
-      throw { code: 'VALIDATION_ERROR', message: '密码长度至少8位' }
-    }
-    if (!/[a-zA-Z]/.test(data.password) || !/[0-9]/.test(data.password)) {
-      throw { code: 'VALIDATION_ERROR', message: '密码必须包含字母和数字' }
+    // Password (only for create)
+    if (data.password !== undefined) {
+      if (!data.password) {
+        throw { code: 'VALIDATION_ERROR', message: '密码不能为空' }
+      }
+      if (data.password.length < 8) {
+        throw { code: 'VALIDATION_ERROR', message: '密码长度至少8位' }
+      }
+      if (!/[a-zA-Z]/.test(data.password) || !/[0-9]/.test(data.password)) {
+        throw { code: 'VALIDATION_ERROR', message: '密码必须包含字母和数字' }
+      }
     }
 
     // Real name
-    if (!data.real_name) {
+    if (!data.realName) {
       throw { code: 'VALIDATION_ERROR', message: '姓名不能为空' }
     }
-    if (data.real_name.length < 2 || data.real_name.length > 20) {
+    if (data.realName.length < 2 || data.realName.length > 20) {
       throw { code: 'VALIDATION_ERROR', message: '姓名长度必须为2-20个字符' }
     }
 
@@ -232,46 +232,50 @@ export class UserService {
       throw { code: 'VALIDATION_ERROR', message: '请输入正确的11位手机号' }
     }
 
-    // Roles
-    if (!data.roles || data.roles.length === 0) {
-      throw { code: 'VALIDATION_ERROR', message: '请至少选择一个角色' }
-    }
+    // // Roles
+    // if (data.roles && Array.isArray(data.roles)) {
+    //   if (data.roles.length === 0) {
+    //     throw { code: 'VALIDATION_ERROR', message: '请至少选择一个角色' }
+    //   }
 
-    const validRoles = ['SYSTEM_ADMIN', 'DUTY_ADMIN', 'MATERIAL_ADMIN']
-    const invalidRoles = data.roles.filter(r => !validRoles.includes(r))
-    if (invalidRoles.length > 0) {
-      throw { code: 'VALIDATION_ERROR', message: '包含无效的角色' }
-    }
+    //   const validRoles = [USER_ROLES.SYSTEM_ADMIN, USER_ROLES.SCHEDULE_ADMIN, USER_ROLES.MATERIAL_ADMIN]
+    //   const invalidRoles = data.roles.filter(r => !validRoles.includes(r))
+    //   console.log(invalidRoles)
+    //   if (invalidRoles.length > 0) {
+    //     throw { code: 'VALIDATION_ERROR', message: '包含无效的角色' }
+    //   }
+    // }
 
-    // Status
-    if (data.status && !['ACTIVE', 'INACTIVE'].includes(data.status)) {
+    // Status - only validate if explicitly provided
+    if (data.status !== undefined && !Object.values(USER_STATUS).includes(data.status)) {
       throw { code: 'VALIDATION_ERROR', message: '无效的状态' }
     }
   }
 
   /**
    * Get role display name
-   * @param {string} roleCode - Role code
+   * @param {number} roleCode - Role code (number)
    * @returns {string} Display name
    */
   getRoleDisplayName(roleCode) {
     const roleNames = {
-      'SYSTEM_ADMIN': '系统管理员',
-      'DUTY_ADMIN': '值班管理员',
-      'MATERIAL_ADMIN': '物资管理员'
+      [USER_ROLES.SYSTEM_ADMIN]: '系统管理员',
+      [USER_ROLES.SCHEDULE_ADMIN]: '值班管理员',
+      [USER_ROLES.MATERIAL_ADMIN]: '物资管理员'
     }
     return roleNames[roleCode] || roleCode
   }
 
   /**
    * Get status display name
-   * @param {string} statusCode - Status code
+   * @param {number} statusCode - Status code (number)
    * @returns {string} Display name
    */
   getStatusDisplayName(statusCode) {
     const statusNames = {
-      'ACTIVE': '启用',
-      'INACTIVE': '禁用'
+      [USER_STATUS.ACTIVE]: '正常',
+      [USER_STATUS.INACTIVE]: '停用',
+      [USER_STATUS.LOCKED]: '锁定'
     }
     return statusNames[statusCode] || statusCode
   }

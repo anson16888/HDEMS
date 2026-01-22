@@ -28,6 +28,7 @@ export class StorageService {
       try {
         return JSON.parse(value)
       } catch {
+        // If not JSON, return as string
         return value
       }
     } catch (error) {
@@ -39,13 +40,22 @@ export class StorageService {
   /**
    * Set item in localStorage
    * @param {string} key - Storage key (without prefix)
-   * @param {any} value - Value to store (will be JSON stringified)
+   * @param {any} value - Value to store
    * @returns {boolean} Success status
    */
   set(key, value) {
     try {
       const fullKey = `${STORAGE_PREFIX}${key}`
-      const serialized = JSON.stringify(value)
+
+      // For simple types (string, number, boolean), store directly
+      // For complex types (object, array), use JSON.stringify
+      let serialized
+      if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
+        serialized = String(value)
+      } else {
+        serialized = JSON.stringify(value)
+      }
+
       localStorage.setItem(fullKey, serialized)
       return true
     } catch (error) {

@@ -21,7 +21,7 @@ export const useAuthStore = defineStore('auth', () => {
   })
 
   const isDutyAdmin = computed(() => {
-    return user.value?.roles?.includes('DUTY_ADMIN') || false
+    return user.value?.roles?.includes('SCHEDULE_ADMIN') || false
   })
 
   const isMaterialAdmin = computed(() => {
@@ -37,7 +37,7 @@ export const useAuthStore = defineStore('auth', () => {
   })
 
   const userDisplayName = computed(() => {
-    return user.value?.real_name || '未登录'
+    return user.value?.realName || '未登录'
   })
 
   // Actions

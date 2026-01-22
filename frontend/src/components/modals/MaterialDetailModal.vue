@@ -31,15 +31,18 @@
       </a-descriptions-item>
 
       <a-descriptions-item label="库存数量">
-        <a-statistic
-          :value="material.quantity"
-          :value-style="{
-            fontSize: '16px',
-            fontWeight: 'bold',
-            color: material.quantity === 0 ? '#ff4d4f' : '#1890ff'
-          }"
-        />
-        <span v-if="material.unit" style="margin-left: 8px">{{ material.unit }}</span>
+        <div style="display: flex; align-items: baseline;">
+          <a-statistic
+            :value="material.quantity"
+            :value-style="{
+              fontSize: '16px',
+              fontWeight: 'bold',
+              color: material.quantity === 0 ? '#ff4d4f' : '#1890ff'
+            }"
+            :style="{ flexShrink: 0 }"
+          />
+          <span v-if="material.unit" style="margin-left: 8px">{{ material.unit }}</span>
+        </div>
       </a-descriptions-item>
 
       <a-descriptions-item label="单位">
@@ -130,11 +133,11 @@ const emit = defineEmits(['update:visible'])
  */
 function getTypeColor(type) {
   const colors = {
-    FOOD: 'orange',
     MEDICAL: 'green',
-    EQUIPMENT: 'blue',
-    CLOTHING: 'purple',
-    OTHER: 'default'
+    MEDICINE: 'blue',
+    EMERGENCY: 'red',
+    CONSUMABLE: 'orange',
+    EQUIPMENT: 'purple'
   }
   return colors[type] || 'default'
 }
@@ -144,11 +147,11 @@ function getTypeColor(type) {
  */
 function getTypeLabel(type) {
   const labels = {
-    FOOD: '食品类',
-    MEDICAL: '医疗用品',
-    EQUIPMENT: '救援设备',
-    CLOTHING: '衣物类',
-    OTHER: '其他'
+    MEDICAL: '医疗设备',
+    MEDICINE: '药品',
+    EMERGENCY: '急救物资',
+    CONSUMABLE: '耗材',
+    EQUIPMENT: '设备'
   }
   return labels[type] || type
 }
@@ -161,7 +164,8 @@ function getStatusColor(status) {
     NORMAL: 'green',
     LOW: 'orange',
     OUT: 'red',
-    EXPIRED: 'default'
+    EXPIRED: 'default',
+    EXPIRING_SOON: 'orange'
   }
   return colors[status] || 'default'
 }
@@ -174,7 +178,8 @@ function getStatusLabel(status) {
     NORMAL: '正常',
     LOW: '库存偏低',
     OUT: '已耗尽',
-    EXPIRED: '已过期'
+    EXPIRED: '已过期',
+    EXPIRING_SOON: '即将过期'
   }
   return labels[status] || status
 }

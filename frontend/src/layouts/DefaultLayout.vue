@@ -22,9 +22,9 @@
         </button>
         <div class="user-dropdown">
           <button class="user-card" type="button">
-            <div class="user-avatar">{{ user?.real_name?.substring(0, 1) || '用' }}</div>
+            <div class="user-avatar">{{ user?.realName?.substring(0, 1) || '用' }}</div>
             <div class="user-meta">
-              <span class="user-name">{{ user?.real_name || '未登录' }}</span>
+              <span class="user-name">{{ user?.realName || '未登录' }}</span>
               <span class="user-role">{{ user?.username || '' }}</span>
             </div>
             <i class="fa-solid fa-angle-down"></i>
@@ -50,20 +50,14 @@
 
     <div class="app-body">
       <aside :class="['sidebar', { collapsed: isCollapsed }]">
-        <nav class="nav-group" v-for="section in menuSections" :key="section.title">
-          <p class="nav-title" :class="{ hidden: isCollapsed }">{{ section.title }}</p>
-          <RouterLink
-            v-for="item in section.items"
-            :key="item.to"
-            :to="item.to"
-            class="menu-item"
-            active-class="menu-item-active"
-            :title="item.label"
-          >
-            <i :class="item.icon"></i>
-            <span :class="{ hidden: isCollapsed }">{{ item.label }}</span>
-          </RouterLink>
-        </nav>
+        <a-menu
+          v-model:selectedKeys="selectedKeys"
+          v-model:openKeys="openKeys"
+          mode="inline"
+          :inline-collapsed="isCollapsed"
+          :items="menuItems"
+          @click="handleMenuClick"
+        />
       </aside>
 
       <main class="app-content">
@@ -78,69 +72,230 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
-import { RouterLink, useRouter } from 'vue-router'
+import { ref, computed, watch, h } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import { useAuth } from '../composables/useAuth.js'
+import * as Icons from '@ant-design/icons-vue'
 
 const router = useRouter()
+const route = useRoute()
 const { logout, user, isAuthenticated, isSystemAdmin } = useAuth()
 const isCollapsed = ref(false)
+const selectedKeys = ref([])
+const openKeys = ref([])
 
 // 退出登录
 async function handleLogout() {
   if (confirm('确定要退出登录吗？')) {
     try {
       await logout()
-      // 跳转到登录页
       router.push('/login')
     } catch (error) {
       console.error('退出登录失败:', error)
-      // 即使失败也清除本地状态并跳转
       router.push('/login')
     }
   }
 }
 
-const menuSections = computed(() => {
-  const sections = [
-    {
-      title: '主菜单',
-      items: [
-        { label: '物资管理', to: '/materials', icon: 'fa-solid fa-boxes-stacked' }
-      ]
-    },
-    {
-      title: '值班管理',
-      items: [
-        { label: '局级行政排班', to: '/schedules/bureau', icon: 'fa-solid fa-building-columns' },
-        { label: '院级行政排班', to: '/schedules/hospital', icon: 'fa-solid fa-hospital' },
-        { label: '院内主任排班', to: '/schedules/director', icon: 'fa-solid fa-user-doctor' },
-        { label: '排班一览表', to: '/schedules/overview', icon: 'fa-solid fa-table-list' }
-      ]
-    }
-  ]
+// 图标映射
+const iconMap = {
+  'fa-solid fa-boxes-stacked': 'InboxOutlined',
+  'fa-solid fa-building-columns': 'BankOutlined',
+  'fa-solid fa-hospital': 'MedicineBoxOutlined',
+  'fa-solid fa-user-doctor': 'UserOutlined',
+  'fa-solid fa-table-list': 'TableOutlined',
+  'fa-solid fa-users': 'TeamOutlined',
+  'fa-solid fa-gear': 'SettingOutlined',
+  'fa-solid fa-sitemap': 'NodeIndexOutlined',
+  'fa-solid fa-clock': 'ClockCircleOutlined',
+  'fa-solid fa-ranking-star': 'TrophyOutlined',
+  'fa-solid fa-award': 'StarOutlined',
+  'fa-solid fa-user-tag': 'TagOutlined'
+}
 
-  // 系统设置部分（始终显示系统管理，仅系统管理员显示用户管理）
-  const systemSettingsSection = {
-    title: '系统设置',
-    items: [
-      { label: '系统管理', to: '/system', icon: 'fa-solid fa-gear' }
-    ]
+// 获取图标组件
+function getIcon(iconName) {
+  const iconKey = iconMap[iconName]
+  if (iconKey && Icons[iconKey]) {
+    return h(Icons[iconKey])
   }
+  return null
+}
+
+// 菜单项生成函数
+function getItem(label, key, icon, children) {
+  return {
+    key,
+    icon,
+    children,
+    label
+  }
+}
+
+// 菜单配置
+const menuItems = computed(() => {
+  const items = []
+
+  // 物资管理
+  items.push(
+    getItem('物资管理', '/materials', getIcon('fa-solid fa-boxes-stacked'))
+  )
+
+  // 值班管理子菜单
+  items.push(
+    getItem('值班管理', '/schedules', getIcon('fa-solid fa-building-columns'), [
+      getItem('局级行政排班', '/schedules/bureau', getIcon('fa-solid fa-building-columns')),
+      getItem('院级行政排班', '/schedules/hospital', getIcon('fa-solid fa-hospital')),
+      getItem('院内主任排班', '/schedules/director', getIcon('fa-solid fa-user-doctor')),
+      getItem('排班一览表', '/schedules/overview', getIcon('fa-solid fa-table-list'))
+    ])
+  )
 
   // 仅系统管理员可见用户管理
   if (isSystemAdmin.value) {
-    systemSettingsSection.items.unshift(
-      { label: '用户管理', to: '/users', icon: 'fa-solid fa-users' }
+    items.push(
+      getItem('用户管理', '/users', getIcon('fa-solid fa-users'))
     )
   }
 
-  sections.push(systemSettingsSection)
+  // 系统管理子菜单
+  items.push(
+    getItem('系统管理', '/system', getIcon('fa-solid fa-gear'), [
+      getItem('医院信息', '/system/hospitals', getIcon('fa-solid fa-hospital')),
+      getItem('科室信息', '/system/departments', getIcon('fa-solid fa-sitemap')),
+      getItem('班次信息', '/system/shifts', getIcon('fa-solid fa-clock')),
+      getItem('人员职级', '/system/person-ranks', getIcon('fa-solid fa-ranking-star')),
+      getItem('人员职称', '/system/person-titles', getIcon('fa-solid fa-award')),
+      getItem('人员信息', '/system/persons', getIcon('fa-solid fa-user-tag'))
+    ])
+  )
 
-  return sections
+  return items
 })
+
+// 菜单点击处理
+function handleMenuClick({ key }) {
+  router.push(key)
+}
+
+// 自动展开当前路由所在的子菜单并设置选中项
+watch(
+  () => route.path,
+  (newPath) => {
+    selectedKeys.value = [newPath]
+
+    // 查找父级菜单并展开
+    menuItems.value.forEach(group => {
+      if (group.children) {
+        // 检查是否有子菜单项匹配当前路由
+        const hasActiveChild = group.children.some(child => {
+          // 精确匹配或前缀匹配（处理三级菜单的情况）
+          return child.key === newPath || newPath.startsWith(child.key + '/')
+        })
+
+        if (hasActiveChild && !openKeys.value.includes(group.key)) {
+          openKeys.value.push(group.key)
+        }
+      }
+    })
+  },
+  { immediate: true }
+)
 
 const toggleSidebar = () => {
   isCollapsed.value = !isCollapsed.value
 }
 </script>
+
+<style scoped>
+/* Ant Design Vue Menu 组件样式覆盖 */
+.sidebar :deep(.ant-menu) {
+  background: transparent;
+  border-right: none;
+}
+
+.sidebar :deep(.ant-menu-inline) {
+  border-right: none;
+}
+
+.sidebar :deep(.ant-menu-item) {
+  margin: 0;
+  padding: 0.75rem 1rem;
+  height: auto;
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+  border-radius: 0.5rem;
+  transition: all 0.2s;
+}
+
+.sidebar :deep(.ant-menu-item:hover) {
+  background-color: var(--color-bg-light);
+  color: var(--color-text-primary);
+}
+
+.sidebar :deep(.ant-menu-item-selected) {
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
+}
+
+.sidebar :deep(.ant-menu-submenu) {
+  margin: 0;
+}
+
+.sidebar :deep(.ant-menu-submenu-title) {
+  margin: 0;
+  padding: 0.75rem 1rem;
+  height: auto;
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+  border-radius: 0.5rem;
+  transition: all 0.2s;
+}
+
+.sidebar :deep(.ant-menu-submenu-title:hover) {
+  background-color: var(--color-bg-light);
+  color: var(--color-text-primary);
+}
+
+.sidebar :deep(.ant-menu-submenu-selected > .ant-menu-submenu-title) {
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
+}
+
+.sidebar :deep(.ant-menu-item .anticon) {
+  font-size: 1rem;
+  min-width: 1.25rem;
+  text-align: center;
+}
+
+.sidebar :deep(.ant-menu-submenu-title .anticon) {
+  font-size: 1rem;
+  min-width: 1.25rem;
+  text-align: center;
+}
+
+.sidebar :deep(.ant-menu-group-list) {
+  margin: 0;
+  padding: 0;
+}
+
+.sidebar :deep(.ant-menu-group-title) {
+  padding: 0.5rem 1rem;
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+.sidebar :deep(.ant-menu-sub) {
+  background: transparent;
+}
+
+.sidebar :deep(.ant-menu-sub .ant-menu-item) {
+  padding-left: 2.5rem !important;
+}
+
+/* 折叠状态 */
+.sidebar.collapsed :deep(.ant-menu-group-title) {
+  display: none;
+}
+</style>

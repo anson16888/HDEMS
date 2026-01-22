@@ -63,13 +63,13 @@ export function useMaterialForm() {
     ]
   }
 
-  // 物资类型选项
+  // 物资类型选项（匹配后端 MaterialType 枚举）
   const materialTypeOptions = [
-    { label: '食品类', value: 'FOOD' },
-    { label: '医疗用品', value: 'MEDICAL' },
-    { label: '救援设备', value: 'EQUIPMENT' },
-    { label: '衣物类', value: 'CLOTHING' },
-    { label: '其他', value: 'OTHER' }
+    { label: '医疗设备', value: 'MEDICAL' },
+    { label: '药品', value: 'MEDICINE' },
+    { label: '急救物资', value: 'EMERGENCY' },
+    { label: '耗材', value: 'CONSUMABLE' },
+    { label: '设备', value: 'EQUIPMENT' }
   ]
 
   /**
