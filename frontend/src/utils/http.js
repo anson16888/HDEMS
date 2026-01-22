@@ -143,6 +143,10 @@ export const request = {
     return http.put(url, data, config)
   },
 
+  patch(url, data, config = {}) {
+    return http.patch(url, data, config)
+  },
+
   delete(url, params, config = {}) {
     return http.delete(url, { params, ...config })
   },

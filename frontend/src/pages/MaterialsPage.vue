@@ -102,13 +102,13 @@
           :data-source="materialStore.materials"
           :pagination="false"
           :row-key="record => record.id"
-          :scroll="{ x: 1200 }"
+          :scroll="{ x: 1200, y: 'calc(100vh - 450px)' }"
         >
           <!-- 物资类型 -->
           <template #bodyCell="{ column, record }">
             <template v-if="column.key === 'material_type'">
               <a-tag :color="getTypeColor(record.material_type)">
-                {{ getTypeLabel(record.material_type) }}
+                {{ record.materialTypeName || getTypeLabel(record.material_type) }}
               </a-tag>
             </template>
 
@@ -316,13 +316,18 @@ function getTypeLabel(type) {
  */
 function getStatusLabel(status) {
   const labels = {
+    0: '正常',
+    1: '库存偏低',
+    2: '已耗尽',
+    3: '已过期',
+    4: '即将过期',
     NORMAL: '正常',
     LOW: '库存偏低',
     OUT: '已耗尽',
     EXPIRED: '已过期',
     EXPIRING_SOON: '即将过期'
   }
-  return labels[status] || status
+  return labels[status] ?? '未知'
 }
 
 /**
@@ -330,6 +335,11 @@ function getStatusLabel(status) {
  */
 function getStatusBadgeStatus(status) {
   const badgeStatus = {
+    0: 'success',
+    1: 'warning',
+    2: 'error',
+    3: 'default',
+    4: 'warning',
     NORMAL: 'success',
     LOW: 'warning',
     OUT: 'error',
@@ -502,7 +512,7 @@ onMounted(() => {
 
 <style scoped>
 .materials-page {
-  padding: 24px;
+  padding: 0 16px;
 }
 
 .search-card {

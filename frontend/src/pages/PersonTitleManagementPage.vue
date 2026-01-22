@@ -1,10 +1,7 @@
 <template>
   <div class="person-title-management-page">
     <!-- Page Header -->
-    <a-page-header
-      title="人员职称管理"
-      sub-title="查看人员职称信息,包括教授、副教授、讲师等"
-    />
+    <a-page-header title="人员职称管理" sub-title="查看人员职称信息,包括教授、副教授、讲师等" />
 
     <!-- Table Card -->
     <a-card class="table-card" :bordered="false">
@@ -13,7 +10,7 @@
         :data-source="titles"
         :loading="loading"
         :pagination="pagination"
-        :scroll="{ y: 'calc(100vh - 380px)' }"
+        :scroll="{ y: 'calc(100vh - 365px)' }"
         row-key="id"
       >
         <template #bodyCell="{ column, record }">
@@ -102,15 +99,7 @@ onMounted(() => {
 
 <style scoped>
 .person-title-management-page {
-  padding: 16px;
-  padding-bottom: 0;
-}
-
-.person-title-management-page :deep(.ant-page-header) {
-  padding: 16px 24px;
-  background: #fff;
-  border-radius: 8px;
-  margin-bottom: 16px;
+  padding: 0 16px;
 }
 
 .table-card {

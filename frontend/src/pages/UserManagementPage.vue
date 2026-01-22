@@ -90,7 +90,7 @@
           :data-source="paginatedUsers"
           :pagination="false"
           :row-key="(record) => record.id"
-          :scroll="{ x: 1200 }"
+          :scroll="{ x: 1200, y: 'calc(100vh - 450px)' }"
         >
           <!-- 姓名 -->
           <template #bodyCell="{ column, record }">
@@ -466,7 +466,7 @@ onMounted(() => {
 
 <style scoped>
 .user-management-page {
-  padding: 24px;
+  padding: 0 16px;
   /* background-color: #f0f2f5; */
 }
 

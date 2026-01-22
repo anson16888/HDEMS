@@ -64,20 +64,18 @@
 
       <!-- Roles -->
       <a-form-item label="角色" name="roles">
-        <a-checkbox-group v-model:value="formData.roles">
-          <a-checkbox :value="'SYSTEM_ADMIN'">系统管理员</a-checkbox>
-          <a-checkbox :value="'SCHEDULE_ADMIN'">值班管理员</a-checkbox>
-          <a-checkbox :value="'MATERIAL_ADMIN'">物资管理员</a-checkbox>
-        </a-checkbox-group>
+        <a-checkbox-group
+          v-model:value="formData.roles"
+          :options="roleOptions"
+        />
       </a-form-item>
 
       <!-- Status (edit mode only) -->
       <a-form-item v-if="mode === 'edit'" label="状态" name="status">
-        <a-radio-group v-model:value="formData.status">
-          <a-radio :value="1">正常</a-radio>
-          <a-radio :value="2">停用</a-radio>
-          <a-radio :value="3">锁定</a-radio>
-        </a-radio-group>
+        <a-radio-group
+          v-model:value="formData.status"
+          :options="statusOptions"
+        />
       </a-form-item>
     </a-form>
   </a-modal>
@@ -118,6 +116,20 @@ const formData = reactive({
 })
 
 const isSubmitting = ref(false)
+
+// 角色选项
+const roleOptions = [
+  { label: '系统管理员', value: 'SYSTEM_ADMIN' },
+  { label: '值班管理员', value: 'SCHEDULE_ADMIN' },
+  { label: '物资管理员', value: 'MATERIAL_ADMIN' }
+]
+
+// 状态选项
+const statusOptions = [
+  { label: '正常', value: 1 },
+  { label: '停用', value: 2 },
+  { label: '锁定', value: 3 }
+]
 
 // Validation rules
 const rules = computed(() => ({

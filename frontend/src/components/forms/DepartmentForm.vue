@@ -1,63 +1,60 @@
 <template>
   <div class="department-form">
     <h3>{{ department ? '编辑科室信息' : '新增科室' }}</h3>
-    <Form
+    <a-form
       :model="formData"
       :rules="rules"
       ref="formRef"
       :label-col="{ span: 6 }"
       :wrapper-col="{ span: 14 }"
     >
-      <FormItem label="科室编码" name="departmentCode">
-        <Input
+      <a-form-item label="科室编码" name="departmentCode">
+        <a-input
           v-model:value="formData.departmentCode"
           placeholder="请输入科室编码"
           :disabled="!!department"
         />
-      </FormItem>
+      </a-form-item>
 
-      <FormItem label="科室名称" name="departmentName">
-        <Input
+      <a-form-item label="科室名称" name="departmentName">
+        <a-input
           v-model:value="formData.departmentName"
           placeholder="请输入科室名称"
         />
-      </FormItem>
+      </a-form-item>
 
-      <FormItem label="科室类型" name="departmentType">
-        <Select
+      <a-form-item label="科室类型" name="departmentType">
+        <a-select
           v-model:value="formData.departmentType"
           placeholder="请选择科室类型"
-        >
-          <SelectOption value="clinical">临床科室</SelectOption>
-          <SelectOption value="medical_tech">医技科室</SelectOption>
-          <SelectOption value="administrative">行政科室</SelectOption>
-        </Select>
-      </FormItem>
+          :options="departmentTypeOptions"
+        />
+      </a-form-item>
 
-      <FormItem label="排序号" name="sortOrder">
-        <InputNumber
+      <a-form-item label="排序号" name="sortOrder">
+        <a-input-number
           v-model:value="formData.sortOrder"
           :min="0"
           :max="9999"
           style="width: 100%"
         />
-      </FormItem>
+      </a-form-item>
 
-      <FormItem :wrapper-col="{ span: 14, offset: 6 }">
-        <Space>
-          <Button type="primary" @click="handleSubmit" :loading="submitting">
+      <a-form-item :wrapper-col="{ span: 14, offset: 6 }">
+        <a-space>
+          <a-button type="primary" @click="handleSubmit" :loading="submitting">
             {{ department ? '更新' : '创建' }}
-          </Button>
-          <Button @click="handleCancel">取消</Button>
-        </Space>
-      </FormItem>
-    </Form>
+          </a-button>
+          <a-button @click="handleCancel">取消</a-button>
+        </a-space>
+      </a-form-item>
+    </a-form>
   </div>
 </template>
 
 <script setup>
 import { ref, reactive, watch } from 'vue'
-import { message, Form, FormItem, Input, InputNumber, Select, SelectOption, Button, Space } from 'ant-design-vue'
+import { message } from 'ant-design-vue'
 
 const props = defineProps({
   department: {
@@ -77,6 +74,13 @@ const formData = reactive({
   departmentType: 'clinical',
   sortOrder: 0
 })
+
+// 科室类型选项
+const departmentTypeOptions = [
+  { label: '临床科室', value: 'clinical' },
+  { label: '医技科室', value: 'medical_tech' },
+  { label: '行政科室', value: 'administrative' }
+]
 
 const rules = {
   departmentCode: [

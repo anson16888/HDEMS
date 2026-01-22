@@ -1,15 +1,12 @@
 <template>
   <div class="department-management-page">
     <!-- Page Header -->
-    <a-page-header
-      title="科室信息管理"
-      sub-title="维护医院科室基本信息,包括科室编码、名称、类型等"
-    />
+    <a-page-header title="科室信息管理" sub-title="维护医院科室基本信息,包括科室编码、名称、类型等" />
 
     <!-- Search and Action Card -->
-    <a-card v-if="!showForm" class="search-card" :bordered="false">
+    <a-card class="search-card" :bordered="false">
       <a-space>
-        <a-button v-if="!showForm" type="primary" @click="toggleForm">
+        <a-button type="primary" @click="openCreateModal">
           <template #icon><PlusOutlined /></template>
           新增科室
         </a-button>
@@ -17,7 +14,7 @@
     </a-card>
 
     <!-- Department Table -->
-    <a-card v-if="!showForm" :bordered="false" class="table-card">
+    <a-card :bordered="false" class="table-card">
       <Table
         :columns="columns"
         :data-source="departments"
@@ -34,7 +31,7 @@
           </template>
           <template v-else-if="column.key === 'action'">
             <Space>
-              <Button type="link" size="small" @click="handleEdit(record)">
+              <Button type="link" size="small" @click="openEditModal(record)">
                 编辑
               </Button>
               <Popconfirm
@@ -51,27 +48,27 @@
       </Table>
     </a-card>
 
-    <!-- Department Form Card -->
-    <a-card v-else :bordered="false" class="form-card">
-      <div class="form-header">
-        <a-button @click="handleCancel">
-          <template #icon><ArrowLeftOutlined /></template>
-          返回列表
-        </a-button>
-      </div>
+    <!-- Department Form Modal -->
+    <a-modal
+      v-model:open="modalVisible"
+      :title="editingDepartment ? '编辑科室信息' : '新增科室'"
+      :width="600"
+      :footer="null"
+      @cancel="closeModal"
+    >
       <DepartmentForm
         :department="editingDepartment"
         @submit="handleSubmit"
-        @cancel="handleCancel"
+        @cancel="closeModal"
       />
-    </a-card>
+    </a-modal>
   </div>
 </template>
 
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
 import { message } from 'ant-design-vue'
-import { PlusOutlined, ArrowLeftOutlined } from '@ant-design/icons-vue'
+import { PlusOutlined } from '@ant-design/icons-vue'
 import { Table, Button, Space, Popconfirm, Tag } from 'ant-design-vue'
 import DepartmentForm from '../components/forms/DepartmentForm.vue'
 import {
@@ -81,7 +78,7 @@ import {
   deleteDepartment
 } from '../api/basicData.api.js'
 
-const showForm = ref(false)
+const modalVisible = ref(false)
 const loading = ref(false)
 const departments = ref([])
 const editingDepartment = ref(null)
@@ -166,16 +163,19 @@ function getDepartmentTypeColor(type) {
   return colors[type] || 'default'
 }
 
-function toggleForm() {
-  showForm.value = !showForm.value
-  if (!showForm.value) {
-    editingDepartment.value = null
-  }
+function openCreateModal() {
+  editingDepartment.value = null
+  modalVisible.value = true
 }
 
-function handleEdit(record) {
+function openEditModal(record) {
   editingDepartment.value = { ...record }
-  showForm.value = true
+  modalVisible.value = true
+}
+
+function closeModal() {
+  modalVisible.value = false
+  editingDepartment.value = null
 }
 
 async function handleDelete(id) {
@@ -201,18 +201,12 @@ async function handleSubmit(formData) {
 
     if (response.success) {
       message.success(editingDepartment.value ? '更新成功' : '创建成功')
-      showForm.value = false
-      editingDepartment.value = null
+      closeModal()
       await loadDepartments()
     }
   } catch (error) {
     message.error('操作失败: ' + error.message)
   }
-}
-
-function handleCancel() {
-  showForm.value = false
-  editingDepartment.value = null
 }
 
 onMounted(() => {
@@ -222,15 +216,7 @@ onMounted(() => {
 
 <style scoped>
 .department-management-page {
-  padding: 16px;
-  padding-bottom: 0;
-}
-
-.department-management-page :deep(.ant-page-header) {
-  padding: 16px 24px;
-  background: #fff;
-  border-radius: 8px;
-  margin-bottom: 16px;
+  padding: 0 16px;
 }
 
 .search-card {
@@ -239,13 +225,5 @@ onMounted(() => {
 
 .table-card {
   margin-bottom: 0;
-}
-
-.form-card {
-  margin-bottom: 16px;
-}
-
-.form-header {
-  margin-bottom: 16px;
 }
 </style>

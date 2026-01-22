@@ -1,10 +1,7 @@
 <template>
   <div class="person-management-page">
     <!-- Page Header -->
-    <a-page-header
-      title="人员信息管理"
-      sub-title="维护医院人员基本信息,包括姓名、科室、职级、职称等"
-    />
+    <a-page-header title="人员信息管理" sub-title="维护医院人员基本信息,包括姓名、科室、职级、职称等" />
 
     <!-- Search Card -->
     <a-card class="search-card" :bordered="false">
@@ -32,6 +29,10 @@
                   查询
                 </a-button>
                 <a-button @click="handleReset">重置</a-button>
+                <a-button type="primary" @click="openCreateModal">
+                  <template #icon><PlusOutlined /></template>
+                  新增人员
+                </a-button>
               </a-space>
             </a-form-item>
           </a-col>
@@ -58,31 +59,54 @@
             <Tag color="green">{{ record.departmentName || '-' }}</Tag>
           </template>
           <template v-else-if="column.key === 'action'">
-            <Popconfirm
-              title="确定要删除该人员吗?"
-              ok-text="确定"
-              cancel-text="取消"
-              @confirm="handleDelete(record.id)"
-            >
-              <Button type="link" size="small" danger>删除</Button>
-            </Popconfirm>
+            <Space>
+              <Button type="link" size="small" @click="openEditModal(record)">
+                编辑
+              </Button>
+              <Popconfirm
+                title="确定要删除该人员吗?"
+                ok-text="确定"
+                cancel-text="取消"
+                @confirm="handleDelete(record.id)"
+              >
+                <Button type="link" size="small" danger>删除</Button>
+              </Popconfirm>
+            </Space>
           </template>
         </template>
       </Table>
     </a-card>
+
+    <!-- Person Form Modal -->
+    <a-modal
+      v-model:open="modalVisible"
+      :title="editingPerson ? '编辑人员信息' : '新增人员'"
+      :width="700"
+      :footer="null"
+      @cancel="closeModal"
+    >
+      <PersonForm
+        :person="editingPerson"
+        @submit="handleSubmit"
+        @cancel="closeModal"
+      />
+    </a-modal>
   </div>
 </template>
 
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
 import { message } from 'ant-design-vue'
-import { SearchOutlined } from '@ant-design/icons-vue'
-import { Table, Button, Space, Popconfirm, Tag, Input } from 'ant-design-vue'
-import { getPersons, deletePerson } from '../api/basicData.api.js'
+import { SearchOutlined, PlusOutlined } from '@ant-design/icons-vue'
+import { Table, Button, Space, Popconfirm, Tag } from 'ant-design-vue'
+import PersonForm from '../components/forms/PersonForm.vue'
+import { getPersons, deletePerson, createPerson, updatePerson } from '../api/basicData.api.js'
 
 const loading = ref(false)
 const persons = ref([])
 const searchKeyword = ref('')
+const modalVisible = ref(false)
+const editingPerson = ref(null)
 
 const pagination = reactive({
   current: 1,
@@ -138,7 +162,7 @@ const columns = [
   {
     title: '操作',
     key: 'action',
-    width: 100,
+    width: 150,
     align: 'center',
     fixed: 'right'
   }
@@ -193,6 +217,40 @@ async function handleDelete(id) {
   }
 }
 
+function openCreateModal() {
+  editingPerson.value = null
+  modalVisible.value = true
+}
+
+function openEditModal(record) {
+  editingPerson.value = { ...record }
+  modalVisible.value = true
+}
+
+function closeModal() {
+  modalVisible.value = false
+  editingPerson.value = null
+}
+
+async function handleSubmit(formData) {
+  try {
+    let response
+    if (editingPerson.value) {
+      response = await updatePerson(editingPerson.value.id, formData)
+    } else {
+      response = await createPerson(formData)
+    }
+
+    if (response.success) {
+      message.success(editingPerson.value ? '更新成功' : '创建成功')
+      closeModal()
+      await loadPersons()
+    }
+  } catch (error) {
+    message.error('操作失败: ' + error.message)
+  }
+}
+
 onMounted(() => {
   loadPersons()
 })
@@ -200,15 +258,7 @@ onMounted(() => {
 
 <style scoped>
 .person-management-page {
-  padding: 16px;
-  padding-bottom: 0;
-}
-
-.person-management-page :deep(.ant-page-header) {
-  padding: 16px 24px;
-  background: #fff;
-  border-radius: 8px;
-  margin-bottom: 16px;
+  padding: 0 16px;
 }
 
 .search-card {

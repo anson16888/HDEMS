@@ -11,6 +11,7 @@ import ShiftManagementPage from '../pages/ShiftManagementPage.vue'
 import PersonRankManagementPage from '../pages/PersonRankManagementPage.vue'
 import PersonTitleManagementPage from '../pages/PersonTitleManagementPage.vue'
 import PersonManagementPage from '../pages/PersonManagementPage.vue'
+import MaterialTypeManagementPage from '../pages/MaterialTypeManagementPage.vue'
 import LoginPage from '../pages/LoginPage.vue'
 import NotFoundPage from '../pages/NotFoundPage.vue'
 
@@ -84,6 +85,12 @@ const routes = [
     path: '/system/persons',
     name: 'system-persons',
     component: PersonManagementPage,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/system/material-types',
+    name: 'system-material-types',
+    component: MaterialTypeManagementPage,
     meta: { requiresAuth: true }
   },
   {

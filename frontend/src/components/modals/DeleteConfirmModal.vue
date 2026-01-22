@@ -129,7 +129,7 @@ const handleDelete = async () => {
 const getRoleDisplayName = (role) => {
   const roleNames = {
     SYSTEM_ADMIN: '系统管理员',
-    DUTY_ADMIN: '值班管理员',
+    SCHEDULE_ADMIN: '值班管理员',
     MATERIAL_ADMIN: '物资管理员'
   }
   return roleNames[role] || role
@@ -138,7 +138,7 @@ const getRoleDisplayName = (role) => {
 const getRoleColor = (role) => {
   const colors = {
     SYSTEM_ADMIN: 'blue',
-    DUTY_ADMIN: 'green',
+    SCHEDULE_ADMIN: 'green',
     MATERIAL_ADMIN: 'orange'
   }
   return colors[role] || 'default'

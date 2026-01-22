@@ -1,10 +1,7 @@
 <template>
   <div class="hospital-management-page">
     <!-- Page Header -->
-    <a-page-header
-      title="医院信息"
-      sub-title="编辑当前医院的基本信息"
-    />
+    <a-page-header title="医院信息" sub-title="编辑当前医院的基本信息" />
 
     <!-- Hospital Edit Form -->
     <a-card :bordered="false" class="form-card">
@@ -23,10 +20,10 @@
             />
           </FormItem>
 
-          <FormItem label="值班电话" name="dutyPhone">
+          <FormItem label="医院电话" name="hospitalPhone">
             <Input
-              v-model:value="formData.dutyPhone"
-              placeholder="请输入值班电话"
+              v-model:value="formData.hospitalPhone"
+              placeholder="请输入医院电话"
             />
           </FormItem>
 
@@ -46,35 +43,31 @@
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
 import { message, Form, FormItem, Input, Button, Space } from 'ant-design-vue'
-import { getHospitals, updateHospital } from '../api/basicData.api.js'
+import { getHospitalConfig, updateHospitalConfig } from '../api/hospitalConfig.api.js'
 
 const formRef = ref()
 const submitting = ref(false)
-const hospitalId = ref(null)
-
 const formData = reactive({
   hospitalName: '',
-  dutyPhone: ''
+  hospitalPhone: ''
 })
 
 const rules = {
   hospitalName: [
     { required: true, message: '请输入医院名称', trigger: 'blur' }
   ],
-  dutyPhone: [
-    { required: true, message: '请输入值班电话', trigger: 'blur' },
-    { pattern: /^1[3-9]\d{9}$/, message: '请输入正确的手机号码', trigger: 'blur' }
+  hospitalPhone: [
+    { required: true, message: '请输入医院电话', trigger: 'blur' },
+    { pattern: /^[0-9\-+()\s]{6,20}$/, message: '请输入正确的联系电话', trigger: 'blur' }
   ]
 }
 
 async function loadHospitalInfo() {
   try {
-    const response = await getHospitals()
-    if (response.success && response.data && response.data.length > 0) {
-      const hospital = response.data[0]
-      hospitalId.value = hospital.id
-      formData.hospitalName = hospital.hospitalName || ''
-      formData.dutyPhone = hospital.dutyPhone || ''
+    const response = await getHospitalConfig()
+    if (response.success && response.data) {
+      formData.hospitalName = response.data.hospitalName || ''
+      formData.hospitalPhone = response.data.hospitalPhone || ''
     }
   } catch (error) {
     message.error('加载医院信息失败: ' + error.message)
@@ -86,9 +79,9 @@ async function handleSubmit() {
     await formRef.value.validate()
     submitting.value = true
 
-    const response = await updateHospital(hospitalId.value, {
+    const response = await updateHospitalConfig({
       hospitalName: formData.hospitalName,
-      dutyPhone: formData.dutyPhone
+      hospitalPhone: formData.hospitalPhone
     })
 
     if (response.success) {
@@ -113,15 +106,7 @@ onMounted(() => {
 
 <style scoped>
 .hospital-management-page {
-  padding: 16px;
-  padding-bottom: 0;
-}
-
-.hospital-management-page :deep(.ant-page-header) {
-  padding: 16px 24px;
-  background: #fff;
-  border-radius: 8px;
-  margin-bottom: 16px;
+  padding: 0 16px;
 }
 
 .form-card {

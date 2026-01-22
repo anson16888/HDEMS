@@ -22,11 +22,11 @@ const MATERIAL_TYPE_MAP = {
  * 物资状态映射 - 前端使用字符串，后端使用数字
  */
 const MATERIAL_STATUS_MAP = {
-  1: 'NORMAL',           // 正常
-  2: 'LOW',              // 库存偏低
-  3: 'OUT',              // 已耗尽
-  4: 'EXPIRED',          // 已过期
-  5: 'EXPIRING_SOON'     // 即将过期
+  0: 'NORMAL',           // 正常
+  1: 'LOW',              // 库存偏低
+  2: 'OUT',              // 已耗尽
+  3: 'EXPIRED',          // 已过期
+  4: 'EXPIRING_SOON'     // 即将过期
 }
 
 /**
@@ -41,11 +41,11 @@ const MATERIAL_TYPE_REVERSE_MAP = {
 }
 
 const MATERIAL_STATUS_REVERSE_MAP = {
-  'NORMAL': 1,
-  'LOW': 2,
-  'OUT': 3,
-  'EXPIRED': 4,
-  'EXPIRING_SOON': 5
+  'NORMAL': 0,
+  'LOW': 1,
+  'OUT': 2,
+  'EXPIRED': 3,
+  'EXPIRING_SOON': 4
 }
 
 /**
@@ -131,7 +131,7 @@ class MaterialApi {
    * @param {Object} params - 查询参数
    * @param {string} params.keyword - 关键词搜索
    * @param {number} params.materialType - 物资类型 (1-5)
-   * @param {number} params.status - 物资状态 (1-5)
+   * @param {number} params.status - 物资状态 (0-4)
    * @param {string} params.hospitalId - 医院ID
    * @param {number} params.page - 页码
    * @param {number} params.pageSize - 每页条数
@@ -315,18 +315,18 @@ class MaterialApi {
    */
   getStatusDisplayName(status) {
     const statusMap = {
-      1: '正常',
-      2: '库存偏低',
-      3: '已耗尽',
-      4: '已过期',
-      5: '即将过期',
+      0: '正常',
+      1: '库存偏低',
+      2: '已耗尽',
+      3: '已过期',
+      4: '即将过期',
       'NORMAL': '正常',
       'LOW': '库存偏低',
       'OUT': '已耗尽',
       'EXPIRED': '已过期',
       'EXPIRING_SOON': '即将过期'
     }
-    return statusMap[status] || status
+    return statusMap[status] ?? '未知'
   }
 }
 

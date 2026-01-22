@@ -110,7 +110,8 @@ const iconMap = {
   'fa-solid fa-clock': 'ClockCircleOutlined',
   'fa-solid fa-ranking-star': 'TrophyOutlined',
   'fa-solid fa-award': 'StarOutlined',
-  'fa-solid fa-user-tag': 'TagOutlined'
+  'fa-solid fa-user-tag': 'TagOutlined',
+  'fa-solid fa-tags': 'TagsOutlined'
 }
 
 // 获取图标组件
@@ -166,6 +167,7 @@ const menuItems = computed(() => {
       getItem('班次信息', '/system/shifts', getIcon('fa-solid fa-clock')),
       getItem('人员职级', '/system/person-ranks', getIcon('fa-solid fa-ranking-star')),
       getItem('人员职称', '/system/person-titles', getIcon('fa-solid fa-award')),
+      getItem('物资类型', '/system/material-types', getIcon('fa-solid fa-tags')),
       getItem('人员信息', '/system/persons', getIcon('fa-solid fa-user-tag'))
     ])
   )

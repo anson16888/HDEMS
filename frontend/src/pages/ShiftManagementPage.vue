@@ -1,15 +1,12 @@
 <template>
   <div class="shift-management-page">
     <!-- Page Header -->
-    <a-page-header
-      title="班次信息管理"
-      sub-title="维护值班班次基本信息,包括班次编码、名称、时间段等"
-    />
+    <a-page-header title="班次信息管理" sub-title="维护值班班次基本信息,包括班次编码、名称、时间段等" />
 
     <!-- Search and Action Card -->
-    <a-card v-if="!showForm" class="search-card" :bordered="false">
+    <a-card class="search-card" :bordered="false">
       <a-space>
-        <a-button v-if="!showForm" type="primary" @click="toggleForm">
+        <a-button type="primary" @click="openCreateModal">
           <template #icon><PlusOutlined /></template>
           新增班次
         </a-button>
@@ -17,13 +14,13 @@
     </a-card>
 
     <!-- Shift Table -->
-    <a-card v-if="!showForm" :bordered="false" class="table-card">
+    <a-card :bordered="false" class="table-card">
       <Table
         :columns="columns"
         :data-source="shifts"
         :loading="loading"
         :pagination="pagination"
-        :scroll="{ y: 'calc(100vh - 450px)' }"
+        :scroll="{ y: 'calc(100vh - 460px)' }"
         row-key="id"
       >
         <template #bodyCell="{ column, record }">
@@ -32,7 +29,7 @@
           </template>
           <template v-else-if="column.key === 'action'">
             <Space>
-              <Button type="link" size="small" @click="handleEdit(record)">
+              <Button type="link" size="small" @click="openEditModal(record)">
                 编辑
               </Button>
               <Popconfirm
@@ -49,27 +46,27 @@
       </Table>
     </a-card>
 
-    <!-- Shift Form Card -->
-    <a-card v-else :bordered="false" class="form-card">
-      <div class="form-header">
-        <a-button @click="handleCancel">
-          <template #icon><ArrowLeftOutlined /></template>
-          返回列表
-        </a-button>
-      </div>
+    <!-- Shift Form Modal -->
+    <a-modal
+      v-model:open="modalVisible"
+      :title="editingShift ? '编辑班次信息' : '新增班次'"
+      :width="600"
+      :footer="null"
+      @cancel="closeModal"
+    >
       <ShiftForm
         :shift="editingShift"
         @submit="handleSubmit"
-        @cancel="handleCancel"
+        @cancel="closeModal"
       />
-    </a-card>
+    </a-modal>
   </div>
 </template>
 
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
 import { message } from 'ant-design-vue'
-import { PlusOutlined, ArrowLeftOutlined } from '@ant-design/icons-vue'
+import { PlusOutlined } from '@ant-design/icons-vue'
 import { Table, Button, Space, Popconfirm, Tag } from 'ant-design-vue'
 import ShiftForm from '../components/forms/ShiftForm.vue'
 import {
@@ -79,7 +76,7 @@ import {
   deleteShift
 } from '../api/basicData.api.js'
 
-const showForm = ref(false)
+const modalVisible = ref(false)
 const loading = ref(false)
 const shifts = ref([])
 const editingShift = ref(null)
@@ -138,16 +135,19 @@ async function loadShifts() {
   }
 }
 
-function toggleForm() {
-  showForm.value = !showForm.value
-  if (!showForm.value) {
-    editingShift.value = null
-  }
+function openCreateModal() {
+  editingShift.value = null
+  modalVisible.value = true
 }
 
-function handleEdit(record) {
+function openEditModal(record) {
   editingShift.value = { ...record }
-  showForm.value = true
+  modalVisible.value = true
+}
+
+function closeModal() {
+  modalVisible.value = false
+  editingShift.value = null
 }
 
 async function handleDelete(id) {
@@ -173,18 +173,12 @@ async function handleSubmit(formData) {
 
     if (response.success) {
       message.success(editingShift.value ? '更新成功' : '创建成功')
-      showForm.value = false
-      editingShift.value = null
+      closeModal()
       await loadShifts()
     }
   } catch (error) {
     message.error('操作失败: ' + error.message)
   }
-}
-
-function handleCancel() {
-  showForm.value = false
-  editingShift.value = null
 }
 
 onMounted(() => {
@@ -194,15 +188,7 @@ onMounted(() => {
 
 <style scoped>
 .shift-management-page {
-  padding: 16px;
-  padding-bottom: 0;
-}
-
-.shift-management-page :deep(.ant-page-header) {
-  padding: 16px 24px;
-  background: #fff;
-  border-radius: 8px;
-  margin-bottom: 16px;
+  padding: 0 16px;
 }
 
 .search-card {
@@ -211,13 +197,5 @@ onMounted(() => {
 
 .table-card {
   margin-bottom: 0;
-}
-
-.form-card {
-  margin-bottom: 16px;
-}
-
-.form-header {
-  margin-bottom: 16px;
 }
 </style>

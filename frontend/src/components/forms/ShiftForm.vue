@@ -1,60 +1,60 @@
 <template>
   <div class="shift-form">
     <h3>{{ shift ? '编辑班次信息' : '新增班次' }}</h3>
-    <Form
+    <a-form
       :model="formData"
       :rules="rules"
       ref="formRef"
       :label-col="{ span: 6 }"
       :wrapper-col="{ span: 14 }"
     >
-      <FormItem label="班次编码" name="shiftCode">
-        <Input
+      <a-form-item label="班次编码" name="shiftCode">
+        <a-input
           v-model:value="formData.shiftCode"
           placeholder="请输入班次编码"
           :disabled="!!shift"
         />
-      </FormItem>
+      </a-form-item>
 
-      <FormItem label="班次名称" name="shiftName">
-        <Input
+      <a-form-item label="班次名称" name="shiftName">
+        <a-input
           v-model:value="formData.shiftName"
           placeholder="请输入班次名称"
         />
-      </FormItem>
+      </a-form-item>
 
-      <FormItem label="时间段" name="timeRange">
-        <Input
+      <a-form-item label="时间段" name="timeRange">
+        <a-input
           v-model:value="formData.timeRange"
           placeholder="例如: 08:00-12:00"
         />
         <div class="form-tip">格式示例: 08:00-12:00 或 全天</div>
-      </FormItem>
+      </a-form-item>
 
-      <FormItem label="排序号" name="sortOrder">
-        <InputNumber
+      <a-form-item label="排序号" name="sortOrder">
+        <a-input-number
           v-model:value="formData.sortOrder"
           :min="0"
           :max="9999"
           style="width: 100%"
         />
-      </FormItem>
+      </a-form-item>
 
-      <FormItem :wrapper-col="{ span: 14, offset: 6 }">
-        <Space>
-          <Button type="primary" @click="handleSubmit" :loading="submitting">
+      <a-form-item :wrapper-col="{ span: 14, offset: 6 }">
+        <a-space>
+          <a-button type="primary" @click="handleSubmit" :loading="submitting">
             {{ shift ? '更新' : '创建' }}
-          </Button>
-          <Button @click="handleCancel">取消</Button>
-        </Space>
-      </FormItem>
-    </Form>
+          </a-button>
+          <a-button @click="handleCancel">取消</a-button>
+        </a-space>
+      </a-form-item>
+    </a-form>
   </div>
 </template>
 
 <script setup>
 import { ref, reactive, watch } from 'vue'
-import { message, Form, FormItem, Input, InputNumber, Button, Space } from 'ant-design-vue'
+import { message } from 'ant-design-vue'
 
 const props = defineProps({
   shift: {

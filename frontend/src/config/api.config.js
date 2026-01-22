@@ -37,6 +37,16 @@ export const API_ENDPOINTS = {
     STATISTICS: '/Material/statistics'
   },
 
+  // Material Type endpoints
+  MATERIAL_TYPE: {
+    LIST: '/MaterialType',
+    DETAIL: (id) => `/MaterialType/${id}`,
+    BY_CODE: (code) => `/MaterialType/code/${code}`,
+    ENABLED: '/MaterialType/enabled',
+    BATCH_DELETE: '/MaterialType/batch',
+    TOGGLE: (id) => `/MaterialType/${id}/toggle`
+  },
+
   // Schedule endpoints
   SCHEDULE: {
     LIST: '/Schedule',
@@ -68,6 +78,12 @@ export const API_ENDPOINTS = {
     PERSONS: '/BasicData/persons',
     PERSON_DETAIL: (id) => `/BasicData/persons/${id}`,
     PERSONS_BY_HOSPITAL: (hospitalId) => `/BasicData/persons/by-hospital/${hospitalId}`
+  },
+
+  // Hospital config endpoints
+  HOSPITAL_CONFIG: {
+    DETAIL: '/HospitalConfig',
+    UPDATE: '/HospitalConfig'
   },
 
   // Import/Export endpoints
@@ -117,11 +133,11 @@ export const MATERIAL_TYPE = {
  * Matches backend MaterialStatus enum
  */
 export const MATERIAL_STATUS = {
-  NORMAL: 1,           // 正常
-  LOW: 2,              // 库存偏低
-  OUT: 3,              // 已耗尽
-  EXPIRED: 4,          // 已过期
-  EXPIRING_SOON: 5     // 即将过期
+  NORMAL: 0,           // 正常
+  LOW: 1,              // 库存偏低
+  OUT: 2,              // 已耗尽
+  EXPIRED: 3,          // 已过期
+  EXPIRING_SOON: 4     // 即将过期
 }
 
 /**

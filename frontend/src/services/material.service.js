@@ -61,11 +61,11 @@ export class MaterialService {
     // 转换状态字符串为数字
     if (params.status) {
       const statusMap = {
-        'NORMAL': 1,
-        'LOW': 2,
-        'OUT': 3,
-        'EXPIRED': 4,
-        'EXPIRING_SOON': 5
+        'NORMAL': 0,
+        'LOW': 1,
+        'OUT': 2,
+        'EXPIRED': 3,
+        'EXPIRING_SOON': 4
       }
       queryParams.status = statusMap[params.status]
     }
@@ -170,11 +170,11 @@ export class MaterialService {
     // 转换状态字符串为数字
     if (filters.status) {
       const statusMap = {
-        'NORMAL': 1,
-        'LOW': 2,
-        'OUT': 3,
-        'EXPIRED': 4,
-        'EXPIRING_SOON': 5
+        'NORMAL': 0,
+        'LOW': 1,
+        'OUT': 2,
+        'EXPIRED': 3,
+        'EXPIRING_SOON': 4
       }
       exportFilters.status = statusMap[filters.status]
     }

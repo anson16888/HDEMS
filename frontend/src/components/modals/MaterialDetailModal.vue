@@ -18,7 +18,7 @@
 
       <a-descriptions-item label="物资类型">
         <a-tag :color="getTypeColor(material.material_type)">
-          {{ getTypeLabel(material.material_type) }}
+          {{ material.materialTypeName || getTypeLabel(material.material_type) }}
         </a-tag>
       </a-descriptions-item>
 
@@ -161,6 +161,11 @@ function getTypeLabel(type) {
  */
 function getStatusColor(status) {
   const colors = {
+    0: 'green',
+    1: 'orange',
+    2: 'red',
+    3: 'default',
+    4: 'orange',
     NORMAL: 'green',
     LOW: 'orange',
     OUT: 'red',
@@ -175,13 +180,18 @@ function getStatusColor(status) {
  */
 function getStatusLabel(status) {
   const labels = {
+    0: '正常',
+    1: '库存偏低',
+    2: '已耗尽',
+    3: '已过期',
+    4: '即将过期',
     NORMAL: '正常',
     LOW: '库存偏低',
     OUT: '已耗尽',
     EXPIRED: '已过期',
     EXPIRING_SOON: '即将过期'
   }
-  return labels[status] || status
+  return labels[status] ?? '未知'
 }
 
 /**

@@ -1,87 +1,87 @@
 <template>
   <div class="hospital-form">
     <h3>{{ hospital ? '编辑医院信息' : '新增医院' }}</h3>
-    <Form
+    <a-form
       :model="formData"
       :rules="rules"
       ref="formRef"
       :label-col="{ span: 6 }"
       :wrapper-col="{ span: 14 }"
     >
-      <FormItem label="医院编码" name="hospitalCode">
-        <Input
+      <a-form-item label="医院编码" name="hospitalCode">
+        <a-input
           v-model:value="formData.hospitalCode"
           placeholder="请输入医院编码"
           :disabled="!!hospital"
         />
-      </FormItem>
+      </a-form-item>
 
-      <FormItem label="医院名称" name="hospitalName">
-        <Input
+      <a-form-item label="医院名称" name="hospitalName">
+        <a-input
           v-model:value="formData.hospitalName"
           placeholder="请输入医院名称"
         />
-      </FormItem>
+      </a-form-item>
 
-      <FormItem label="简称" name="shortName">
-        <Input
+      <a-form-item label="简称" name="shortName">
+        <a-input
           v-model:value="formData.shortName"
           placeholder="请输入简称"
         />
-      </FormItem>
+      </a-form-item>
 
-      <FormItem label="地址" name="address">
-        <Input
+      <a-form-item label="地址" name="address">
+        <a-input
           v-model:value="formData.address"
           placeholder="请输入医院地址"
         />
-      </FormItem>
+      </a-form-item>
 
-      <FormItem label="联系人" name="contactPerson">
-        <Input
+      <a-form-item label="联系人" name="contactPerson">
+        <a-input
           v-model:value="formData.contactPerson"
           placeholder="请输入联系人姓名"
         />
-      </FormItem>
+      </a-form-item>
 
-      <FormItem label="联系电话" name="contactPhone">
-        <Input
+      <a-form-item label="联系电话" name="contactPhone">
+        <a-input
           v-model:value="formData.contactPhone"
           placeholder="请输入联系电话"
         />
-      </FormItem>
+      </a-form-item>
 
-      <FormItem label="排序号" name="sortOrder">
-        <InputNumber
+      <a-form-item label="排序号" name="sortOrder">
+        <a-input-number
           v-model:value="formData.sortOrder"
           :min="0"
           :max="9999"
           style="width: 100%"
         />
-      </FormItem>
+      </a-form-item>
 
-      <FormItem label="状态" name="status">
-        <RadioGroup v-model:value="formData.status">
-          <Radio :value="1">启用</Radio>
-          <Radio :value="0">停用</Radio>
-        </RadioGroup>
-      </FormItem>
+      <a-form-item label="状态" name="status">
+        <a-radio-group
+          v-model:value="formData.status"
+          :options="statusOptions"
+        />
+      </a-form-item>
 
-      <FormItem :wrapper-col="{ span: 14, offset: 6 }">
-        <Space>
-          <Button type="primary" @click="handleSubmit" :loading="submitting">
+      <a-form-item :wrapper-col="{ span: 14, offset: 6 }">
+        <a-space>
+          <a-button type="primary" @click="handleSubmit" :loading="submitting">
             {{ hospital ? '更新' : '创建' }}
-          </Button>
-          <Button @click="handleCancel">取消</Button>
-        </Space>
-      </FormItem>
-    </Form>
+          </a-button>
+          <a-button @click="handleCancel">取消</a-button>
+        </a-space>
+      </a-form-item>
+    </a-form>
   </div>
 </template>
 
 <script setup>
 import { ref, reactive, watch } from 'vue'
-import { message, Form, FormItem, Input, InputNumber, RadioGroup, Radio, Button, Space } from 'ant-design-vue'
+import { message } from 'ant-design-vue'
 
 const props = defineProps({
   hospital: {
@@ -105,6 +105,12 @@ const formData = reactive({
   sortOrder: 0,
   status: 1
 })
+
+// 状态选项
+const statusOptions = [
+  { label: '启用', value: 1 },
+  { label: '停用', value: 0 }
+]
 
 const rules = {
   hospitalCode: [
