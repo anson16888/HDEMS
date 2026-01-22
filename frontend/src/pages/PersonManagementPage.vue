@@ -1,31 +1,52 @@
 <template>
-  <section class="page">
-    <PageHeader
+  <div class="person-management-page">
+    <!-- Page Header -->
+    <a-page-header
       title="人员信息管理"
-      description="维护医院人员基本信息,包括姓名、科室、职级、职称等。"
+      sub-title="维护医院人员基本信息,包括姓名、科室、职级、职称等"
     />
 
-    <div class="card">
-      <!-- 搜索栏 -->
-      <div class="search-bar">
-        <Space>
-          <Input
-            v-model:value="searchKeyword"
-            placeholder="搜索人员姓名或科室"
-            style="width: 300px"
-            @pressEnter="handleSearch"
-          />
-          <Button type="primary" @click="handleSearch">搜索</Button>
-          <Button @click="handleReset">重置</Button>
-        </Space>
-      </div>
+    <!-- Search Card -->
+    <a-card class="search-card" :bordered="false">
+      <a-form layout="inline">
+        <a-row :gutter="16" style="width: 100%">
+          <a-col :span="8">
+            <a-form-item label="关键字">
+              <a-input
+                v-model:value="searchKeyword"
+                placeholder="搜索人员姓名或科室"
+                allow-clear
+                @pressEnter="handleSearch"
+              >
+                <template #prefix>
+                  <SearchOutlined />
+                </template>
+              </a-input>
+            </a-form-item>
+          </a-col>
+          <a-col :span="16">
+            <a-form-item :wrapper-col="{ span: 24 }">
+              <a-space>
+                <a-button type="primary" @click="handleSearch">
+                  <template #icon><SearchOutlined /></template>
+                  查询
+                </a-button>
+                <a-button @click="handleReset">重置</a-button>
+              </a-space>
+            </a-form-item>
+          </a-col>
+        </a-row>
+      </a-form>
+    </a-card>
 
-      <!-- 人员列表 -->
+    <!-- Person Table Card -->
+    <a-card class="table-card" :bordered="false">
       <Table
         :columns="columns"
         :data-source="persons"
         :loading="loading"
         :pagination="pagination"
+        :scroll="{ y: 'calc(100vh - 380px)' }"
         row-key="id"
         @change="handleTableChange"
       >
@@ -48,14 +69,15 @@
           </template>
         </template>
       </Table>
-    </div>
-  </section>
+    </a-card>
+  </div>
 </template>
 
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
-import { message, Table, Button, Space, Popconfirm, Tag, Input } from 'ant-design-vue'
-import PageHeader from '../components/PageHeader.vue'
+import { message } from 'ant-design-vue'
+import { SearchOutlined } from '@ant-design/icons-vue'
+import { Table, Button, Space, Popconfirm, Tag, Input } from 'ant-design-vue'
 import { getPersons, deletePerson } from '../api/basicData.api.js'
 
 const loading = ref(false)
@@ -177,7 +199,23 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.search-bar {
+.person-management-page {
+  padding: 16px;
+  padding-bottom: 0;
+}
+
+.person-management-page :deep(.ant-page-header) {
+  padding: 16px 24px;
+  background: #fff;
+  border-radius: 8px;
   margin-bottom: 16px;
+}
+
+.search-card {
+  margin-bottom: 16px;
+}
+
+.table-card {
+  margin-bottom: 0;
 }
 </style>

@@ -1,20 +1,29 @@
 <template>
-  <section class="page">
-    <PageHeader
+  <div class="shift-management-page">
+    <!-- Page Header -->
+    <a-page-header
       title="班次信息管理"
-      description="维护值班班次基本信息,包括班次编码、名称、时间段等。"
-      :cta-text="showForm ? '返回列表' : '新增班次'"
-      :show-cta="true"
-      @cta-click="toggleForm"
+      sub-title="维护值班班次基本信息,包括班次编码、名称、时间段等"
     />
 
-    <!-- 班次列表 -->
-    <div v-if="!showForm" class="card">
+    <!-- Search and Action Card -->
+    <a-card v-if="!showForm" class="search-card" :bordered="false">
+      <a-space>
+        <a-button v-if="!showForm" type="primary" @click="toggleForm">
+          <template #icon><PlusOutlined /></template>
+          新增班次
+        </a-button>
+      </a-space>
+    </a-card>
+
+    <!-- Shift Table -->
+    <a-card v-if="!showForm" :bordered="false" class="table-card">
       <Table
         :columns="columns"
         :data-source="shifts"
         :loading="loading"
         :pagination="pagination"
+        :scroll="{ y: 'calc(100vh - 450px)' }"
         row-key="id"
       >
         <template #bodyCell="{ column, record }">
@@ -38,23 +47,30 @@
           </template>
         </template>
       </Table>
-    </div>
+    </a-card>
 
-    <!-- 班次表单 -->
-    <div v-else class="card">
+    <!-- Shift Form Card -->
+    <a-card v-else :bordered="false" class="form-card">
+      <div class="form-header">
+        <a-button @click="handleCancel">
+          <template #icon><ArrowLeftOutlined /></template>
+          返回列表
+        </a-button>
+      </div>
       <ShiftForm
         :shift="editingShift"
         @submit="handleSubmit"
         @cancel="handleCancel"
       />
-    </div>
-  </section>
+    </a-card>
+  </div>
 </template>
 
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
-import { message, Table, Button, Space, Popconfirm, Tag } from 'ant-design-vue'
-import PageHeader from '../components/PageHeader.vue'
+import { message } from 'ant-design-vue'
+import { PlusOutlined, ArrowLeftOutlined } from '@ant-design/icons-vue'
+import { Table, Button, Space, Popconfirm, Tag } from 'ant-design-vue'
 import ShiftForm from '../components/forms/ShiftForm.vue'
 import {
   getShifts,
@@ -175,3 +191,33 @@ onMounted(() => {
   loadShifts()
 })
 </script>
+
+<style scoped>
+.shift-management-page {
+  padding: 16px;
+  padding-bottom: 0;
+}
+
+.shift-management-page :deep(.ant-page-header) {
+  padding: 16px 24px;
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.search-card {
+  margin-bottom: 16px;
+}
+
+.table-card {
+  margin-bottom: 0;
+}
+
+.form-card {
+  margin-bottom: 16px;
+}
+
+.form-header {
+  margin-bottom: 16px;
+}
+</style>

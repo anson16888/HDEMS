@@ -1,11 +1,13 @@
 <template>
-  <section class="page">
-    <PageHeader
+  <div class="person-rank-management-page">
+    <!-- Page Header -->
+    <a-page-header
       title="人员职级管理"
-      description="查看人员职级信息,按类别分类展示。"
+      sub-title="查看人员职级信息,按类别分类展示"
     />
 
-    <div class="content-section">
+    <!-- Content Card -->
+    <a-card class="content-card" :bordered="false">
       <Tabs v-model:activeKey="activeCategory" @change="handleCategoryChange">
         <TabPane key="all" tab="全部职级">
           <PersonRankTable :data="allRanks" :loading="loading" />
@@ -20,14 +22,14 @@
           <PersonRankTable :data="administrativeRanks" :loading="loading" />
         </TabPane>
       </Tabs>
-    </div>
-  </section>
+    </a-card>
+  </div>
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { message, Tabs, TabPane } from 'ant-design-vue'
-import PageHeader from '../components/PageHeader.vue'
+import { message } from 'ant-design-vue'
+import { Tabs, TabPane } from 'ant-design-vue'
 import PersonRankTable from '../components/tables/PersonRankTable.vue'
 import { getPersonRanks } from '../api/basicData.api.js'
 
@@ -71,7 +73,19 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.content-section {
-  margin-top: 20px;
+.person-rank-management-page {
+  padding: 16px;
+  padding-bottom: 0;
+}
+
+.person-rank-management-page :deep(.ant-page-header) {
+  padding: 16px 24px;
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.content-card {
+  margin-bottom: 0;
 }
 </style>

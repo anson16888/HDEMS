@@ -1,204 +1,135 @@
 <template>
-  <section class="page">
-    <PageHeader
-      title="医院信息管理"
-      description="维护医院基本信息,包括医院名称、编码、联系方式等。"
-      :cta-text="showForm ? '返回列表' : '新增医院'"
-      :show-cta="true"
-      @cta-click="toggleForm"
+  <div class="hospital-management-page">
+    <!-- Page Header -->
+    <a-page-header
+      title="医院信息"
+      sub-title="编辑当前医院的基本信息"
     />
 
-    <!-- 医院列表 -->
-    <div v-if="!showForm" class="card">
-      <Table
-        :columns="columns"
-        :data-source="hospitals"
-        :loading="loading"
-        :pagination="pagination"
-        row-key="id"
-      >
-        <template #bodyCell="{ column, record }">
-          <template v-if="column.key === 'status'">
-            <Tag :color="record.status === 1 ? 'green' : 'red'">
-              {{ record.status === 1 ? '启用' : '停用' }}
-            </Tag>
-          </template>
-          <template v-else-if="column.key === 'action'">
-            <Space>
-              <Button type="link" size="small" @click="handleEdit(record)">
-                编辑
-              </Button>
-              <Popconfirm
-                title="确定要删除该医院吗?"
-                ok-text="确定"
-                cancel-text="取消"
-                @confirm="handleDelete(record.id)"
-              >
-                <Button type="link" size="small" danger>删除</Button>
-              </Popconfirm>
-            </Space>
-          </template>
-        </template>
-      </Table>
-    </div>
+    <!-- Hospital Edit Form -->
+    <a-card :bordered="false" class="form-card">
+      <div class="hospital-form">
+        <Form
+          :model="formData"
+          :rules="rules"
+          ref="formRef"
+          :label-col="{ span: 4 }"
+          :wrapper-col="{ span: 12 }"
+        >
+          <FormItem label="医院名称" name="hospitalName">
+            <Input
+              v-model:value="formData.hospitalName"
+              placeholder="请输入医院名称"
+            />
+          </FormItem>
 
-    <!-- 医院表单 -->
-    <div v-else class="card">
-      <HospitalForm
-        :hospital="editingHospital"
-        @submit="handleSubmit"
-        @cancel="handleCancel"
-      />
-    </div>
-  </section>
+          <FormItem label="值班电话" name="dutyPhone">
+            <Input
+              v-model:value="formData.dutyPhone"
+              placeholder="请输入值班电话"
+            />
+          </FormItem>
+
+          <FormItem :wrapper-col="{ span: 12, offset: 4 }">
+            <Space>
+              <Button type="primary" @click="handleSubmit" :loading="submitting">
+                保存
+              </Button>
+            </Space>
+          </FormItem>
+        </Form>
+      </div>
+    </a-card>
+  </div>
 </template>
 
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
-import { message, Table, Button, Space, Popconfirm, Tag } from 'ant-design-vue'
-import PageHeader from '../components/PageHeader.vue'
-import HospitalForm from '../components/forms/HospitalForm.vue'
-import {
-  getHospitals,
-  createHospital,
-  updateHospital,
-  deleteHospital
-} from '../api/basicData.api.js'
+import { message, Form, FormItem, Input, Button, Space } from 'ant-design-vue'
+import { getHospitals, updateHospital } from '../api/basicData.api.js'
 
-const showForm = ref(false)
-const loading = ref(false)
-const hospitals = ref([])
-const editingHospital = ref(null)
+const formRef = ref()
+const submitting = ref(false)
+const hospitalId = ref(null)
 
-const pagination = reactive({
-  current: 1,
-  pageSize: 20,
-  showSizeChanger: true,
-  showTotal: (total) => `共 ${total} 条记录`
+const formData = reactive({
+  hospitalName: '',
+  dutyPhone: ''
 })
 
-const columns = [
-  {
-    title: '医院编码',
-    dataIndex: 'hospitalCode',
-    key: 'hospitalCode',
-    width: 150
-  },
-  {
-    title: '医院名称',
-    dataIndex: 'hospitalName',
-    key: 'hospitalName'
-  },
-  {
-    title: '简称',
-    dataIndex: 'shortName',
-    key: 'shortName',
-    width: 150
-  },
-  {
-    title: '地址',
-    dataIndex: 'address',
-    key: 'address',
-    ellipsis: true
-  },
-  {
-    title: '联系人',
-    dataIndex: 'contactPerson',
-    key: 'contactPerson',
-    width: 120
-  },
-  {
-    title: '联系电话',
-    dataIndex: 'contactPhone',
-    key: 'contactPhone',
-    width: 150
-  },
-  {
-    title: '状态',
-    dataIndex: 'status',
-    key: 'status',
-    width: 100,
-    align: 'center'
-  },
-  {
-    title: '排序',
-    dataIndex: 'sortOrder',
-    key: 'sortOrder',
-    width: 80,
-    align: 'center'
-  },
-  {
-    title: '操作',
-    key: 'action',
-    width: 150,
-    align: 'center'
-  }
-]
+const rules = {
+  hospitalName: [
+    { required: true, message: '请输入医院名称', trigger: 'blur' }
+  ],
+  dutyPhone: [
+    { required: true, message: '请输入值班电话', trigger: 'blur' },
+    { pattern: /^1[3-9]\d{9}$/, message: '请输入正确的手机号码', trigger: 'blur' }
+  ]
+}
 
-async function loadHospitals() {
+async function loadHospitalInfo() {
   try {
-    loading.value = true
     const response = await getHospitals()
-    if (response.success) {
-      hospitals.value = response.data || []
+    if (response.success && response.data && response.data.length > 0) {
+      const hospital = response.data[0]
+      hospitalId.value = hospital.id
+      formData.hospitalName = hospital.hospitalName || ''
+      formData.dutyPhone = hospital.dutyPhone || ''
     }
   } catch (error) {
-    message.error('加载医院列表失败: ' + error.message)
-  } finally {
-    loading.value = false
+    message.error('加载医院信息失败: ' + error.message)
   }
 }
 
-function toggleForm() {
-  showForm.value = !showForm.value
-  if (!showForm.value) {
-    editingHospital.value = null
-  }
-}
-
-function handleEdit(record) {
-  editingHospital.value = { ...record }
-  showForm.value = true
-}
-
-async function handleDelete(id) {
+async function handleSubmit() {
   try {
-    const response = await deleteHospital(id)
+    await formRef.value.validate()
+    submitting.value = true
+
+    const response = await updateHospital(hospitalId.value, {
+      hospitalName: formData.hospitalName,
+      dutyPhone: formData.dutyPhone
+    })
+
     if (response.success) {
-      message.success('删除成功')
-      await loadHospitals()
+      message.success('保存成功')
+      await loadHospitalInfo()
     }
   } catch (error) {
-    message.error('删除失败: ' + error.message)
-  }
-}
-
-async function handleSubmit(formData) {
-  try {
-    let response
-    if (editingHospital.value) {
-      response = await updateHospital(editingHospital.value.id, formData)
+    if (error.errorFields) {
+      message.error('请检查表单填写是否正确')
     } else {
-      response = await createHospital(formData)
+      message.error('保存失败: ' + error.message)
     }
-
-    if (response.success) {
-      message.success(editingHospital.value ? '更新成功' : '创建成功')
-      showForm.value = false
-      editingHospital.value = null
-      await loadHospitals()
-    }
-  } catch (error) {
-    message.error('操作失败: ' + error.message)
+  } finally {
+    submitting.value = false
   }
-}
-
-function handleCancel() {
-  showForm.value = false
-  editingHospital.value = null
 }
 
 onMounted(() => {
-  loadHospitals()
+  loadHospitalInfo()
 })
 </script>
+
+<style scoped>
+.hospital-management-page {
+  padding: 16px;
+  padding-bottom: 0;
+}
+
+.hospital-management-page :deep(.ant-page-header) {
+  padding: 16px 24px;
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.form-card {
+  margin-bottom: 16px;
+}
+
+.hospital-form {
+  max-width: 800px;
+  padding: 20px;
+}
+</style>

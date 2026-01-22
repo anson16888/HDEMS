@@ -1,16 +1,19 @@
 <template>
-  <section class="page">
-    <PageHeader
+  <div class="person-title-management-page">
+    <!-- Page Header -->
+    <a-page-header
       title="人员职称管理"
-      description="查看人员职称信息,包括教授、副教授、讲师等。"
+      sub-title="查看人员职称信息,包括教授、副教授、讲师等"
     />
 
-    <div class="card">
+    <!-- Table Card -->
+    <a-card class="table-card" :bordered="false">
       <Table
         :columns="columns"
         :data-source="titles"
         :loading="loading"
         :pagination="pagination"
+        :scroll="{ y: 'calc(100vh - 380px)' }"
         row-key="id"
       >
         <template #bodyCell="{ column, record }">
@@ -21,14 +24,14 @@
           </template>
         </template>
       </Table>
-    </div>
-  </section>
+    </a-card>
+  </div>
 </template>
 
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
-import { message, Table, Tag } from 'ant-design-vue'
-import PageHeader from '../components/PageHeader.vue'
+import { message } from 'ant-design-vue'
+import { Table, Tag } from 'ant-design-vue'
 import { getPersonTitles } from '../api/basicData.api.js'
 
 const loading = ref(false)
@@ -96,3 +99,21 @@ onMounted(() => {
   loadTitles()
 })
 </script>
+
+<style scoped>
+.person-title-management-page {
+  padding: 16px;
+  padding-bottom: 0;
+}
+
+.person-title-management-page :deep(.ant-page-header) {
+  padding: 16px 24px;
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.table-card {
+  margin-bottom: 0;
+}
+</style>

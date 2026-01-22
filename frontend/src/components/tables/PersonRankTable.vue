@@ -1,9 +1,11 @@
 <template>
   <Table
+    class="person-rank-table"
     :columns="columns"
     :data-source="data"
     :loading="loading"
     :pagination="paginationConfig"
+    :scroll="{ y: 'calc(100vh - 430px)' }"
     row-key="id"
   >
     <template #bodyCell="{ column, record }">
@@ -84,3 +86,7 @@ function getCategoryColor(category) {
   return CATEGORY_COLORS[category] || 'default'
 }
 </script>
+
+<style scoped>
+/* 无需额外样式，使用 scroll 属性即可 */
+</style>
