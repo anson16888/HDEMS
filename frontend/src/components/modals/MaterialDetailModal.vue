@@ -31,15 +31,18 @@
       </a-descriptions-item>
 
       <a-descriptions-item label="库存数量">
-        <a-statistic
-          :value="material.quantity"
-          :value-style="{
-            fontSize: '16px',
-            fontWeight: 'bold',
-            color: material.quantity === 0 ? '#ff4d4f' : '#1890ff'
-          }"
-        />
-        <span v-if="material.unit" style="margin-left: 8px">{{ material.unit }}</span>
+        <div style="display: flex; align-items: baseline;">
+          <a-statistic
+            :value="material.quantity"
+            :value-style="{
+              fontSize: '16px',
+              fontWeight: 'bold',
+              color: material.quantity === 0 ? '#ff4d4f' : '#1890ff'
+            }"
+            :style="{ flexShrink: 0 }"
+          />
+          <span v-if="material.unit" style="margin-left: 8px">{{ material.unit }}</span>
+        </div>
       </a-descriptions-item>
 
       <a-descriptions-item label="单位">

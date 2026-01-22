@@ -3,12 +3,51 @@
  * Handles login, logout, token management
  */
 
-import { mockAuthBackend } from '../mock/auth-backend.js'
+import { login as loginApi, logout as logoutApi, refreshToken as refreshTokenApi, getCurrentUser as getCurrentUserApi } from '../api/auth.api.js'
 import { storageService } from './storage.service.js'
-import { parseSimulatedJWT, isTokenExpired, getTokenExpiresIn } from '../mock/crypto.js'
 
 const TOKEN_KEY = 'auth_token'
 const USER_KEY = 'auth_user'
+
+/**
+ * Parse JWT token (simple base64 decode)
+ * @param {string} token - JWT token
+ * @returns {object|null} Parsed payload
+ */
+function parseJWT(token) {
+  try {
+    const base64Url = token.split('.')[1]
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/')
+    const jsonPayload = decodeURIComponent(atob(base64).split('').map((c) => {
+      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+    }).join(''))
+    return JSON.parse(jsonPayload)
+  } catch (error) {
+    return null
+  }
+}
+
+/**
+ * Check if token is expired
+ * @param {object} payload - Parsed JWT payload
+ * @returns {boolean}
+ */
+function isTokenExpired(payload) {
+  if (!payload.exp) return false
+  const now = Math.floor(Date.now() / 1000)
+  return payload.exp < now
+}
+
+/**
+ * Get token expiry time in seconds
+ * @param {object} payload - Parsed JWT payload
+ * @returns {number} Seconds until expiry
+ */
+function getTokenExpiresIn(payload) {
+  if (!payload.exp) return 0
+  const now = Math.floor(Date.now() / 1000)
+  return Math.max(0, payload.exp - now)
+}
 
 export class AuthService {
   /**
@@ -19,13 +58,17 @@ export class AuthService {
    */
   async login(username, password) {
     try {
-      const response = await mockAuthBackend.login(username, password)
+      const response = await loginApi(username, password)
 
-      // Store token and user in localStorage
-      storageService.set(TOKEN_KEY, response.token)
-      storageService.set(USER_KEY, response.user)
+      // Store token and user info in localStorage
+      // Backend returns { code, message, data: { token, userInfo }, timestamp }
+      storageService.set(TOKEN_KEY, response.data.token)
+      storageService.set(USER_KEY, response.data.userInfo)
 
-      return response
+      return {
+        token: response.data.token,
+        user: response.data.userInfo
+      }
     } catch (error) {
       throw error
     }
@@ -37,10 +80,7 @@ export class AuthService {
    */
   async logout() {
     try {
-      const user = this.getCurrentUser()
-      if (user) {
-        await mockAuthBackend.logout(user.id)
-      }
+      await logoutApi()
 
       // Clear stored data
       storageService.remove(TOKEN_KEY)
@@ -82,7 +122,7 @@ export class AuthService {
     }
 
     // Check if token is expired
-    const payload = parseSimulatedJWT(token)
+    const payload = parseJWT(token)
     if (!payload || isTokenExpired(payload)) {
       // Clear expired token
       this.clearSession()
@@ -99,7 +139,8 @@ export class AuthService {
    */
   async validateToken(token) {
     try {
-      const user = await mockAuthBackend.validateToken(token)
+      const response = await getCurrentUserApi()
+      const user = response.data
       storageService.set(USER_KEY, user)
       return user
     } catch (error) {
@@ -119,7 +160,8 @@ export class AuthService {
         throw new Error('No token to refresh')
       }
 
-      const newToken = await mockAuthBackend.refreshToken(currentToken)
+      const response = await refreshTokenApi(currentToken)
+      const newToken = response.data
       storageService.set(TOKEN_KEY, newToken)
 
       return newToken
@@ -163,7 +205,7 @@ export class AuthService {
     const token = this.getToken()
     if (!token) return 0
 
-    const payload = parseSimulatedJWT(token)
+    const payload = parseJWT(token)
     if (!payload) return 0
 
     return getTokenExpiresIn(payload)
@@ -203,16 +245,24 @@ export class AuthService {
    * @returns {string} User-friendly error message
    */
   getErrorMessage(error) {
-    const errorMessages = {
-      'INVALID_CREDENTIALS': '账号或密码错误',
-      'ACCOUNT_LOCKED': '账号已被锁定，请30分钟后再试',
-      'ACCOUNT_DISABLED': '账号已被禁用，请联系管理员',
-      'TOKEN_EXPIRED': '登录已过期，请重新登录',
-      'NETWORK_ERROR': '网络错误，请稍后重试',
-      'SERVER_ERROR': '服务器错误，请稍后重试'
+    // Backend returns different error formats
+    // HTTP interceptor already shows error message via antd message
+    // But for login form, we need to return the message
+    if (error.message) {
+      return error.message
     }
 
-    return error.message || errorMessages[error.code] || '登录失败，请重试'
+    // Map backend error codes to user-friendly messages
+    const errorMessages = {
+      400: '账号或密码错误',
+      401: '账号或密码错误',
+      403: '账号已被禁用，请联系管理员',
+      404: '用户不存在',
+      429: '请求过于频繁，请稍后重试',
+      500: '服务器错误，请稍后重试'
+    }
+
+    return errorMessages[error.code] || error.message || '登录失败，请重试'
   }
 }
 

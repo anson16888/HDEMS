@@ -38,9 +38,9 @@
       </a-form-item>
 
       <!-- Real Name -->
-      <a-form-item label="姓名" name="real_name">
+      <a-form-item label="姓名" name="realName">
         <a-input
-          v-model:value="formData.real_name"
+          v-model:value="formData.realName"
           placeholder="请输入真实姓名"
         />
       </a-form-item>
@@ -109,7 +109,7 @@ const formRef = ref()
 const formData = reactive({
   username: '',
   password: '',
-  real_name: '',
+  realName: '',
   phone: '',
   department: '',
   roles: [],
@@ -148,7 +148,7 @@ const rules = computed(() => ({
       trigger: 'blur'
     }
   ] : [],
-  real_name: [
+  realName: [
     { required: true, message: '请输入姓名', trigger: 'blur' },
     { min: 2, message: '姓名至少2个字符', trigger: 'blur' }
   ],
@@ -203,7 +203,7 @@ onMounted(() => {
   if (props.mode === 'edit' && props.user) {
     Object.assign(formData, {
       username: props.user.username,
-      real_name: props.user.real_name,
+      realName: props.user.realName,
       phone: props.user.phone,
       department: props.user.department || '',
       roles: [...props.user.roles],

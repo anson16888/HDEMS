@@ -22,9 +22,9 @@
         </button>
         <div class="user-dropdown">
           <button class="user-card" type="button">
-            <div class="user-avatar">{{ user?.real_name?.substring(0, 1) || '用' }}</div>
+            <div class="user-avatar">{{ user?.realName?.substring(0, 1) || '用' }}</div>
             <div class="user-meta">
-              <span class="user-name">{{ user?.real_name || '未登录' }}</span>
+              <span class="user-name">{{ user?.realName || '未登录' }}</span>
               <span class="user-role">{{ user?.username || '' }}</span>
             </div>
             <i class="fa-solid fa-angle-down"></i>

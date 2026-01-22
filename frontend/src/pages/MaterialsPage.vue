@@ -234,44 +234,50 @@ const columns = [
     title: '物资编号',
     dataIndex: 'material_code',
     key: 'material_code',
-    width: 150
+    width: 140
   },
   {
     title: '物资名称',
     dataIndex: 'material_name',
     key: 'material_name',
-    width: 200
+    width: 180
   },
   {
-    title: '类型',
+    title: '物资类型',
     dataIndex: 'material_type',
     key: 'material_type',
     width: 120
   },
   {
-    title: '库存',
+    title: '库存数量',
     dataIndex: 'quantity',
     key: 'quantity',
-    width: 100,
+    width: 110,
     align: 'right'
+  },
+  {
+    title: '存放位置',
+    dataIndex: 'location',
+    key: 'location',
+    width: 140
   },
   {
     title: '状态',
     dataIndex: 'status',
     key: 'status',
-    width: 120
+    width: 110
   },
   {
-    title: '过期日期',
-    dataIndex: 'expiry_date',
-    key: 'expiry_date',
-    width: 150
+    title: '更新时间',
+    dataIndex: 'updated_at',
+    key: 'updated_at',
+    width: 170
   },
   {
     title: '操作',
     key: 'action',
     fixed: 'right',
-    width: 200,
+    width: 180,
     align: 'center'
   }
 ]

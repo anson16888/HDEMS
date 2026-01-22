@@ -17,7 +17,7 @@
       </a-descriptions-item>
 
       <a-descriptions-item label="姓名">
-        {{ user.real_name }}
+        {{ user.realName }}
       </a-descriptions-item>
 
       <a-descriptions-item label="手机号">

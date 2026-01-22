@@ -93,12 +93,12 @@
         >
           <!-- 姓名 -->
           <template #bodyCell="{ column, record }">
-            <template v-if="column.key === 'real_name'">
+            <template v-if="column.key === 'realName'">
               <a-space>
                 <a-avatar :size="32" style="background-color: #1890ff;">
-                  {{ record.real_name?.substring(0, 1) || '用' }}
+                  {{ record.realName?.substring(0, 1) || '用' }}
                 </a-avatar>
-                <span>{{ record.real_name }}</span>
+                <span>{{ record.realName }}</span>
               </a-space>
             </template>
 
@@ -254,7 +254,7 @@ const modalState = reactive({
 const columns = [
   {
     title: '姓名',
-    key: 'real_name',
+    key: 'realName',
     width: 200,
     fixed: 'left'
   },
@@ -297,7 +297,7 @@ const filteredUsers = computed(() => {
   if (searchKeyword.value) {
     const keyword = searchKeyword.value.toLowerCase()
     result = result.filter(user =>
-      user.real_name.toLowerCase().includes(keyword) ||
+      user.realName.toLowerCase().includes(keyword) ||
       user.username.toLowerCase().includes(keyword)
     )
   }

@@ -37,7 +37,7 @@ export class UserService {
     if (filters.keyword) {
       const keyword = filters.keyword.toLowerCase()
       users = users.filter(u =>
-        u.real_name.toLowerCase().includes(keyword) ||
+        u.realName.toLowerCase().includes(keyword) ||
         u.username.toLowerCase().includes(keyword)
       )
     }
@@ -217,10 +217,10 @@ export class UserService {
     }
 
     // Real name
-    if (!data.real_name) {
+    if (!data.realName) {
       throw { code: 'VALIDATION_ERROR', message: '姓名不能为空' }
     }
-    if (data.real_name.length < 2 || data.real_name.length > 20) {
+    if (data.realName.length < 2 || data.realName.length > 20) {
       throw { code: 'VALIDATION_ERROR', message: '姓名长度必须为2-20个字符' }
     }
 

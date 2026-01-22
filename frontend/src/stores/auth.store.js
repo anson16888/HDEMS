@@ -37,7 +37,7 @@ export const useAuthStore = defineStore('auth', () => {
   })
 
   const userDisplayName = computed(() => {
-    return user.value?.real_name || '未登录'
+    return user.value?.realName || '未登录'
   })
 
   // Actions

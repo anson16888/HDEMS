@@ -29,7 +29,7 @@ export const useUserStore = defineStore('users', () => {
     if (filters.value.keyword) {
       const keyword = filters.value.keyword.toLowerCase()
       result = result.filter(u =>
-        u.real_name.toLowerCase().includes(keyword) ||
+        u.realName.toLowerCase().includes(keyword) ||
         u.username.toLowerCase().includes(keyword)
       )
     }

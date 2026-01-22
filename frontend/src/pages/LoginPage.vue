@@ -50,27 +50,6 @@
           <span v-if="!loading">登录</span>
           <span v-else><i class="fa-solid fa-spinner fa-spin"></i> 登录中...</span>
         </button>
-
-        <div class="form-hints">
-          <p class="hint-text">
-            <i class="fa-solid fa-info-circle"></i>
-            首次登录请使用以下测试账号：
-          </p>
-          <div class="test-accounts">
-            <div class="account-item">
-              <strong>admin</strong> / admin123456
-              <span class="role-badge system-admin">系统管理员</span>
-            </div>
-            <div class="account-item">
-              <strong>duty_admin</strong> / duty123456
-              <span class="role-badge duty-admin">值班管理员</span>
-            </div>
-            <div class="account-item">
-              <strong>material_admin</strong> / material123456
-              <span class="role-badge material-admin">物资管理员</span>
-            </div>
-          </div>
-        </div>
       </form>
 
       <!-- Alert for login errors -->
@@ -80,12 +59,6 @@
         <button class="close-alert" @click="clearLoginError">
           <i class="fa-solid fa-times"></i>
         </button>
-      </div>
-
-      <!-- Demo mode banner -->
-      <div class="demo-banner" v-if="isDevelopment">
-        <i class="fa-solid fa-flask"></i>
-        <span>⚠️ Demo Mode - 使用 Mock 数据（开发环境）</span>
       </div>
     </div>
   </div>
@@ -113,8 +86,6 @@ const errors = reactive({
   username: '',
   password: ''
 })
-
-const isDevelopment = ref(import.meta.env.DEV)
 
 // Clear field error
 function clearError(field) {
@@ -175,14 +146,6 @@ async function handleLogin() {
   } finally {
     loading.value = false
   }
-}
-
-// Auto-fill test credentials in development
-function fillTestCredentials(username, password) {
-  form.username = username
-  form.password = password
-  clearError('username')
-  clearError('password')
 }
 
 onMounted(() => {
@@ -342,65 +305,6 @@ label.has-error input:focus {
   cursor: not-allowed;
 }
 
-.form-hints {
-  margin-top: 16px;
-  padding: 16px;
-  background: #f7fafc;
-  border-radius: 8px;
-  border: 1px solid #e2e8f0;
-}
-
-.hint-text {
-  margin: 0 0 12px 0;
-  font-size: 13px;
-  color: #4a5568;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.test-accounts {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.account-item {
-  font-size: 12px;
-  color: #2d3748;
-  padding: 8px 12px;
-  background: white;
-  border-radius: 6px;
-  border: 1px solid #e2e8f0;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.role-badge {
-  padding: 2px 8px;
-  border-radius: 4px;
-  font-size: 11px;
-  font-weight: 600;
-  margin-left: auto;
-}
-
-.role-badge.system-admin {
-  background: #fee2e2;
-  color: #991b1b;
-}
-
-.role-badge.duty-admin {
-  background: #fef3c7;
-  color: #92400e;
-}
-
-.role-badge.material-admin {
-  background: #dbeafe;
-  color: #1e40af;
-}
-
 .alert {
   position: fixed;
   top: 20px;
@@ -446,24 +350,6 @@ label.has-error input:focus {
 
 .close-alert:hover {
   opacity: 1;
-}
-
-.demo-banner {
-  position: absolute;
-  top: -40px;
-  left: 0;
-  right: 0;
-  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-  color: white;
-  padding: 8px 16px;
-  text-align: center;
-  font-size: 12px;
-  font-weight: 600;
-  border-radius: 8px 8px 0 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
 }
 
 @media (max-width: 640px) {
