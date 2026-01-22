@@ -21,7 +21,7 @@ export const useAuthStore = defineStore('auth', () => {
   })
 
   const isDutyAdmin = computed(() => {
-    return user.value?.roles?.includes('DUTY_ADMIN') || false
+    return user.value?.roles?.includes('SCHEDULE_ADMIN') || false
   })
 
   const isMaterialAdmin = computed(() => {

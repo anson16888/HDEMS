@@ -232,10 +232,10 @@ async function handleImport() {
 
     // 解析响应
     const result = {
-      total: response.data.total || 0,
-      success: response.data.success || 0,
-      failed: response.data.failed || 0,
-      errors: response.data.errors || []
+      total: response.total || 0,
+      success: response.success || 0,
+      failed: response.failed || 0,
+      errors: response.errors || []
     }
 
     importResult.value = result

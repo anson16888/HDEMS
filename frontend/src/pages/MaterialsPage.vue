@@ -31,11 +31,11 @@
                 @change="handleSearch"
               >
                 <a-select-option value="">全部</a-select-option>
-                <a-select-option value="FOOD">食品类</a-select-option>
-                <a-select-option value="MEDICAL">医疗用品</a-select-option>
-                <a-select-option value="EQUIPMENT">救援设备</a-select-option>
-                <a-select-option value="CLOTHING">衣物类</a-select-option>
-                <a-select-option value="OTHER">其他</a-select-option>
+                <a-select-option value="MEDICAL">医疗设备</a-select-option>
+                <a-select-option value="MEDICINE">药品</a-select-option>
+                <a-select-option value="EMERGENCY">急救物资</a-select-option>
+                <a-select-option value="CONSUMABLE">耗材</a-select-option>
+                <a-select-option value="EQUIPMENT">设备</a-select-option>
               </a-select>
             </a-form-item>
           </a-col>
@@ -53,6 +53,7 @@
                 <a-select-option value="LOW">库存偏低</a-select-option>
                 <a-select-option value="OUT">已耗尽</a-select-option>
                 <a-select-option value="EXPIRED">已过期</a-select-option>
+                <a-select-option value="EXPIRING_SOON">即将过期</a-select-option>
               </a-select>
             </a-form-item>
           </a-col>
@@ -87,7 +88,7 @@
     <a-card :bordered="false" class="table-card">
       <a-spin :spinning="materialStore.loading">
         <a-empty
-          v-if="materialStore.filteredMaterials.length === 0 && !materialStore.loading"
+          v-if="materialStore.materials.length === 0 && !materialStore.loading"
           :description="hasActiveFilters ? '没有找到匹配的物资' : '暂无物资数据'"
         >
           <a-button type="primary" v-if="!hasActiveFilters" @click="handleCreate">
@@ -98,7 +99,7 @@
         <a-table
           v-else
           :columns="columns"
-          :data-source="materialStore.filteredMaterials"
+          :data-source="materialStore.materials"
           :pagination="false"
           :row-key="record => record.id"
           :scroll="{ x: 1200 }"
@@ -163,7 +164,7 @@
         </a-table>
 
         <!-- Pagination -->
-        <div v-if="materialStore.filteredMaterials.length > 0" class="pagination-wrapper">
+        <div v-if="materialStore.materials.length > 0" class="pagination-wrapper">
           <a-pagination
             v-model:current="materialStore.pagination.current"
             v-model:page-size="materialStore.pagination.pageSize"
@@ -287,11 +288,11 @@ const columns = [
  */
 function getTypeColor(type) {
   const colors = {
-    FOOD: 'orange',
     MEDICAL: 'green',
-    EQUIPMENT: 'blue',
-    CLOTHING: 'purple',
-    OTHER: 'default'
+    MEDICINE: 'blue',
+    EMERGENCY: 'red',
+    CONSUMABLE: 'orange',
+    EQUIPMENT: 'purple'
   }
   return colors[type] || 'default'
 }
@@ -301,11 +302,11 @@ function getTypeColor(type) {
  */
 function getTypeLabel(type) {
   const labels = {
-    FOOD: '食品类',
-    MEDICAL: '医疗用品',
-    EQUIPMENT: '救援设备',
-    CLOTHING: '衣物类',
-    OTHER: '其他'
+    MEDICAL: '医疗设备',
+    MEDICINE: '药品',
+    EMERGENCY: '急救物资',
+    CONSUMABLE: '耗材',
+    EQUIPMENT: '设备'
   }
   return labels[type] || type
 }
@@ -318,7 +319,8 @@ function getStatusLabel(status) {
     NORMAL: '正常',
     LOW: '库存偏低',
     OUT: '已耗尽',
-    EXPIRED: '已过期'
+    EXPIRED: '已过期',
+    EXPIRING_SOON: '即将过期'
   }
   return labels[status] || status
 }
@@ -331,7 +333,8 @@ function getStatusBadgeStatus(status) {
     NORMAL: 'success',
     LOW: 'warning',
     OUT: 'error',
-    EXPIRED: 'default'
+    EXPIRED: 'default',
+    EXPIRING_SOON: 'warning'
   }
   return badgeStatus[status] || 'default'
 }
@@ -366,15 +369,17 @@ function isExpiringSoon(date) {
 /**
  * 搜索
  */
-function handleSearch() {
+async function handleSearch() {
   materialStore.pagination.current = 1
+  await materialStore.fetchMaterials()
 }
 
 /**
  * 重置筛选
  */
-function handleResetFilters() {
+async function handleResetFilters() {
   materialStore.resetFilters()
+  await materialStore.fetchMaterials()
   message.success('筛选条件已重置')
 }
 
@@ -474,11 +479,14 @@ async function handleExport() {
 /**
  * 表格变化（分页、排序、筛选）
  */
-function handleTableChange(pagination, filters, sorter) {
+async function handleTableChange(pagination, filters, sorter) {
   materialStore.setPagination({
     current: pagination.current,
     pageSize: pagination.pageSize
   })
+
+  // 重新获取数据
+  await materialStore.fetchMaterials()
 
   // TODO: 处理排序
   if (sorter.field) {

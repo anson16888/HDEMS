@@ -65,17 +65,18 @@
       <!-- Roles -->
       <a-form-item label="角色" name="roles">
         <a-checkbox-group v-model:value="formData.roles">
-          <a-checkbox value="SYSTEM_ADMIN">系统管理员</a-checkbox>
-          <a-checkbox value="DUTY_ADMIN">值班管理员</a-checkbox>
-          <a-checkbox value="MATERIAL_ADMIN">物资管理员</a-checkbox>
+          <a-checkbox :value="'SYSTEM_ADMIN'">系统管理员</a-checkbox>
+          <a-checkbox :value="'SCHEDULE_ADMIN'">值班管理员</a-checkbox>
+          <a-checkbox :value="'MATERIAL_ADMIN'">物资管理员</a-checkbox>
         </a-checkbox-group>
       </a-form-item>
 
       <!-- Status (edit mode only) -->
       <a-form-item v-if="mode === 'edit'" label="状态" name="status">
         <a-radio-group v-model:value="formData.status">
-          <a-radio value="ACTIVE">启用</a-radio>
-          <a-radio value="INACTIVE">禁用</a-radio>
+          <a-radio :value="1">正常</a-radio>
+          <a-radio :value="2">停用</a-radio>
+          <a-radio :value="3">锁定</a-radio>
         </a-radio-group>
       </a-form-item>
     </a-form>
@@ -113,14 +114,14 @@ const formData = reactive({
   phone: '',
   department: '',
   roles: [],
-  status: 'ACTIVE'
+  status: 1  // Default to ACTIVE (1)
 })
 
 const isSubmitting = ref(false)
 
 // Validation rules
 const rules = computed(() => ({
-  username: [
+  username: props.mode === 'create' ? [
     { required: true, message: '请输入账号', trigger: 'blur' },
     {
       pattern: /^[a-zA-Z0-9_]+$/,
@@ -129,7 +130,6 @@ const rules = computed(() => ({
     },
     {
       validator: async (_, value) => {
-        if (props.mode === 'edit') return Promise.resolve()
         const existing = userStore.users.find(u => u.username === value)
         if (existing) {
           return Promise.reject(new Error('该账号已存在'))
@@ -138,7 +138,7 @@ const rules = computed(() => ({
       },
       trigger: 'blur'
     }
-  ],
+  ] : [],
   password: props.mode === 'create' ? [
     { required: true, message: '请输入密码', trigger: 'blur' },
     { min: 8, message: '密码至少8个字符', trigger: 'blur' },
@@ -188,7 +188,7 @@ const rules = computed(() => ({
     {
       validator: async (_, value) => {
         if (props.mode === 'edit' && props.user && currentUser.value && props.user.id === currentUser.value.id) {
-          if (value === 'INACTIVE' && props.user.status !== 'INACTIVE') {
+          if (value === 2 && props.user.status !== 2) {
             return Promise.reject(new Error('不能禁用自己的账号'))
           }
         }
@@ -206,8 +206,8 @@ onMounted(() => {
       realName: props.user.realName,
       phone: props.user.phone,
       department: props.user.department || '',
-      roles: [...props.user.roles],
-      status: props.user.status
+      roles: [...props.user.roles],  // Roles are already numbers from backend
+      status: props.user.status      // Status is already a number from backend
     })
   }
 })

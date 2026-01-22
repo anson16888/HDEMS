@@ -43,7 +43,7 @@
 
       <a-descriptions-item label="状态">
         <a-badge
-          :status="user.status === 'ACTIVE' ? 'success' : 'error'"
+          :status="getStatusBadgeStatus(user.status)"
           :text="getStatusDisplayName(user.status)"
         />
       </a-descriptions-item>
@@ -92,24 +92,38 @@ const emit = defineEmits(['close', 'edit', 'delete'])
 
 const getRoleDisplayName = (role) => {
   const roleNames = {
-    SYSTEM_ADMIN: '系统管理员',
-    DUTY_ADMIN: '值班管理员',
-    MATERIAL_ADMIN: '物资管理员'
+    1: '系统管理员',
+    2: '值班管理员',
+    3: '物资管理员'
   }
   return roleNames[role] || role
 }
 
 const getRoleColor = (role) => {
   const colors = {
-    SYSTEM_ADMIN: 'blue',
-    DUTY_ADMIN: 'green',
-    MATERIAL_ADMIN: 'orange'
+    1: 'blue',
+    2: 'green',
+    3: 'orange'
   }
   return colors[role] || 'default'
 }
 
 const getStatusDisplayName = (status) => {
-  return status === 'ACTIVE' ? '启用' : '禁用'
+  const statusNames = {
+    1: '正常',
+    2: '停用',
+    3: '锁定'
+  }
+  return statusNames[status] || status
+}
+
+const getStatusBadgeStatus = (status) => {
+  const badgeStatus = {
+    1: 'success',
+    2: 'error',
+    3: 'warning'
+  }
+  return badgeStatus[status] || 'default'
 }
 
 const formatDate = (dateString) => {

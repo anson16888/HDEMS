@@ -42,7 +42,7 @@ export async function generateSeedUsers() {
       realName: '值班管理员',
       phone: '13800138001',
       department: '医务科',
-      roles: ['DUTY_ADMIN'],
+      roles: ['SCHEDULE_ADMIN'],
       status: 'ACTIVE',
       login_attempts: 0,
       locked_until: null,

@@ -34,6 +34,11 @@ http.interceptors.request.use(
 // Response interceptor
 http.interceptors.response.use(
   (response) => {
+    // 如果是文件下载（blob类型），直接返回响应
+    if (response.config.responseType === 'blob') {
+      return response
+    }
+
     // Handle API response wrapper
     const { data } = response
 

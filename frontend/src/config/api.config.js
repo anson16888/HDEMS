@@ -61,8 +61,10 @@ export const API_ENDPOINTS = {
     SHIFTS: '/BasicData/shifts',
     SHIFT_DETAIL: (id) => `/BasicData/shifts/${id}`,
     PERSON_RANKS: '/BasicData/person-ranks',
+    PERSON_RANK_DETAIL: (id) => `/BasicData/person-ranks/${id}`,
     PERSON_RANKS_BY_CATEGORY: (category) => `/BasicData/person-ranks/by-category/${category}`,
     PERSON_TITLES: '/BasicData/person-titles',
+    PERSON_TITLE_DETAIL: (id) => `/BasicData/person-titles/${id}`,
     PERSONS: '/BasicData/persons',
     PERSON_DETAIL: (id) => `/BasicData/persons/${id}`,
     PERSONS_BY_HOSPITAL: (hospitalId) => `/BasicData/persons/by-hospital/${hospitalId}`
@@ -83,10 +85,9 @@ export const API_ENDPOINTS = {
  * Matches backend UserRole enum
  */
 export const USER_ROLES = {
-  SYSTEM_ADMIN: 1,  // 系统管理员
-  DUTY_ADMIN: 2,    // 值班管理员
-  MATERIAL_ADMIN: 3, // 物资管理员
-  HOSPITAL_USER: 4   // 医院用户
+  SYSTEM_ADMIN: 'SYSTEM_ADMIN',  // 系统管理员
+  SCHEDULE_ADMIN: 'SCHEDULE_ADMIN',    // 值班管理员
+  MATERIAL_ADMIN: 'MATERIAL_ADMIN', // 物资管理员
 }
 
 /**
@@ -116,11 +117,11 @@ export const MATERIAL_TYPE = {
  * Matches backend MaterialStatus enum
  */
 export const MATERIAL_STATUS = {
-  NORMAL: 1,      // 正常
-  EXPIRED: 2,     // 过期
-  LOW_STOCK: 3,   // 库存不足
-  DAMAGED: 4,     // 损坏
-  EXPIRING: 5     // 临期
+  NORMAL: 1,           // 正常
+  LOW: 2,              // 库存偏低
+  OUT: 3,              // 已耗尽
+  EXPIRED: 4,          // 已过期
+  EXPIRING_SOON: 5     // 即将过期
 }
 
 /**

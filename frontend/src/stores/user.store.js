@@ -19,36 +19,19 @@ export const useUserStore = defineStore('users', () => {
   const pagination = ref({
     page: 1,
     pageSize: 20,
-    total: 0
+    total: 0,
+    totalPages: 0
   })
 
   // Getters
+  // Note: Filtering is now done on backend, so we just return users directly
   const filteredUsers = computed(() => {
-    let result = users.value
-
-    if (filters.value.keyword) {
-      const keyword = filters.value.keyword.toLowerCase()
-      result = result.filter(u =>
-        u.realName.toLowerCase().includes(keyword) ||
-        u.username.toLowerCase().includes(keyword)
-      )
-    }
-
-    if (filters.value.role) {
-      result = result.filter(u => u.roles.includes(filters.value.role))
-    }
-
-    if (filters.value.status) {
-      result = result.filter(u => u.status === filters.value.status)
-    }
-
-    return result
+    return users.value
   })
 
   const paginatedUsers = computed(() => {
-    const start = (pagination.value.page - 1) * pagination.value.pageSize
-    const end = start + pagination.value.pageSize
-    return filteredUsers.value.slice(start, end)
+    // Pagination is now handled by backend
+    return users.value
   })
 
   // Actions
@@ -57,12 +40,17 @@ export const useUserStore = defineStore('users', () => {
       loading.value = true
       error.value = null
 
-      // Ensure user store is initialized
-      await userService.initialize()
+      // Pass filters and pagination to backend
+      const params = {
+        ...filters.value,
+        page: pagination.value.page,
+        pageSize: pagination.value.pageSize
+      }
 
-      const data = await userService.getUsers(filters.value)
-      users.value = data
-      pagination.value.total = data.length
+      const result = await userService.getUsers(params)
+      users.value = result.items || []
+      pagination.value.total = result.total || 0
+      pagination.value.totalPages = result.totalPages || 0
     } catch (err) {
       error.value = err.message || '获取用户列表失败'
       throw err
@@ -91,8 +79,8 @@ export const useUserStore = defineStore('users', () => {
       error.value = null
 
       const newUser = await userService.createUser(userData)
-      users.value.push(newUser)
-      pagination.value.total++
+      // Refresh list to get updated data
+      await fetchUsers()
 
       return newUser
     } catch (err) {
@@ -132,9 +120,8 @@ export const useUserStore = defineStore('users', () => {
 
       await userService.deleteUser(id)
 
-      // Remove from list
-      users.value = users.value.filter(u => u.id !== id)
-      pagination.value.total--
+      // Refresh list to get updated data
+      await fetchUsers()
     } catch (err) {
       error.value = err.message || '删除用户失败'
       throw err
@@ -158,18 +145,17 @@ export const useUserStore = defineStore('users', () => {
     }
   }
 
-  async function unlockAccount(id) {
+  async function unlockAccount(id, user) {
     try {
       loading.value = true
       error.value = null
 
-      await userService.unlockAccount(id)
+      const updatedUser = await userService.unlockAccount(id, user)
 
       // Update in list
       const index = users.value.findIndex(u => u.id === id)
       if (index !== -1) {
-        users.value[index].login_attempts = 0
-        users.value[index].locked_until = null
+        users.value[index] = updatedUser
       }
     } catch (err) {
       error.value = err.message || '解锁账号失败'
