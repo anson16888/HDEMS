@@ -1,4 +1,5 @@
 using HDEMS.Domain.Enums;
+using System.Text.Json.Serialization;
 
 namespace HDEMS.Application.DTOs;
 
@@ -16,7 +17,10 @@ public class LoginRequest
 /// </summary>
 public class LoginResponse
 {
+    [JsonPropertyName("token")]
     public string Token { get; set; } = string.Empty;
+
+    [JsonPropertyName("userInfo")]
     public UserInfo UserInfo { get; set; } = new UserInfo();
 }
 
@@ -25,14 +29,44 @@ public class LoginResponse
 /// </summary>
 public class UserInfo
 {
+    [JsonPropertyName("id")]
     public Guid Id { get; set; }
+
+    [JsonPropertyName("username")]
     public string Username { get; set; } = string.Empty;
+
+    [JsonPropertyName("realName")]
     public string RealName { get; set; } = string.Empty;
+
+    [JsonPropertyName("phone")]
     public string Phone { get; set; } = string.Empty;
+
+    [JsonPropertyName("department")]
     public string? Department { get; set; }
-    public List<UserRole> Roles { get; set; } = new List<UserRole>();
+
+    [JsonPropertyName("roles")]
+    public List<string> RoleStrings { get; set; } = new List<string>();
+
+    [JsonIgnore]
+    public List<UserRole> Roles
+    {
+        get => RoleStrings.Select(r => Enum.Parse<UserRole>(r)).ToList();
+        set => RoleStrings = value.Select(r => r.ToString()).ToList();
+    }
+
+    [JsonPropertyName("hospitalId")]
     public Guid? HospitalId { get; set; }
+
+    [JsonPropertyName("hospitalName")]
     public string? HospitalName { get; set; }
+
+    [JsonPropertyName("systemHospitalName")]
+    public string? SystemHospitalName { get; set; }
+
+    [JsonPropertyName("systemLevel")]
+    public string? SystemLevel { get; set; }
+
+    [JsonPropertyName("isCommissionUser")]
     public bool IsCommissionUser { get; set; }
 }
 

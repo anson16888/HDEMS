@@ -3,9 +3,11 @@ using HDEMS.Application.DTOs;
 using HDEMS.Application.Interfaces;
 using HDEMS.Domain.Entities;
 using HDEMS.Domain.Enums;
+using HDEMS.Infrastructure.Configuration;
 using HDEMS.Infrastructure.Services;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using OfficeOpenXml;
 
 namespace HDEMS.Application.Services;
@@ -19,13 +21,15 @@ public class MaterialService : IMaterialService
     private readonly IMapper _mapper;
     private readonly PasswordService _passwordService;
     private readonly ILogger<MaterialService> _logger;
+    private readonly SystemConfig _systemConfig;
 
-    public MaterialService(IFreeSql fsql, IMapper mapper, PasswordService passwordService, ILogger<MaterialService> logger)
+    public MaterialService(IFreeSql fsql, IMapper mapper, PasswordService passwordService, ILogger<MaterialService> logger, IOptions<SystemConfig> systemConfig)
     {
         _fsql = fsql;
         _mapper = mapper;
         _passwordService = passwordService;
         _logger = logger;
+        _systemConfig = systemConfig.Value;
     }
 
     public async Task<ApiResponse<PagedResult<MaterialDto>>> GetPagedAsync(MaterialQueryRequest request)
@@ -92,17 +96,27 @@ public class MaterialService : IMaterialService
 
     public async Task<ApiResponse<MaterialDto>> CreateAsync(MaterialCreateRequest request)
     {
-        // 检查编码是否已存在
-        var exists = await _fsql.Select<Material>()
-            .Where(m => m.MaterialCode == request.MaterialCode)
-            .AnyAsync();
-
-        if (exists)
+        // 如果物资编码为空，自动生成
+        string materialCode = request.MaterialCode;
+        if (string.IsNullOrWhiteSpace(materialCode))
         {
-            return ApiResponse<MaterialDto>.Fail(400, "物资编码已存在");
+            materialCode = await GenerateMaterialCodeAsync();
+        }
+        else
+        {
+            // 检查编码是否已存在
+            var exists = await _fsql.Select<Material>()
+                .Where(m => m.MaterialCode == materialCode)
+                .AnyAsync();
+
+            if (exists)
+            {
+                return ApiResponse<MaterialDto>.Fail(400, "物资编码已存在");
+            }
         }
 
         var material = _mapper.Map<Material>(request);
+        material.MaterialCode = materialCode;
 
         // 计算过期日期
         if (request.ProductionDate.HasValue && request.ShelfLife.HasValue)
@@ -123,6 +137,32 @@ public class MaterialService : IMaterialService
         return result;
     }
 
+    /// <summary>
+    /// 生成物资编码：EM-YYMMDDHHMMSS-随机数
+    /// </summary>
+    private async Task<string> GenerateMaterialCodeAsync()
+    {
+        var now = DateTime.Now;
+        var datePrefix = $"EM-{now:yyMMddHHmmss}";
+
+        // 生成5位随机数（大写字母+数字）
+        const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        var random = new Random();
+        string randomCode;
+
+        // 确保生成的编码不重复
+        do
+        {
+            randomCode = new string(Enumerable.Repeat(chars, 5)
+                .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+        while (await _fsql.Select<Material>()
+            .Where(m => m.MaterialCode == $"{datePrefix}-{randomCode}")
+            .AnyAsync());
+
+        return $"{datePrefix}-{randomCode}";
+    }
+
     public async Task<ApiResponse<MaterialDto>> UpdateAsync(Guid id, MaterialCreateRequest request)
     {
         var material = await _fsql.Select<Material>().Where(m => m.Id == id).FirstAsync();
@@ -131,17 +171,26 @@ public class MaterialService : IMaterialService
             return ApiResponse<MaterialDto>.Fail(404, "物资不存在");
         }
 
-        // 检查编码是否与其他物资冲突
-        var codeExists = await _fsql.Select<Material>()
-            .Where(m => m.MaterialCode == request.MaterialCode && m.Id != id)
-            .AnyAsync();
-
-        if (codeExists)
+        // 如果传入了新的物资编码，检查是否冲突
+        if (!string.IsNullOrWhiteSpace(request.MaterialCode))
         {
-            return ApiResponse<MaterialDto>.Fail(400, "物资编码已被其他物资使用");
+            var codeExists = await _fsql.Select<Material>()
+                .Where(m => m.MaterialCode == request.MaterialCode && m.Id != id)
+                .AnyAsync();
+
+            if (codeExists)
+            {
+                return ApiResponse<MaterialDto>.Fail(400, "物资编码已被其他物资使用");
+            }
         }
 
+        // 保存原编码，如果请求中的编码为空则保留原编码
+        var originalCode = material.MaterialCode;
         _mapper.Map(request, material);
+        if (string.IsNullOrWhiteSpace(request.MaterialCode))
+        {
+            material.MaterialCode = originalCode;
+        }
 
         // 计算过期日期
         if (request.ProductionDate.HasValue && request.ShelfLife.HasValue)
@@ -201,47 +250,63 @@ public class MaterialService : IMaterialService
         }
 
         var rowCount = worksheet.Dimension.Rows;
-        result.TotalCount = rowCount - 1; // 减去表头
+        result.TotalCount = rowCount - 3; // 减去标题和说明行
 
-        var hospitals = await _fsql.Select<Hospital>().ToListAsync();
-        var hospitalDict = hospitals.ToDictionary(h => h.HospitalName, h => h.Id);
+        // 从配置获取医院名称
+        var hospitalName = _systemConfig.HospitalName ?? "宝安人民医院";
+        var hospital = await _fsql.Select<Hospital>().Where(h => h.HospitalName == hospitalName).FirstAsync();
 
-        for (int row = 2; row <= rowCount; row++)
+        if (hospital == null)
+        {
+            return ApiResponse<MaterialImportResult>.Fail(400, $"系统配置的医院 '{hospitalName}' 不存在，请先在系统中创建该医院");
+        }
+
+        for (int row = 4; row <= rowCount; row++)
         {
             try
             {
-                var materialCode = worksheet.Cells[row, 1].Text;
-                var materialName = worksheet.Cells[row, 2].Text;
-                var materialTypeName = worksheet.Cells[row, 3].Text;
-                var quantity = decimal.Parse(worksheet.Cells[row, 4].Text);
-                var unit = worksheet.Cells[row, 5].Text;
-                var location = worksheet.Cells[row, 6].Text;
-                var hospitalName = worksheet.Cells[row, 7].Text;
-                var specification = worksheet.Cells[row, 8].Text;
-                var productionDateStr = worksheet.Cells[row, 9].Text;
-                var shelfLifeStr = worksheet.Cells[row, 10].Text;
-                var remark = worksheet.Cells[row, 11].Text;
+                // 去掉医院列，列号调整：1-编码,2-名称,3-类型,4-数量,5-单位,6-位置,7-规格,8-生产日期,9-质保期,10-备注
+                var materialCode = worksheet.Cells[row, 1].Text?.Trim();
+                var materialName = worksheet.Cells[row, 2].Text?.Trim();
+                var materialTypeName = worksheet.Cells[row, 3].Text?.Trim();
+                var quantityText = worksheet.Cells[row, 4].Text?.Trim();
+                var unit = worksheet.Cells[row, 5].Text?.Trim();
+                var location = worksheet.Cells[row, 6].Text?.Trim();
+                var specification = worksheet.Cells[row, 7].Text?.Trim();
+                var productionDateStr = worksheet.Cells[row, 8].Text?.Trim();
+                var shelfLifeStr = worksheet.Cells[row, 9].Text?.Trim();
+                var remark = worksheet.Cells[row, 10].Text?.Trim();
 
                 // 验证必填项
-                if (string.IsNullOrWhiteSpace(materialCode) || string.IsNullOrWhiteSpace(materialName))
+                if (string.IsNullOrWhiteSpace(materialName))
                 {
-                    result.Errors.Add(new MaterialImportError { RowNumber = row, ErrorMessage = "物资编码和名称不能为空" });
+                    result.Errors.Add(new MaterialImportError { RowNumber = row, ErrorMessage = "物资名称不能为空" });
                     result.FailedCount++;
                     continue;
                 }
 
-                // 检查医院
-                if (!hospitalDict.ContainsKey(hospitalName))
+                if (string.IsNullOrWhiteSpace(quantityText) || !decimal.TryParse(quantityText, out var quantity))
                 {
-                    result.Errors.Add(new MaterialImportError { RowNumber = row, ErrorMessage = $"医院 '{hospitalName}' 不存在" });
+                    result.Errors.Add(new MaterialImportError { RowNumber = row, ErrorMessage = "库存数量格式不正确" });
                     result.FailedCount++;
                     continue;
                 }
 
-                // 解析物资类型
-                if (!Enum.TryParse<MaterialType>(materialTypeName, out var materialType))
+                // 解析物资类型（中文转枚举）
+                MaterialType materialType = materialTypeName switch
                 {
-                    materialType = MaterialType.Other;
+                    "食品" => MaterialType.Food,
+                    "医疗" => MaterialType.Medical,
+                    "设备" => MaterialType.Equipment,
+                    "衣物" => MaterialType.Clothing,
+                    "其他" => MaterialType.Other,
+                    _ => Enum.TryParse<MaterialType>(materialTypeName, out var parsedType) ? parsedType : MaterialType.Other
+                };
+
+                // 如果物资编码为空，自动生成
+                if (string.IsNullOrWhiteSpace(materialCode))
+                {
+                    materialCode = await GenerateMaterialCodeAsync();
                 }
 
                 // 检查是否已存在
@@ -265,7 +330,7 @@ public class MaterialService : IMaterialService
                     Quantity = quantity,
                     Unit = unit,
                     Location = location,
-                    HospitalId = hospitalDict[hospitalName],
+                    HospitalId = hospital.Id,
                     Specification = specification,
                     Remark = remark,
                     Status = GetMaterialStatus(quantity),
@@ -322,9 +387,6 @@ public class MaterialService : IMaterialService
         using (var range = worksheet.Cells[1, 1, 1, 12])
         {
             range.Style.Font.Bold = true;
-            //range.Style.Fill.PatternType = OfficeOpenXml.Style.FillStyle.Solid;
-            range.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightBlue);
-            //range.Style.HorizontalAlignment = OfficeOpenXml.Style.HorizontalAlignment.Center;
         }
 
         // 获取数据

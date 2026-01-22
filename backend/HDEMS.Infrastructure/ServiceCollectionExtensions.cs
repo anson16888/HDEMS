@@ -21,6 +21,8 @@ public static class ServiceCollectionExtensions
             configuration.GetSection(JwtConfig.SectionName).Bind(options));
         services.Configure<DatabaseConfig>(options =>
             configuration.GetSection(DatabaseConfig.SectionName).Bind(options));
+        services.Configure<SystemConfig>(options =>
+            configuration.GetSection(SystemConfig.SectionName).Bind(options));
 
         // 注册服务
         services.AddSingleton<JwtService>();

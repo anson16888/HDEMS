@@ -9,7 +9,6 @@ namespace HDEMS.Domain.Entities;
 [Table(Name = "t_material")]
 [Index("idx_material_code", "MaterialCode", true)]
 [Index("idx_material_type", "MaterialType")]
-[Index("idx_status", "Status")]
 [Index("idx_hospital_id", "HospitalId")]
 public class Material : BaseEntity
 {

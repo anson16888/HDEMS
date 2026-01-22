@@ -30,5 +30,5 @@ public interface IAuthService
     /// <summary>
     /// 重置管理员密码
     /// </summary>
-    Task<ApiResponse> ResetAdminPasswordAsync(string initKey);
+    Task<ApiResponse> ResetAdminPasswordAsync(string newPassword);
 }

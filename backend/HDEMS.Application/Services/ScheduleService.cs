@@ -3,9 +3,11 @@ using HDEMS.Application.DTOs;
 using HDEMS.Application.Interfaces;
 using HDEMS.Domain.Entities;
 using HDEMS.Domain.Enums;
+using HDEMS.Infrastructure.Configuration;
 using HDEMS.Infrastructure.Services;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using OfficeOpenXml;
 
 namespace HDEMS.Application.Services;
@@ -18,12 +20,14 @@ public class ScheduleService : IScheduleService
     private readonly IFreeSql _fsql;
     private readonly IMapper _mapper;
     private readonly ILogger<ScheduleService> _logger;
+    private readonly SystemConfig _systemConfig;
 
-    public ScheduleService(IFreeSql fsql, IMapper mapper, ILogger<ScheduleService> logger)
+    public ScheduleService(IFreeSql fsql, IMapper mapper, ILogger<ScheduleService> logger, IOptions<SystemConfig> systemConfig)
     {
         _fsql = fsql;
         _mapper = mapper;
         _logger = logger;
+        _systemConfig = systemConfig.Value;
     }
 
     public async Task<ApiResponse<PagedResult<ScheduleDto>>> GetPagedAsync(ScheduleQueryRequest request)
@@ -238,13 +242,20 @@ public class ScheduleService : IScheduleService
             .Page(request.Page, request.PageSize)
             .ToListAsync();
 
+        // 获取排班类型中文名称映射
         var overviewItems = items.Select(s => new ScheduleOverviewItem
         {
             ScheduleDate = s.ScheduleDate,
             HospitalName = s.Hospital?.HospitalName ?? "",
             DepartmentName = s.Department?.DepartmentName ?? "",
             ScheduleType = s.ScheduleType,
-            ScheduleTypeName = s.ScheduleType.ToString(),
+            ScheduleTypeName = s.ScheduleType switch
+            {
+                ScheduleType.Bureau => "局级行政",
+                ScheduleType.Hospital => "院级行政",
+                ScheduleType.Director => "院内主任",
+                _ => s.ScheduleType.ToString()
+            },
             ShiftName = s.Shift?.ShiftName ?? "",
             PersonName = s.PersonName,
             RankName = s.Rank?.RankName,
@@ -305,8 +316,6 @@ public class ScheduleService : IScheduleService
         using (var range = worksheet.Cells[1, 1, 1, 10])
         {
             range.Style.Font.Bold = true;
-            //range.Style.Fill.PatternType = OfficeOpenXml.Style.FillStyle.Solid;
-            range.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightBlue);
         }
 
         // 获取数据
@@ -346,9 +355,18 @@ public class ScheduleService : IScheduleService
         int row = 2;
         foreach (var schedule in schedules)
         {
+            // 获取排班类型中文名称
+            var scheduleTypeName = schedule.ScheduleType switch
+            {
+                ScheduleType.Bureau => "局级行政",
+                ScheduleType.Hospital => "院级行政",
+                ScheduleType.Director => "院内主任",
+                _ => schedule.ScheduleType.ToString()
+            };
+
             worksheet.Cells[row, 1].Value = schedule.ScheduleDate.ToString("yyyy-MM-dd");
             worksheet.Cells[row, 2].Value = schedule.Hospital?.HospitalName;
-            worksheet.Cells[row, 3].Value = schedule.ScheduleType.ToString();
+            worksheet.Cells[row, 3].Value = scheduleTypeName;
             worksheet.Cells[row, 4].Value = schedule.Shift?.ShiftName;
             worksheet.Cells[row, 5].Value = schedule.PersonName;
             worksheet.Cells[row, 6].Value = schedule.Phone;
@@ -377,10 +395,16 @@ public class ScheduleService : IScheduleService
         }
 
         var rowCount = worksheet.Dimension.Rows;
-        result.TotalCount = rowCount - 1;
+        result.TotalCount = rowCount - 3; // 减去标题和说明行
 
-        var hospitals = await _fsql.Select<Hospital>().ToListAsync();
-        var hospitalDict = hospitals.ToDictionary(h => h.HospitalName, h => h.Id);
+        // 从配置获取医院名称
+        var hospitalName = _systemConfig.HospitalName ?? "宝安人民医院";
+        var hospital = await _fsql.Select<Hospital>().Where(h => h.HospitalName == hospitalName).FirstAsync();
+
+        if (hospital == null)
+        {
+            return ApiResponse<MaterialImportResult>.Fail(400, $"系统配置的医院 '{hospitalName}' 不存在，请先在系统中创建该医院");
+        }
 
         var shifts = await _fsql.Select<Shift>().ToListAsync();
         var shiftDict = shifts.ToDictionary(s => s.ShiftName, s => s.Id);
@@ -394,30 +418,23 @@ public class ScheduleService : IScheduleService
         var titles = await _fsql.Select<PersonTitle>().ToListAsync();
         var titleDict = titles.ToDictionary(t => t.TitleName, t => t.Id);
 
-        for (int row = 2; row <= rowCount; row++)
+        for (int row = 4; row <= rowCount; row++)
         {
             try
             {
+                // 去掉医院列，列号调整：1-日期,2-班次,3-姓名,4-电话,5-职级,6-科室,7-职称,8-备注
                 var dateStr = worksheet.Cells[row, 1].Text;
-                var hospitalName = worksheet.Cells[row, 2].Text;
-                var shiftName = worksheet.Cells[row, 3].Text;
-                var personName = worksheet.Cells[row, 4].Text;
-                var phone = worksheet.Cells[row, 5].Text;
-                var rankName = worksheet.Cells[row, 6].Text;
-                var departmentName = worksheet.Cells[row, 7].Text;
-                var titleName = worksheet.Cells[row, 8].Text;
-                var remark = worksheet.Cells[row, 9].Text;
+                var shiftName = worksheet.Cells[row, 2].Text;
+                var personName = worksheet.Cells[row, 3].Text;
+                var phone = worksheet.Cells[row, 4].Text;
+                var rankName = worksheet.Cells[row, 5].Text;
+                var departmentName = worksheet.Cells[row, 6].Text;
+                var titleName = worksheet.Cells[row, 7].Text;
+                var remark = worksheet.Cells[row, 8].Text;
 
                 if (!DateTime.TryParse(dateStr, out var scheduleDate))
                 {
                     result.Errors.Add(new MaterialImportError { RowNumber = row, ErrorMessage = "日期格式不正确" });
-                    result.FailedCount++;
-                    continue;
-                }
-
-                if (!hospitalDict.ContainsKey(hospitalName))
-                {
-                    result.Errors.Add(new MaterialImportError { RowNumber = row, ErrorMessage = $"医院 '{hospitalName}' 不存在" });
                     result.FailedCount++;
                     continue;
                 }
@@ -433,7 +450,7 @@ public class ScheduleService : IScheduleService
                 {
                     Id = Guid.NewGuid(),
                     ScheduleDate = scheduleDate,
-                    HospitalId = hospitalDict[hospitalName],
+                    HospitalId = hospital.Id,
                     ScheduleType = scheduleType,
                     ShiftId = shiftDict[shiftName],
                     PersonName = personName,

@@ -320,3 +320,820 @@ System.InvalidOperationException: A path base can only be configured using IAppl
 2026-01-21 16:12:50.369 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/ - null null
 2026-01-21 16:12:51.150 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/ - 404 0 null 800.8027ms
 2026-01-21 16:12:51.510 +08:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET http://localhost:57356/, Response status code: 404
+2026-01-21 16:20:22.020 +08:00 [INF] 开始初始化种子数据...
+2026-01-21 16:20:22.673 +08:00 [INF] 系统初始化密钥已生成: 3aa1100669ce4612b04a7cf9f23ad1bd9085fc2209cb4d9b (请妥善保管)
+2026-01-21 16:20:22.697 +08:00 [INF] 种子数据初始化完成
+2026-01-21 16:20:23.610 +08:00 [INF] User profile is available. Using 'C:\Users\SY\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-01-21 16:20:24.133 +08:00 [INF] Now listening on: http://localhost:57356
+2026-01-21 16:20:24.290 +08:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-01-21 16:20:24.293 +08:00 [INF] Hosting environment: Development
+2026-01-21 16:20:24.299 +08:00 [INF] Content root path: D:\Project\HDEMS\backend\HDEMS.Api
+2026-01-21 16:20:25.414 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/ - null null
+2026-01-21 16:20:26.277 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/ - 404 0 null 900.4519ms
+2026-01-21 16:20:26.313 +08:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET http://localhost:57356/, Response status code: 404
+2026-01-21 16:20:32.578 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/swagger/index.html - null null
+2026-01-21 16:20:32.701 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/swagger/index.html - 200 null text/html;charset=utf-8 122.8349ms
+2026-01-21 16:20:32.757 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/_framework/aspnetcore-browser-refresh.js - null null
+2026-01-21 16:20:33.139 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/_framework/aspnetcore-browser-refresh.js - 200 13770 application/javascript; charset=utf-8 382.3778ms
+2026-01-21 16:20:34.419 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/_vs/browserLink - null null
+2026-01-21 16:20:34.453 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/_vs/browserLink - 200 null text/javascript; charset=UTF-8 34.5125ms
+2026-01-21 16:20:35.277 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/swagger/v1/swagger.json - null null
+2026-01-21 16:20:35.350 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 72.6601ms
+2026-01-21 16:20:54.942 +08:00 [INF] Request starting HTTP/1.1 POST http://localhost:57356/api/Auth/login - application/json 49
+2026-01-21 16:20:54.954 +08:00 [INF] CORS policy execution successful.
+2026-01-21 16:20:54.995 +08:00 [INF] Executing endpoint 'HDEMS.Api.Controllers.AuthController.Login (HDEMS.Api)'
+2026-01-21 16:20:55.030 +08:00 [INF] Route matched with {action = "Login", controller = "Auth"}. Executing controller action with signature System.Threading.Tasks.Task`1[HDEMS.Application.DTOs.ApiResponse`1[HDEMS.Application.DTOs.LoginResponse]] Login(HDEMS.Application.DTOs.LoginRequest) on controller HDEMS.Api.Controllers.AuthController (HDEMS.Api).
+2026-01-21 16:20:55.820 +08:00 [INF] Executing ObjectResult, writing value of type 'HDEMS.Application.DTOs.ApiResponse`1[[HDEMS.Application.DTOs.LoginResponse, HDEMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-01-21 16:20:55.845 +08:00 [INF] Executed action HDEMS.Api.Controllers.AuthController.Login (HDEMS.Api) in 808.2495ms
+2026-01-21 16:20:55.847 +08:00 [INF] Executed endpoint 'HDEMS.Api.Controllers.AuthController.Login (HDEMS.Api)'
+2026-01-21 16:20:55.848 +08:00 [INF] Request finished HTTP/1.1 POST http://localhost:57356/api/Auth/login - 200 null application/json; charset=utf-8 906.2171ms
+2026-01-21 16:21:13.039 +08:00 [INF] Request starting HTTP/1.1 POST http://localhost:57356/api/Auth/reset-admin-password - application/json 8
+2026-01-21 16:21:13.052 +08:00 [INF] CORS policy execution successful.
+2026-01-21 16:21:13.057 +08:00 [INF] Executing endpoint 'HDEMS.Api.Controllers.AuthController.ResetAdminPassword (HDEMS.Api)'
+2026-01-21 16:21:13.067 +08:00 [INF] Route matched with {action = "ResetAdminPassword", controller = "Auth"}. Executing controller action with signature System.Threading.Tasks.Task`1[HDEMS.Application.DTOs.ApiResponse] ResetAdminPassword(System.String) on controller HDEMS.Api.Controllers.AuthController (HDEMS.Api).
+2026-01-21 16:21:13.889 +08:00 [WRN] 管理员密码已重置为: fMX45HjT
+2026-01-21 16:21:13.892 +08:00 [INF] Executing ObjectResult, writing value of type 'HDEMS.Application.DTOs.ApiResponse'.
+2026-01-21 16:21:13.899 +08:00 [INF] Executed action HDEMS.Api.Controllers.AuthController.ResetAdminPassword (HDEMS.Api) in 827.6924ms
+2026-01-21 16:21:13.902 +08:00 [INF] Executed endpoint 'HDEMS.Api.Controllers.AuthController.ResetAdminPassword (HDEMS.Api)'
+2026-01-21 16:21:13.905 +08:00 [INF] Request finished HTTP/1.1 POST http://localhost:57356/api/Auth/reset-admin-password - 200 null application/json; charset=utf-8 865.7584ms
+2026-01-21 16:21:22.982 +08:00 [INF] Request starting HTTP/1.1 POST http://localhost:57356/api/Auth/login - application/json 51
+2026-01-21 16:21:22.987 +08:00 [INF] CORS policy execution successful.
+2026-01-21 16:21:22.988 +08:00 [INF] Executing endpoint 'HDEMS.Api.Controllers.AuthController.Login (HDEMS.Api)'
+2026-01-21 16:21:22.993 +08:00 [INF] Route matched with {action = "Login", controller = "Auth"}. Executing controller action with signature System.Threading.Tasks.Task`1[HDEMS.Application.DTOs.ApiResponse`1[HDEMS.Application.DTOs.LoginResponse]] Login(HDEMS.Application.DTOs.LoginRequest) on controller HDEMS.Api.Controllers.AuthController (HDEMS.Api).
+2026-01-21 16:21:23.454 +08:00 [INF] Executing ObjectResult, writing value of type 'HDEMS.Application.DTOs.ApiResponse`1[[HDEMS.Application.DTOs.LoginResponse, HDEMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-01-21 16:21:23.466 +08:00 [INF] Executed action HDEMS.Api.Controllers.AuthController.Login (HDEMS.Api) in 468.9159ms
+2026-01-21 16:21:23.469 +08:00 [INF] Executed endpoint 'HDEMS.Api.Controllers.AuthController.Login (HDEMS.Api)'
+2026-01-21 16:21:23.473 +08:00 [INF] Request finished HTTP/1.1 POST http://localhost:57356/api/Auth/login - 200 null application/json; charset=utf-8 489.5891ms
+2026-01-21 16:22:03.457 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/api/BasicData/hospitals - null null
+2026-01-21 16:22:03.472 +08:00 [INF] Authorization failed. These requirements were not met:
+DenyAnonymousAuthorizationRequirement: Requires an authenticated user.
+2026-01-21 16:22:03.480 +08:00 [INF] AuthenticationScheme: Bearer was challenged.
+2026-01-21 16:22:03.481 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/api/BasicData/hospitals - 401 0 null 50.4592ms
+2026-01-21 16:23:27.911 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/api/BasicData/hospitals - null null
+2026-01-21 16:23:27.968 +08:00 [INF] Authorization failed. These requirements were not met:
+DenyAnonymousAuthorizationRequirement: Requires an authenticated user.
+2026-01-21 16:23:27.971 +08:00 [INF] AuthenticationScheme: Bearer was challenged.
+2026-01-21 16:23:27.977 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/api/BasicData/hospitals - 401 0 null 66.0814ms
+2026-01-21 16:23:54.944 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/api/BasicData/hospitals - null null
+2026-01-21 16:23:55.105 +08:00 [INF] Executing endpoint 'HDEMS.Api.Controllers.BasicDataController.GetHospitals (HDEMS.Api)'
+2026-01-21 16:23:55.130 +08:00 [INF] Route matched with {action = "GetHospitals", controller = "BasicData"}. Executing controller action with signature System.Threading.Tasks.Task`1[HDEMS.Application.DTOs.ApiResponse`1[System.Collections.Generic.List`1[HDEMS.Application.DTOs.HospitalDto]]] GetHospitals() on controller HDEMS.Api.Controllers.BasicDataController (HDEMS.Api).
+2026-01-21 16:23:57.042 +08:00 [INF] Executing ObjectResult, writing value of type 'HDEMS.Application.DTOs.ApiResponse`1[[System.Collections.Generic.List`1[[HDEMS.Application.DTOs.HospitalDto, HDEMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-01-21 16:23:57.047 +08:00 [INF] Executed action HDEMS.Api.Controllers.BasicDataController.GetHospitals (HDEMS.Api) in 1911.9228ms
+2026-01-21 16:23:57.049 +08:00 [INF] Executed endpoint 'HDEMS.Api.Controllers.BasicDataController.GetHospitals (HDEMS.Api)'
+2026-01-21 16:23:57.050 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/api/BasicData/hospitals - 200 null application/json; charset=utf-8 2106.404ms
+2026-01-21 16:28:08.330 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/api/Schedule - null null
+2026-01-21 16:28:08.343 +08:00 [INF] Executing endpoint 'HDEMS.Api.Controllers.ScheduleController.GetPaged (HDEMS.Api)'
+2026-01-21 16:28:08.363 +08:00 [INF] Route matched with {action = "GetPaged", controller = "Schedule"}. Executing controller action with signature System.Threading.Tasks.Task`1[HDEMS.Application.DTOs.ApiResponse`1[HDEMS.Application.DTOs.PagedResult`1[HDEMS.Application.DTOs.ScheduleDto]]] GetPaged(HDEMS.Application.DTOs.ScheduleQueryRequest) on controller HDEMS.Api.Controllers.ScheduleController (HDEMS.Api).
+2026-01-21 16:28:08.502 +08:00 [INF] Executing ObjectResult, writing value of type 'HDEMS.Application.DTOs.ApiResponse`1[[HDEMS.Application.DTOs.PagedResult`1[[HDEMS.Application.DTOs.ScheduleDto, HDEMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], HDEMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-01-21 16:28:08.517 +08:00 [INF] Executed action HDEMS.Api.Controllers.ScheduleController.GetPaged (HDEMS.Api) in 145.0789ms
+2026-01-21 16:28:08.519 +08:00 [INF] Executed endpoint 'HDEMS.Api.Controllers.ScheduleController.GetPaged (HDEMS.Api)'
+2026-01-21 16:28:08.520 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/api/Schedule - 200 null application/json; charset=utf-8 197.1517ms
+2026-01-21 16:30:44.261 +08:00 [INF] Request starting HTTP/1.1 POST http://localhost:57356/api/Schedule - application/json 414
+2026-01-21 16:30:44.269 +08:00 [INF] CORS policy execution successful.
+2026-01-21 16:30:44.272 +08:00 [INF] Executing endpoint 'HDEMS.Api.Controllers.ScheduleController.Create (HDEMS.Api)'
+2026-01-21 16:30:44.282 +08:00 [INF] Route matched with {action = "Create", controller = "Schedule"}. Executing controller action with signature System.Threading.Tasks.Task`1[HDEMS.Application.DTOs.ApiResponse`1[HDEMS.Application.DTOs.ScheduleDto]] Create(HDEMS.Application.DTOs.ScheduleCreateRequest) on controller HDEMS.Api.Controllers.ScheduleController (HDEMS.Api).
+2026-01-21 16:30:44.440 +08:00 [INF] Executing ObjectResult, writing value of type 'HDEMS.Application.DTOs.ApiResponse`1[[HDEMS.Application.DTOs.ScheduleDto, HDEMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-01-21 16:30:44.453 +08:00 [INF] Executed action HDEMS.Api.Controllers.ScheduleController.Create (HDEMS.Api) in 166.7584ms
+2026-01-21 16:30:44.457 +08:00 [INF] Executed endpoint 'HDEMS.Api.Controllers.ScheduleController.Create (HDEMS.Api)'
+2026-01-21 16:30:44.459 +08:00 [INF] Request finished HTTP/1.1 POST http://localhost:57356/api/Schedule - 200 null application/json; charset=utf-8 203.6476ms
+2026-01-21 16:31:31.073 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/api/Schedule - null null
+2026-01-21 16:31:31.080 +08:00 [INF] Executing endpoint 'HDEMS.Api.Controllers.ScheduleController.GetPaged (HDEMS.Api)'
+2026-01-21 16:31:31.083 +08:00 [INF] Route matched with {action = "GetPaged", controller = "Schedule"}. Executing controller action with signature System.Threading.Tasks.Task`1[HDEMS.Application.DTOs.ApiResponse`1[HDEMS.Application.DTOs.PagedResult`1[HDEMS.Application.DTOs.ScheduleDto]]] GetPaged(HDEMS.Application.DTOs.ScheduleQueryRequest) on controller HDEMS.Api.Controllers.ScheduleController (HDEMS.Api).
+2026-01-21 16:31:31.142 +08:00 [INF] Executing ObjectResult, writing value of type 'HDEMS.Application.DTOs.ApiResponse`1[[HDEMS.Application.DTOs.PagedResult`1[[HDEMS.Application.DTOs.ScheduleDto, HDEMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], HDEMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-01-21 16:31:31.150 +08:00 [INF] Executed action HDEMS.Api.Controllers.ScheduleController.GetPaged (HDEMS.Api) in 61.8644ms
+2026-01-21 16:31:31.153 +08:00 [INF] Executed endpoint 'HDEMS.Api.Controllers.ScheduleController.GetPaged (HDEMS.Api)'
+2026-01-21 16:31:31.156 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/api/Schedule - 200 null application/json; charset=utf-8 86.0522ms
+2026-01-21 16:31:47.917 +08:00 [INF] Request starting HTTP/1.1 POST http://localhost:57356/api/Schedule - application/json 414
+2026-01-21 16:31:47.920 +08:00 [INF] CORS policy execution successful.
+2026-01-21 16:31:47.922 +08:00 [INF] Executing endpoint 'HDEMS.Api.Controllers.ScheduleController.Create (HDEMS.Api)'
+2026-01-21 16:31:47.923 +08:00 [INF] Route matched with {action = "Create", controller = "Schedule"}. Executing controller action with signature System.Threading.Tasks.Task`1[HDEMS.Application.DTOs.ApiResponse`1[HDEMS.Application.DTOs.ScheduleDto]] Create(HDEMS.Application.DTOs.ScheduleCreateRequest) on controller HDEMS.Api.Controllers.ScheduleController (HDEMS.Api).
+2026-01-21 16:31:47.954 +08:00 [INF] Executing ObjectResult, writing value of type 'HDEMS.Application.DTOs.ApiResponse`1[[HDEMS.Application.DTOs.ScheduleDto, HDEMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-01-21 16:31:47.988 +08:00 [INF] Executed action HDEMS.Api.Controllers.ScheduleController.Create (HDEMS.Api) in 59.9123ms
+2026-01-21 16:31:47.991 +08:00 [INF] Executed endpoint 'HDEMS.Api.Controllers.ScheduleController.Create (HDEMS.Api)'
+2026-01-21 16:31:47.994 +08:00 [INF] Request finished HTTP/1.1 POST http://localhost:57356/api/Schedule - 200 null application/json; charset=utf-8 77.0018ms
+2026-01-21 16:32:19.491 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/api/User?page=1&pageSize=20 - null null
+2026-01-21 16:32:19.521 +08:00 [INF] Executing endpoint 'HDEMS.Api.Controllers.UserController.GetPaged (HDEMS.Api)'
+2026-01-21 16:32:19.532 +08:00 [INF] Route matched with {action = "GetPaged", controller = "User"}. Executing controller action with signature System.Threading.Tasks.Task`1[HDEMS.Application.DTOs.ApiResponse`1[HDEMS.Application.DTOs.PagedResult`1[HDEMS.Application.DTOs.UserDto]]] GetPaged(Int32, Int32, System.String) on controller HDEMS.Api.Controllers.UserController (HDEMS.Api).
+2026-01-21 16:32:19.559 +08:00 [INF] Executing ObjectResult, writing value of type 'HDEMS.Application.DTOs.ApiResponse`1[[HDEMS.Application.DTOs.PagedResult`1[[HDEMS.Application.DTOs.UserDto, HDEMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], HDEMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-01-21 16:32:19.575 +08:00 [INF] Executed action HDEMS.Api.Controllers.UserController.GetPaged (HDEMS.Api) in 35.2245ms
+2026-01-21 16:32:19.577 +08:00 [INF] Executed endpoint 'HDEMS.Api.Controllers.UserController.GetPaged (HDEMS.Api)'
+2026-01-21 16:32:19.581 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/api/User?page=1&pageSize=20 - 200 null application/json; charset=utf-8 116.3946ms
+2026-01-21 16:33:40.885 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/api/Material - null null
+2026-01-21 16:33:40.889 +08:00 [INF] Executing endpoint 'HDEMS.Api.Controllers.MaterialController.GetPaged (HDEMS.Api)'
+2026-01-21 16:33:40.902 +08:00 [INF] Route matched with {action = "GetPaged", controller = "Material"}. Executing controller action with signature System.Threading.Tasks.Task`1[HDEMS.Application.DTOs.ApiResponse`1[HDEMS.Application.DTOs.PagedResult`1[HDEMS.Application.DTOs.MaterialDto]]] GetPaged(HDEMS.Application.DTOs.MaterialQueryRequest) on controller HDEMS.Api.Controllers.MaterialController (HDEMS.Api).
+2026-01-21 16:33:41.417 +08:00 [ERR] 未捕获的异常: SQL logic error
+index idx_status already exists
+System.Exception: SQL logic error
+index idx_status already exists
+ ---> code = Error (1), message = System.Data.SQLite.SQLiteException (0x800007BF): SQL logic error
+index idx_status already exists
+   at System.Data.SQLite.SQLite3.Prepare(SQLiteConnection cnn, String strSql, SQLiteStatement previous, UInt32 timeoutMS, String& strRemain)
+   at System.Data.SQLite.SQLiteCommand.BuildNextCommand()
+   at System.Data.SQLite.SQLiteDataReader.NextResult()
+   at System.Data.SQLite.SQLiteDataReader..ctor(SQLiteCommand cmd, CommandBehavior behave)
+   at System.Data.SQLite.SQLiteCommand.ExecuteReader(CommandBehavior behavior)
+   at System.Data.SQLite.SQLiteCommand.ExecuteNonQuery(CommandBehavior behavior)
+   at System.Data.SQLite.SQLiteCommand.ExecuteNonQuery()
+   at FreeSql.Internal.CommonProvider.AdoProvider.ExecuteNonQuery(DbConnection connection, DbTransaction transaction, CommandType cmdType, String cmdText, Int32 cmdTimeout, Action`1 cmdAfterHandler, DbParameter[] cmdParms)
+   --- End of inner exception stack trace ---
+   at FreeSql.Internal.CommonProvider.AdoProvider.LoggerException(IObjectPool`1 pool, PrepareCommandResult pc, Exception ex, DateTime dt, StringBuilder logtxt, Boolean isThrowException)
+   at FreeSql.Internal.CommonProvider.AdoProvider.ExecuteNonQuery(DbConnection connection, DbTransaction transaction, CommandType cmdType, String cmdText, Int32 cmdTimeout, Action`1 cmdAfterHandler, DbParameter[] cmdParms)
+   at FreeSql.Internal.CommonProvider.AdoProvider.ExecuteNonQuery(CommandType cmdType, String cmdText, DbParameter[] cmdParms)
+   at FreeSql.Internal.CommonProvider.CodeFirstProvider.ExecuteDDLStatements(String ddl)
+   at FreeSql.Internal.CommonProvider.CodeFirstProvider.SyncStructure(TypeSchemaAndName[] objects)
+   at FreeSql.Internal.CommonProvider.CodeFirstProvider.SyncStructure[TEntity]()
+   at FreeSql.Internal.CommonProvider.Select0Provider`2..ctor(IFreeSql orm, CommonUtils commonUtils, CommonExpression commonExpression, Object dywhere)
+   at FreeSql.Internal.CommonProvider.Select1Provider`1..ctor(IFreeSql orm, CommonUtils commonUtils, CommonExpression commonExpression, Object dywhere)
+   at FreeSql.Sqlite.Curd.SqliteSelect`1..ctor(IFreeSql orm, CommonUtils commonUtils, CommonExpression commonExpression, Object dywhere)
+   at FreeSql.Sqlite.SqliteProvider`1.CreateSelectProvider[T1](Object dywhere)
+   at FreeSql.Internal.CommonProvider.BaseDbProvider.Select[T1]()
+   at HDEMS.Application.Services.MaterialService.GetPagedAsync(MaterialQueryRequest request) in D:\Project\HDEMS\backend\HDEMS.Application\Services\MaterialService.cs:line 33
+   at HDEMS.Api.Controllers.MaterialController.GetPaged(MaterialQueryRequest request) in D:\Project\HDEMS\backend\HDEMS.Api\Controllers\MaterialController.cs:line 33
+   at lambda_method107(Closure, Object)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeNextExceptionFilterAsync>g__Awaited|26_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+2026-01-21 16:33:41.520 +08:00 [INF] Executing ObjectResult, writing value of type '<>f__AnonymousType0`4[[System.Int32, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Int64, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-01-21 16:33:41.531 +08:00 [INF] Executed action HDEMS.Api.Controllers.MaterialController.GetPaged (HDEMS.Api) in 624.0507ms
+2026-01-21 16:33:41.533 +08:00 [INF] Executed endpoint 'HDEMS.Api.Controllers.MaterialController.GetPaged (HDEMS.Api)'
+2026-01-21 16:33:41.536 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/api/Material - 500 null application/json; charset=utf-8 658.9758ms
+2026-01-21 16:35:26.340 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/api/Auth/current-user - null null
+2026-01-21 16:35:26.362 +08:00 [INF] Executing endpoint 'HDEMS.Api.Controllers.AuthController.GetCurrentUser (HDEMS.Api)'
+2026-01-21 16:35:26.365 +08:00 [INF] Route matched with {action = "GetCurrentUser", controller = "Auth"}. Executing controller action with signature HDEMS.Application.DTOs.ApiResponse`1[HDEMS.Api.Controllers.AuthController+CurrentUser] GetCurrentUser() on controller HDEMS.Api.Controllers.AuthController (HDEMS.Api).
+2026-01-21 16:35:26.387 +08:00 [INF] Executing ObjectResult, writing value of type 'HDEMS.Application.DTOs.ApiResponse`1[[HDEMS.Api.Controllers.AuthController+CurrentUser, HDEMS.Api, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-01-21 16:35:26.399 +08:00 [INF] Executed action HDEMS.Api.Controllers.AuthController.GetCurrentUser (HDEMS.Api) in 19.2371ms
+2026-01-21 16:35:26.403 +08:00 [INF] Executed endpoint 'HDEMS.Api.Controllers.AuthController.GetCurrentUser (HDEMS.Api)'
+2026-01-21 16:35:26.405 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/api/Auth/current-user - 200 null application/json; charset=utf-8 71.0369ms
+2026-01-21 16:36:54.095 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/api/Material - null null
+2026-01-21 16:36:54.103 +08:00 [INF] Executing endpoint 'HDEMS.Api.Controllers.MaterialController.GetPaged (HDEMS.Api)'
+2026-01-21 16:36:54.105 +08:00 [INF] Route matched with {action = "GetPaged", controller = "Material"}. Executing controller action with signature System.Threading.Tasks.Task`1[HDEMS.Application.DTOs.ApiResponse`1[HDEMS.Application.DTOs.PagedResult`1[HDEMS.Application.DTOs.MaterialDto]]] GetPaged(HDEMS.Application.DTOs.MaterialQueryRequest) on controller HDEMS.Api.Controllers.MaterialController (HDEMS.Api).
+2026-01-21 16:36:54.627 +08:00 [ERR] 未捕获的异常: SQL logic error
+index idx_status already exists
+System.Exception: SQL logic error
+index idx_status already exists
+ ---> code = Error (1), message = System.Data.SQLite.SQLiteException (0x800007BF): SQL logic error
+index idx_status already exists
+   at System.Data.SQLite.SQLite3.Prepare(SQLiteConnection cnn, String strSql, SQLiteStatement previous, UInt32 timeoutMS, String& strRemain)
+   at System.Data.SQLite.SQLiteCommand.BuildNextCommand()
+   at System.Data.SQLite.SQLiteDataReader.NextResult()
+   at System.Data.SQLite.SQLiteDataReader..ctor(SQLiteCommand cmd, CommandBehavior behave)
+   at System.Data.SQLite.SQLiteCommand.ExecuteReader(CommandBehavior behavior)
+   at System.Data.SQLite.SQLiteCommand.ExecuteNonQuery(CommandBehavior behavior)
+   at System.Data.SQLite.SQLiteCommand.ExecuteNonQuery()
+   at FreeSql.Internal.CommonProvider.AdoProvider.ExecuteNonQuery(DbConnection connection, DbTransaction transaction, CommandType cmdType, String cmdText, Int32 cmdTimeout, Action`1 cmdAfterHandler, DbParameter[] cmdParms)
+   --- End of inner exception stack trace ---
+   at FreeSql.Internal.CommonProvider.AdoProvider.LoggerException(IObjectPool`1 pool, PrepareCommandResult pc, Exception ex, DateTime dt, StringBuilder logtxt, Boolean isThrowException)
+   at FreeSql.Internal.CommonProvider.AdoProvider.ExecuteNonQuery(DbConnection connection, DbTransaction transaction, CommandType cmdType, String cmdText, Int32 cmdTimeout, Action`1 cmdAfterHandler, DbParameter[] cmdParms)
+   at FreeSql.Internal.CommonProvider.AdoProvider.ExecuteNonQuery(CommandType cmdType, String cmdText, DbParameter[] cmdParms)
+   at FreeSql.Internal.CommonProvider.CodeFirstProvider.ExecuteDDLStatements(String ddl)
+   at FreeSql.Internal.CommonProvider.CodeFirstProvider.SyncStructure(TypeSchemaAndName[] objects)
+   at FreeSql.Internal.CommonProvider.CodeFirstProvider.SyncStructure[TEntity]()
+   at FreeSql.Internal.CommonProvider.Select0Provider`2..ctor(IFreeSql orm, CommonUtils commonUtils, CommonExpression commonExpression, Object dywhere)
+   at FreeSql.Internal.CommonProvider.Select1Provider`1..ctor(IFreeSql orm, CommonUtils commonUtils, CommonExpression commonExpression, Object dywhere)
+   at FreeSql.Sqlite.Curd.SqliteSelect`1..ctor(IFreeSql orm, CommonUtils commonUtils, CommonExpression commonExpression, Object dywhere)
+   at FreeSql.Sqlite.SqliteProvider`1.CreateSelectProvider[T1](Object dywhere)
+   at FreeSql.Internal.CommonProvider.BaseDbProvider.Select[T1]()
+   at HDEMS.Application.Services.MaterialService.GetPagedAsync(MaterialQueryRequest request) in D:\Project\HDEMS\backend\HDEMS.Application\Services\MaterialService.cs:line 33
+   at HDEMS.Api.Controllers.MaterialController.GetPaged(MaterialQueryRequest request) in D:\Project\HDEMS\backend\HDEMS.Api\Controllers\MaterialController.cs:line 33
+   at lambda_method107(Closure, Object)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeNextExceptionFilterAsync>g__Awaited|26_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+2026-01-21 16:36:54.642 +08:00 [INF] Executing ObjectResult, writing value of type '<>f__AnonymousType0`4[[System.Int32, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Int64, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-01-21 16:36:54.646 +08:00 [INF] Executed action HDEMS.Api.Controllers.MaterialController.GetPaged (HDEMS.Api) in 537.1571ms
+2026-01-21 16:36:54.649 +08:00 [INF] Executed endpoint 'HDEMS.Api.Controllers.MaterialController.GetPaged (HDEMS.Api)'
+2026-01-21 16:36:54.651 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/api/Material - 500 null application/json; charset=utf-8 558.6647ms
+2026-01-21 16:37:06.596 +08:00 [INF] 开始初始化种子数据...
+2026-01-21 16:37:07.380 +08:00 [INF] 系统初始化密钥已生成: c3bb7c68aba04d4e8731f7b21990ec78761d50ac57184500 (请妥善保管)
+2026-01-21 16:37:07.387 +08:00 [INF] 种子数据初始化完成
+2026-01-21 16:37:08.064 +08:00 [INF] User profile is available. Using 'C:\Users\SY\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-01-21 16:37:08.858 +08:00 [INF] Now listening on: http://localhost:57356
+2026-01-21 16:37:08.998 +08:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-01-21 16:37:09.000 +08:00 [INF] Hosting environment: Development
+2026-01-21 16:37:09.008 +08:00 [INF] Content root path: D:\Project\HDEMS\backend\HDEMS.Api
+2026-01-21 16:37:10.101 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/ - null null
+2026-01-21 16:37:10.674 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/ - 404 0 null 592.4169ms
+2026-01-21 16:37:10.892 +08:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET http://localhost:57356/, Response status code: 404
+2026-01-21 16:39:07.900 +08:00 [INF] 开始初始化种子数据...
+2026-01-21 16:39:08.863 +08:00 [INF] 系统初始化密钥已生成: 202901c86ad24355b6a0972f0f0a58863a289394bad34a5a (请妥善保管)
+2026-01-21 16:39:08.931 +08:00 [INF] 种子数据初始化完成
+2026-01-21 16:39:09.290 +08:00 [INF] User profile is available. Using 'C:\Users\SY\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-01-21 16:39:09.586 +08:00 [INF] Now listening on: http://localhost:57356
+2026-01-21 16:39:09.707 +08:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-01-21 16:39:09.715 +08:00 [INF] Hosting environment: Development
+2026-01-21 16:39:09.717 +08:00 [INF] Content root path: D:\Project\HDEMS\backend\HDEMS.Api
+2026-01-21 16:39:10.654 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/swagger - null null
+2026-01-21 16:39:10.967 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/swagger - 301 0 null 322.8199ms
+2026-01-21 16:39:10.982 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/swagger/index.html - null null
+2026-01-21 16:39:11.053 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/swagger/index.html - 200 null text/html;charset=utf-8 71.2026ms
+2026-01-21 16:39:12.411 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/_vs/browserLink - null null
+2026-01-21 16:39:12.410 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/_framework/aspnetcore-browser-refresh.js - null null
+2026-01-21 16:39:12.436 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/_framework/aspnetcore-browser-refresh.js - 200 13770 application/javascript; charset=utf-8 25.6069ms
+2026-01-21 16:39:12.468 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/_vs/browserLink - 200 null text/javascript; charset=UTF-8 57.7991ms
+2026-01-21 16:39:13.331 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/swagger/v1/swagger.json - null null
+2026-01-21 16:39:13.405 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 73.9695ms
+2026-01-21 16:39:35.316 +08:00 [INF] Request starting HTTP/1.1 POST http://localhost:57356/api/Auth/login - application/json 49
+2026-01-21 16:39:35.330 +08:00 [INF] CORS policy execution successful.
+2026-01-21 16:39:35.468 +08:00 [INF] Executing endpoint 'HDEMS.Api.Controllers.AuthController.Login (HDEMS.Api)'
+2026-01-21 16:39:35.514 +08:00 [INF] Route matched with {action = "Login", controller = "Auth"}. Executing controller action with signature System.Threading.Tasks.Task`1[HDEMS.Application.DTOs.ApiResponse`1[HDEMS.Application.DTOs.LoginResponse]] Login(HDEMS.Application.DTOs.LoginRequest) on controller HDEMS.Api.Controllers.AuthController (HDEMS.Api).
+2026-01-21 16:39:36.306 +08:00 [INF] Executing ObjectResult, writing value of type 'HDEMS.Application.DTOs.ApiResponse`1[[HDEMS.Application.DTOs.LoginResponse, HDEMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-01-21 16:39:36.335 +08:00 [INF] Executed action HDEMS.Api.Controllers.AuthController.Login (HDEMS.Api) in 814.3345ms
+2026-01-21 16:39:36.341 +08:00 [INF] Executed endpoint 'HDEMS.Api.Controllers.AuthController.Login (HDEMS.Api)'
+2026-01-21 16:39:36.344 +08:00 [INF] Request finished HTTP/1.1 POST http://localhost:57356/api/Auth/login - 200 null application/json; charset=utf-8 1028.0481ms
+2026-01-21 16:40:17.218 +08:00 [INF] Request starting HTTP/1.1 POST http://localhost:57356/api/Auth/reset-admin-password - application/json 8
+2026-01-21 16:40:17.234 +08:00 [INF] CORS policy execution successful.
+2026-01-21 16:40:17.305 +08:00 [INF] Executing endpoint 'HDEMS.Api.Controllers.AuthController.ResetAdminPassword (HDEMS.Api)'
+2026-01-21 16:40:17.353 +08:00 [INF] Route matched with {action = "ResetAdminPassword", controller = "Auth"}. Executing controller action with signature System.Threading.Tasks.Task`1[HDEMS.Application.DTOs.ApiResponse] ResetAdminPassword(System.String) on controller HDEMS.Api.Controllers.AuthController (HDEMS.Api).
+2026-01-21 16:40:17.933 +08:00 [WRN] 管理员密码已重置为: Lbznhs5n
+2026-01-21 16:40:17.935 +08:00 [INF] Executing ObjectResult, writing value of type 'HDEMS.Application.DTOs.ApiResponse'.
+2026-01-21 16:40:17.941 +08:00 [INF] Executed action HDEMS.Api.Controllers.AuthController.ResetAdminPassword (HDEMS.Api) in 583.3613ms
+2026-01-21 16:40:17.944 +08:00 [INF] Executed endpoint 'HDEMS.Api.Controllers.AuthController.ResetAdminPassword (HDEMS.Api)'
+2026-01-21 16:40:17.945 +08:00 [INF] Request finished HTTP/1.1 POST http://localhost:57356/api/Auth/reset-admin-password - 200 null application/json; charset=utf-8 732.0156ms
+2026-01-21 17:01:03.062 +08:00 [INF] 开始初始化种子数据...
+2026-01-21 17:01:03.775 +08:00 [INF] 系统初始化密钥已生成: d24e4b7e4c954c59ada3b9fa3c9421a3ee8014c85ca94cb4 (请妥善保管)
+2026-01-21 17:01:03.808 +08:00 [INF] 种子数据初始化完成
+2026-01-21 17:01:04.185 +08:00 [INF] User profile is available. Using 'C:\Users\SY\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-01-21 17:01:04.686 +08:00 [INF] Now listening on: http://localhost:57356
+2026-01-21 17:01:04.990 +08:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-01-21 17:01:05.009 +08:00 [INF] Hosting environment: Development
+2026-01-21 17:01:05.074 +08:00 [INF] Content root path: D:\Project\HDEMS\backend\HDEMS.Api
+2026-01-21 17:01:06.534 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/swagger/index.html - null null
+2026-01-21 17:01:07.902 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/swagger/index.html - 200 null text/html;charset=utf-8 1382.0434ms
+2026-01-21 17:01:08.723 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/_framework/aspnetcore-browser-refresh.js - null null
+2026-01-21 17:01:08.752 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/_framework/aspnetcore-browser-refresh.js - 200 13770 application/javascript; charset=utf-8 29.5595ms
+2026-01-21 17:01:10.010 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/_vs/browserLink - null null
+2026-01-21 17:01:10.970 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/_vs/browserLink - 200 null text/javascript; charset=UTF-8 959.9513ms
+2026-01-21 17:01:11.111 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/swagger/v1/swagger.json - null null
+2026-01-21 17:01:11.498 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 388.3643ms
+2026-01-21 17:01:23.183 +08:00 [INF] Request starting HTTP/1.1 POST http://localhost:57356/api/Auth/reset-admin-password - application/json 8
+2026-01-21 17:01:23.213 +08:00 [INF] CORS policy execution successful.
+2026-01-21 17:01:26.089 +08:00 [INF] Executing endpoint 'HDEMS.Api.Controllers.AuthController.ResetAdminPassword (HDEMS.Api)'
+2026-01-21 17:01:26.124 +08:00 [INF] Route matched with {action = "ResetAdminPassword", controller = "Auth"}. Executing controller action with signature System.Threading.Tasks.Task`1[HDEMS.Application.DTOs.ApiResponse] ResetAdminPassword(System.String) on controller HDEMS.Api.Controllers.AuthController (HDEMS.Api).
+2026-01-21 17:01:27.575 +08:00 [INF] 管理员密码已重置
+2026-01-21 17:01:27.589 +08:00 [INF] Executing ObjectResult, writing value of type 'HDEMS.Application.DTOs.ApiResponse'.
+2026-01-21 17:01:27.606 +08:00 [INF] Executed action HDEMS.Api.Controllers.AuthController.ResetAdminPassword (HDEMS.Api) in 1474.7145ms
+2026-01-21 17:01:27.607 +08:00 [INF] Executed endpoint 'HDEMS.Api.Controllers.AuthController.ResetAdminPassword (HDEMS.Api)'
+2026-01-21 17:01:27.609 +08:00 [INF] Request finished HTTP/1.1 POST http://localhost:57356/api/Auth/reset-admin-password - 200 null application/json; charset=utf-8 4426.1372ms
+2026-01-21 17:01:39.879 +08:00 [INF] Request starting HTTP/1.1 POST http://localhost:57356/api/Auth/login - application/json 49
+2026-01-21 17:01:39.891 +08:00 [INF] CORS policy execution successful.
+2026-01-21 17:01:39.899 +08:00 [INF] Executing endpoint 'HDEMS.Api.Controllers.AuthController.Login (HDEMS.Api)'
+2026-01-21 17:01:39.912 +08:00 [INF] Route matched with {action = "Login", controller = "Auth"}. Executing controller action with signature System.Threading.Tasks.Task`1[HDEMS.Application.DTOs.ApiResponse`1[HDEMS.Application.DTOs.LoginResponse]] Login(HDEMS.Application.DTOs.LoginRequest) on controller HDEMS.Api.Controllers.AuthController (HDEMS.Api).
+2026-01-21 17:01:40.341 +08:00 [INF] Executing ObjectResult, writing value of type 'HDEMS.Application.DTOs.ApiResponse`1[[HDEMS.Application.DTOs.LoginResponse, HDEMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-01-21 17:01:40.359 +08:00 [INF] Executed action HDEMS.Api.Controllers.AuthController.Login (HDEMS.Api) in 440.6036ms
+2026-01-21 17:01:40.360 +08:00 [INF] Executed endpoint 'HDEMS.Api.Controllers.AuthController.Login (HDEMS.Api)'
+2026-01-21 17:01:40.362 +08:00 [INF] Request finished HTTP/1.1 POST http://localhost:57356/api/Auth/login - 200 null application/json; charset=utf-8 482.3023ms
+2026-01-21 17:02:08.994 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/api/Material - null null
+2026-01-21 17:02:09.177 +08:00 [INF] Executing endpoint 'HDEMS.Api.Controllers.MaterialController.GetPaged (HDEMS.Api)'
+2026-01-21 17:02:09.190 +08:00 [INF] Route matched with {action = "GetPaged", controller = "Material"}. Executing controller action with signature System.Threading.Tasks.Task`1[HDEMS.Application.DTOs.ApiResponse`1[HDEMS.Application.DTOs.PagedResult`1[HDEMS.Application.DTOs.MaterialDto]]] GetPaged(HDEMS.Application.DTOs.MaterialQueryRequest) on controller HDEMS.Api.Controllers.MaterialController (HDEMS.Api).
+2026-01-21 17:02:09.848 +08:00 [ERR] 未捕获的异常: SQL logic error
+index idx_status already exists
+System.Exception: SQL logic error
+index idx_status already exists
+ ---> code = Error (1), message = System.Data.SQLite.SQLiteException (0x800007BF): SQL logic error
+index idx_status already exists
+   at System.Data.SQLite.SQLite3.Prepare(SQLiteConnection cnn, String strSql, SQLiteStatement previous, UInt32 timeoutMS, String& strRemain)
+   at System.Data.SQLite.SQLiteCommand.BuildNextCommand()
+   at System.Data.SQLite.SQLiteCommand.GetStatement(Int32 index)
+   at System.Data.SQLite.SQLiteDataReader.NextResult()
+   at System.Data.SQLite.SQLiteDataReader..ctor(SQLiteCommand cmd, CommandBehavior behave)
+   at System.Data.SQLite.SQLiteCommand.ExecuteReader(CommandBehavior behavior)
+   at System.Data.SQLite.SQLiteCommand.ExecuteNonQuery(CommandBehavior behavior)
+   at System.Data.SQLite.SQLiteCommand.ExecuteNonQuery()
+   at FreeSql.Internal.CommonProvider.AdoProvider.ExecuteNonQuery(DbConnection connection, DbTransaction transaction, CommandType cmdType, String cmdText, Int32 cmdTimeout, Action`1 cmdAfterHandler, DbParameter[] cmdParms)
+   --- End of inner exception stack trace ---
+   at FreeSql.Internal.CommonProvider.AdoProvider.LoggerException(IObjectPool`1 pool, PrepareCommandResult pc, Exception ex, DateTime dt, StringBuilder logtxt, Boolean isThrowException)
+   at FreeSql.Internal.CommonProvider.AdoProvider.ExecuteNonQuery(DbConnection connection, DbTransaction transaction, CommandType cmdType, String cmdText, Int32 cmdTimeout, Action`1 cmdAfterHandler, DbParameter[] cmdParms)
+   at FreeSql.Internal.CommonProvider.AdoProvider.ExecuteNonQuery(CommandType cmdType, String cmdText, DbParameter[] cmdParms)
+   at FreeSql.Internal.CommonProvider.CodeFirstProvider.ExecuteDDLStatements(String ddl)
+   at FreeSql.Internal.CommonProvider.CodeFirstProvider.SyncStructure(TypeSchemaAndName[] objects)
+   at FreeSql.Internal.CommonProvider.CodeFirstProvider.SyncStructure[TEntity]()
+   at FreeSql.Internal.CommonProvider.Select0Provider`2..ctor(IFreeSql orm, CommonUtils commonUtils, CommonExpression commonExpression, Object dywhere)
+   at FreeSql.Internal.CommonProvider.Select1Provider`1..ctor(IFreeSql orm, CommonUtils commonUtils, CommonExpression commonExpression, Object dywhere)
+   at FreeSql.Sqlite.Curd.SqliteSelect`1..ctor(IFreeSql orm, CommonUtils commonUtils, CommonExpression commonExpression, Object dywhere)
+   at FreeSql.Sqlite.SqliteProvider`1.CreateSelectProvider[T1](Object dywhere)
+   at FreeSql.Internal.CommonProvider.BaseDbProvider.Select[T1]()
+   at HDEMS.Application.Services.MaterialService.GetPagedAsync(MaterialQueryRequest request) in D:\Project\HDEMS\backend\HDEMS.Application\Services\MaterialService.cs:line 33
+   at HDEMS.Api.Controllers.MaterialController.GetPaged(MaterialQueryRequest request) in D:\Project\HDEMS\backend\HDEMS.Api\Controllers\MaterialController.cs:line 33
+   at lambda_method44(Closure, Object)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeNextExceptionFilterAsync>g__Awaited|26_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+2026-01-21 17:02:09.978 +08:00 [INF] Executing ObjectResult, writing value of type '<>f__AnonymousType0`4[[System.Int32, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Int64, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-01-21 17:02:09.991 +08:00 [INF] Executed action HDEMS.Api.Controllers.MaterialController.GetPaged (HDEMS.Api) in 797.6263ms
+2026-01-21 17:02:09.994 +08:00 [INF] Executed endpoint 'HDEMS.Api.Controllers.MaterialController.GetPaged (HDEMS.Api)'
+2026-01-21 17:02:09.995 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/api/Material - 500 null application/json; charset=utf-8 1001.8309ms
+2026-01-21 17:10:29.669 +08:00 [INF] 开始初始化种子数据...
+2026-01-21 17:10:30.325 +08:00 [INF] 系统初始化密钥已生成: c6557d62152a43538c213e68c4d9c6af39818b18fb6c493c (请妥善保管)
+2026-01-21 17:10:30.329 +08:00 [INF] 种子数据初始化完成
+2026-01-21 17:10:30.524 +08:00 [INF] User profile is available. Using 'C:\Users\SY\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-01-21 17:10:30.778 +08:00 [INF] Now listening on: http://localhost:57356
+2026-01-21 17:10:30.869 +08:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-01-21 17:10:30.874 +08:00 [INF] Hosting environment: Development
+2026-01-21 17:10:30.875 +08:00 [INF] Content root path: D:\Project\HDEMS\backend\HDEMS.Api
+2026-01-21 17:10:32.513 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/swagger/index.html - null null
+2026-01-21 17:10:33.363 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/swagger/index.html - 200 null text/html;charset=utf-8 865.1498ms
+2026-01-21 17:10:35.318 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/_framework/aspnetcore-browser-refresh.js - null null
+2026-01-21 17:10:35.318 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/_vs/browserLink - null null
+2026-01-21 17:10:35.329 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/_framework/aspnetcore-browser-refresh.js - 200 13770 application/javascript; charset=utf-8 10.923ms
+2026-01-21 17:10:35.441 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/_vs/browserLink - 200 null text/javascript; charset=UTF-8 123.2635ms
+2026-01-21 17:10:36.327 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/swagger/v1/swagger.json - null null
+2026-01-21 17:10:36.657 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 329.8781ms
+2026-01-21 17:10:50.936 +08:00 [INF] Request starting HTTP/1.1 POST http://localhost:57356/api/Auth/login - application/json 48
+2026-01-21 17:10:50.955 +08:00 [INF] CORS policy execution successful.
+2026-01-21 17:10:51.114 +08:00 [INF] Executing endpoint 'HDEMS.Api.Controllers.AuthController.Login (HDEMS.Api)'
+2026-01-21 17:10:51.142 +08:00 [INF] Route matched with {action = "Login", controller = "Auth"}. Executing controller action with signature System.Threading.Tasks.Task`1[HDEMS.Application.DTOs.ApiResponse`1[HDEMS.Application.DTOs.LoginResponse]] Login(HDEMS.Application.DTOs.LoginRequest) on controller HDEMS.Api.Controllers.AuthController (HDEMS.Api).
+2026-01-21 17:10:51.851 +08:00 [INF] Executing ObjectResult, writing value of type 'HDEMS.Application.DTOs.ApiResponse`1[[HDEMS.Application.DTOs.LoginResponse, HDEMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-01-21 17:10:51.899 +08:00 [INF] Executed action HDEMS.Api.Controllers.AuthController.Login (HDEMS.Api) in 749.1776ms
+2026-01-21 17:10:51.902 +08:00 [INF] Executed endpoint 'HDEMS.Api.Controllers.AuthController.Login (HDEMS.Api)'
+2026-01-21 17:10:51.907 +08:00 [INF] Request finished HTTP/1.1 POST http://localhost:57356/api/Auth/login - 200 null application/json; charset=utf-8 971.3144ms
+2026-01-21 17:11:02.381 +08:00 [INF] Request starting HTTP/1.1 POST http://localhost:57356/api/Auth/login - application/json 49
+2026-01-21 17:11:02.545 +08:00 [INF] CORS policy execution successful.
+2026-01-21 17:11:02.551 +08:00 [INF] Executing endpoint 'HDEMS.Api.Controllers.AuthController.Login (HDEMS.Api)'
+2026-01-21 17:11:02.580 +08:00 [INF] Route matched with {action = "Login", controller = "Auth"}. Executing controller action with signature System.Threading.Tasks.Task`1[HDEMS.Application.DTOs.ApiResponse`1[HDEMS.Application.DTOs.LoginResponse]] Login(HDEMS.Application.DTOs.LoginRequest) on controller HDEMS.Api.Controllers.AuthController (HDEMS.Api).
+2026-01-21 17:11:03.064 +08:00 [INF] Executing ObjectResult, writing value of type 'HDEMS.Application.DTOs.ApiResponse`1[[HDEMS.Application.DTOs.LoginResponse, HDEMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-01-21 17:11:03.066 +08:00 [INF] Executed action HDEMS.Api.Controllers.AuthController.Login (HDEMS.Api) in 482.0764ms
+2026-01-21 17:11:03.067 +08:00 [INF] Executed endpoint 'HDEMS.Api.Controllers.AuthController.Login (HDEMS.Api)'
+2026-01-21 17:11:03.068 +08:00 [INF] Request finished HTTP/1.1 POST http://localhost:57356/api/Auth/login - 200 null application/json; charset=utf-8 687.6099ms
+2026-01-21 17:11:14.358 +08:00 [INF] Request starting HTTP/1.1 POST http://localhost:57356/api/Auth/reset-admin-password - application/json 8
+2026-01-21 17:11:14.366 +08:00 [INF] CORS policy execution successful.
+2026-01-21 17:11:14.372 +08:00 [INF] Executing endpoint 'HDEMS.Api.Controllers.AuthController.ResetAdminPassword (HDEMS.Api)'
+2026-01-21 17:11:14.392 +08:00 [INF] Route matched with {action = "ResetAdminPassword", controller = "Auth"}. Executing controller action with signature System.Threading.Tasks.Task`1[HDEMS.Application.DTOs.ApiResponse] ResetAdminPassword(System.String) on controller HDEMS.Api.Controllers.AuthController (HDEMS.Api).
+2026-01-21 17:11:14.832 +08:00 [INF] 管理员密码已重置
+2026-01-21 17:11:14.834 +08:00 [INF] Executing ObjectResult, writing value of type 'HDEMS.Application.DTOs.ApiResponse'.
+2026-01-21 17:11:14.839 +08:00 [INF] Executed action HDEMS.Api.Controllers.AuthController.ResetAdminPassword (HDEMS.Api) in 431.9202ms
+2026-01-21 17:11:14.842 +08:00 [INF] Executed endpoint 'HDEMS.Api.Controllers.AuthController.ResetAdminPassword (HDEMS.Api)'
+2026-01-21 17:11:14.844 +08:00 [INF] Request finished HTTP/1.1 POST http://localhost:57356/api/Auth/reset-admin-password - 200 null application/json; charset=utf-8 486.4429ms
+2026-01-21 17:11:19.183 +08:00 [INF] Request starting HTTP/1.1 POST http://localhost:57356/api/Auth/login - application/json 49
+2026-01-21 17:11:19.187 +08:00 [INF] CORS policy execution successful.
+2026-01-21 17:11:19.189 +08:00 [INF] Executing endpoint 'HDEMS.Api.Controllers.AuthController.Login (HDEMS.Api)'
+2026-01-21 17:11:19.192 +08:00 [INF] Route matched with {action = "Login", controller = "Auth"}. Executing controller action with signature System.Threading.Tasks.Task`1[HDEMS.Application.DTOs.ApiResponse`1[HDEMS.Application.DTOs.LoginResponse]] Login(HDEMS.Application.DTOs.LoginRequest) on controller HDEMS.Api.Controllers.AuthController (HDEMS.Api).
+2026-01-21 17:11:19.581 +08:00 [INF] Executing ObjectResult, writing value of type 'HDEMS.Application.DTOs.ApiResponse`1[[HDEMS.Application.DTOs.LoginResponse, HDEMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-01-21 17:11:19.599 +08:00 [INF] Executed action HDEMS.Api.Controllers.AuthController.Login (HDEMS.Api) in 404.6394ms
+2026-01-21 17:11:19.607 +08:00 [INF] Executed endpoint 'HDEMS.Api.Controllers.AuthController.Login (HDEMS.Api)'
+2026-01-21 17:11:19.611 +08:00 [INF] Request finished HTTP/1.1 POST http://localhost:57356/api/Auth/login - 200 null application/json; charset=utf-8 427.751ms
+2026-01-21 17:11:41.026 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/api/Material - null null
+2026-01-21 17:11:41.195 +08:00 [INF] Executing endpoint 'HDEMS.Api.Controllers.MaterialController.GetPaged (HDEMS.Api)'
+2026-01-21 17:11:41.208 +08:00 [INF] Route matched with {action = "GetPaged", controller = "Material"}. Executing controller action with signature System.Threading.Tasks.Task`1[HDEMS.Application.DTOs.ApiResponse`1[HDEMS.Application.DTOs.PagedResult`1[HDEMS.Application.DTOs.MaterialDto]]] GetPaged(HDEMS.Application.DTOs.MaterialQueryRequest) on controller HDEMS.Api.Controllers.MaterialController (HDEMS.Api).
+2026-01-21 17:11:42.088 +08:00 [ERR] 未捕获的异常: SQL logic error
+index idx_status already exists
+System.Exception: SQL logic error
+index idx_status already exists
+ ---> code = Error (1), message = System.Data.SQLite.SQLiteException (0x800007BF): SQL logic error
+index idx_status already exists
+   at System.Data.SQLite.SQLite3.Prepare(SQLiteConnection cnn, String strSql, SQLiteStatement previous, UInt32 timeoutMS, String& strRemain)
+   at System.Data.SQLite.SQLiteCommand.BuildNextCommand()
+   at System.Data.SQLite.SQLiteCommand.GetStatement(Int32 index)
+   at System.Data.SQLite.SQLiteDataReader.NextResult()
+   at System.Data.SQLite.SQLiteDataReader..ctor(SQLiteCommand cmd, CommandBehavior behave)
+   at System.Data.SQLite.SQLiteCommand.ExecuteReader(CommandBehavior behavior)
+   at System.Data.SQLite.SQLiteCommand.ExecuteNonQuery(CommandBehavior behavior)
+   at System.Data.SQLite.SQLiteCommand.ExecuteNonQuery()
+   at FreeSql.Internal.CommonProvider.AdoProvider.ExecuteNonQuery(DbConnection connection, DbTransaction transaction, CommandType cmdType, String cmdText, Int32 cmdTimeout, Action`1 cmdAfterHandler, DbParameter[] cmdParms)
+   --- End of inner exception stack trace ---
+   at FreeSql.Internal.CommonProvider.AdoProvider.LoggerException(IObjectPool`1 pool, PrepareCommandResult pc, Exception ex, DateTime dt, StringBuilder logtxt, Boolean isThrowException)
+   at FreeSql.Internal.CommonProvider.AdoProvider.ExecuteNonQuery(DbConnection connection, DbTransaction transaction, CommandType cmdType, String cmdText, Int32 cmdTimeout, Action`1 cmdAfterHandler, DbParameter[] cmdParms)
+   at FreeSql.Internal.CommonProvider.AdoProvider.ExecuteNonQuery(CommandType cmdType, String cmdText, DbParameter[] cmdParms)
+   at FreeSql.Internal.CommonProvider.CodeFirstProvider.ExecuteDDLStatements(String ddl)
+   at FreeSql.Internal.CommonProvider.CodeFirstProvider.SyncStructure(TypeSchemaAndName[] objects)
+   at FreeSql.Internal.CommonProvider.CodeFirstProvider.SyncStructure[TEntity]()
+   at FreeSql.Internal.CommonProvider.Select0Provider`2..ctor(IFreeSql orm, CommonUtils commonUtils, CommonExpression commonExpression, Object dywhere)
+   at FreeSql.Internal.CommonProvider.Select1Provider`1..ctor(IFreeSql orm, CommonUtils commonUtils, CommonExpression commonExpression, Object dywhere)
+   at FreeSql.Sqlite.Curd.SqliteSelect`1..ctor(IFreeSql orm, CommonUtils commonUtils, CommonExpression commonExpression, Object dywhere)
+   at FreeSql.Sqlite.SqliteProvider`1.CreateSelectProvider[T1](Object dywhere)
+   at FreeSql.Internal.CommonProvider.BaseDbProvider.Select[T1]()
+   at HDEMS.Application.Services.MaterialService.GetPagedAsync(MaterialQueryRequest request) in D:\Project\HDEMS\backend\HDEMS.Application\Services\MaterialService.cs:line 33
+   at HDEMS.Api.Controllers.MaterialController.GetPaged(MaterialQueryRequest request) in D:\Project\HDEMS\backend\HDEMS.Api\Controllers\MaterialController.cs:line 33
+   at lambda_method44(Closure, Object)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeNextExceptionFilterAsync>g__Awaited|26_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+2026-01-21 17:11:42.165 +08:00 [INF] Executing ObjectResult, writing value of type '<>f__AnonymousType0`4[[System.Int32, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Int64, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-01-21 17:11:42.173 +08:00 [INF] Executed action HDEMS.Api.Controllers.MaterialController.GetPaged (HDEMS.Api) in 961.7399ms
+2026-01-21 17:11:42.174 +08:00 [INF] Executed endpoint 'HDEMS.Api.Controllers.MaterialController.GetPaged (HDEMS.Api)'
+2026-01-21 17:11:42.175 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/api/Material - 500 null application/json; charset=utf-8 1158.7759ms
+2026-01-21 17:15:55.686 +08:00 [INF] 开始初始化种子数据...
+2026-01-21 17:15:57.045 +08:00 [INF] 初始化医院数据: 10 条
+2026-01-21 17:15:57.185 +08:00 [INF] 初始化科室数据: 20 条
+2026-01-21 17:15:57.296 +08:00 [INF] 初始化班次数据: 10 条
+2026-01-21 17:15:57.592 +08:00 [INF] 初始化人员职级数据: 14 条
+2026-01-21 17:15:58.146 +08:00 [INF] 初始化人员职称数据: 12 条
+2026-01-21 17:15:58.298 +08:00 [INF] 初始化物资阈值数据: 5 条
+2026-01-21 17:15:58.370 +08:00 [INF] 系统初始化密钥已生成: 785dacc13a5247caabd56555a2c6c6eb6ead72bacb6f4e1b (请妥善保管)
+2026-01-21 17:15:58.387 +08:00 [INF] 种子数据初始化完成
+2026-01-21 17:15:59.121 +08:00 [INF] User profile is available. Using 'C:\Users\SY\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-01-21 17:15:59.835 +08:00 [INF] Now listening on: http://localhost:57356
+2026-01-21 17:16:00.097 +08:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-01-21 17:16:00.129 +08:00 [INF] Hosting environment: Development
+2026-01-21 17:16:00.132 +08:00 [INF] Content root path: D:\Project\HDEMS\backend\HDEMS.Api
+2026-01-21 17:16:01.154 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/swagger/index.html - null null
+2026-01-21 17:16:01.696 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/swagger/index.html - 200 null text/html;charset=utf-8 562.8051ms
+2026-01-21 17:16:03.321 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/_framework/aspnetcore-browser-refresh.js - null null
+2026-01-21 17:16:03.321 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/_vs/browserLink - null null
+2026-01-21 17:16:03.331 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/_framework/aspnetcore-browser-refresh.js - 200 13770 application/javascript; charset=utf-8 9.6845ms
+2026-01-21 17:16:03.405 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/_vs/browserLink - 200 null text/javascript; charset=UTF-8 83.611ms
+2026-01-21 17:16:04.427 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/swagger/v1/swagger.json - null null
+2026-01-21 17:16:04.628 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 201.8607ms
+2026-01-21 17:16:19.190 +08:00 [INF] Request starting HTTP/1.1 POST http://localhost:57356/api/Auth/login - application/json 49
+2026-01-21 17:16:19.200 +08:00 [INF] CORS policy execution successful.
+2026-01-21 17:16:19.355 +08:00 [INF] Executing endpoint 'HDEMS.Api.Controllers.AuthController.Login (HDEMS.Api)'
+2026-01-21 17:16:19.393 +08:00 [INF] Route matched with {action = "Login", controller = "Auth"}. Executing controller action with signature System.Threading.Tasks.Task`1[HDEMS.Application.DTOs.ApiResponse`1[HDEMS.Application.DTOs.LoginResponse]] Login(HDEMS.Application.DTOs.LoginRequest) on controller HDEMS.Api.Controllers.AuthController (HDEMS.Api).
+2026-01-21 17:16:19.771 +08:00 [INF] Executing ObjectResult, writing value of type 'HDEMS.Application.DTOs.ApiResponse`1[[HDEMS.Application.DTOs.LoginResponse, HDEMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-01-21 17:16:19.927 +08:00 [INF] Executed action HDEMS.Api.Controllers.AuthController.Login (HDEMS.Api) in 524.618ms
+2026-01-21 17:16:19.930 +08:00 [INF] Executed endpoint 'HDEMS.Api.Controllers.AuthController.Login (HDEMS.Api)'
+2026-01-21 17:16:19.933 +08:00 [INF] Request finished HTTP/1.1 POST http://localhost:57356/api/Auth/login - 200 null application/json; charset=utf-8 743.9501ms
+2026-01-21 17:16:36.779 +08:00 [INF] Request starting HTTP/1.1 POST http://localhost:57356/api/Auth/reset-admin-password - application/json 8
+2026-01-21 17:16:36.789 +08:00 [INF] CORS policy execution successful.
+2026-01-21 17:16:36.792 +08:00 [INF] Executing endpoint 'HDEMS.Api.Controllers.AuthController.ResetAdminPassword (HDEMS.Api)'
+2026-01-21 17:16:36.805 +08:00 [INF] Route matched with {action = "ResetAdminPassword", controller = "Auth"}. Executing controller action with signature System.Threading.Tasks.Task`1[HDEMS.Application.DTOs.ApiResponse] ResetAdminPassword(System.String) on controller HDEMS.Api.Controllers.AuthController (HDEMS.Api).
+2026-01-21 17:16:37.599 +08:00 [INF] 管理员账户已创建
+2026-01-21 17:16:37.601 +08:00 [INF] Executing ObjectResult, writing value of type 'HDEMS.Application.DTOs.ApiResponse'.
+2026-01-21 17:16:37.606 +08:00 [INF] Executed action HDEMS.Api.Controllers.AuthController.ResetAdminPassword (HDEMS.Api) in 787.5408ms
+2026-01-21 17:16:37.608 +08:00 [INF] Executed endpoint 'HDEMS.Api.Controllers.AuthController.ResetAdminPassword (HDEMS.Api)'
+2026-01-21 17:16:37.610 +08:00 [INF] Request finished HTTP/1.1 POST http://localhost:57356/api/Auth/reset-admin-password - 200 null application/json; charset=utf-8 831.2712ms
+2026-01-21 17:16:40.540 +08:00 [INF] Request starting HTTP/1.1 POST http://localhost:57356/api/Auth/login - application/json 49
+2026-01-21 17:16:40.543 +08:00 [INF] CORS policy execution successful.
+2026-01-21 17:16:40.548 +08:00 [INF] Executing endpoint 'HDEMS.Api.Controllers.AuthController.Login (HDEMS.Api)'
+2026-01-21 17:16:40.550 +08:00 [INF] Route matched with {action = "Login", controller = "Auth"}. Executing controller action with signature System.Threading.Tasks.Task`1[HDEMS.Application.DTOs.ApiResponse`1[HDEMS.Application.DTOs.LoginResponse]] Login(HDEMS.Application.DTOs.LoginRequest) on controller HDEMS.Api.Controllers.AuthController (HDEMS.Api).
+2026-01-21 17:16:41.119 +08:00 [INF] Executing ObjectResult, writing value of type 'HDEMS.Application.DTOs.ApiResponse`1[[HDEMS.Application.DTOs.LoginResponse, HDEMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-01-21 17:16:41.142 +08:00 [INF] Executed action HDEMS.Api.Controllers.AuthController.Login (HDEMS.Api) in 589.3742ms
+2026-01-21 17:16:41.150 +08:00 [INF] Executed endpoint 'HDEMS.Api.Controllers.AuthController.Login (HDEMS.Api)'
+2026-01-21 17:16:41.157 +08:00 [INF] Request finished HTTP/1.1 POST http://localhost:57356/api/Auth/login - 200 null application/json; charset=utf-8 616.7294ms
+2026-01-21 17:17:04.481 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/api/Material - null null
+2026-01-21 17:17:04.610 +08:00 [INF] Executing endpoint 'HDEMS.Api.Controllers.MaterialController.GetPaged (HDEMS.Api)'
+2026-01-21 17:17:04.621 +08:00 [INF] Route matched with {action = "GetPaged", controller = "Material"}. Executing controller action with signature System.Threading.Tasks.Task`1[HDEMS.Application.DTOs.ApiResponse`1[HDEMS.Application.DTOs.PagedResult`1[HDEMS.Application.DTOs.MaterialDto]]] GetPaged(HDEMS.Application.DTOs.MaterialQueryRequest) on controller HDEMS.Api.Controllers.MaterialController (HDEMS.Api).
+2026-01-21 17:17:04.948 +08:00 [INF] Executing ObjectResult, writing value of type 'HDEMS.Application.DTOs.ApiResponse`1[[HDEMS.Application.DTOs.PagedResult`1[[HDEMS.Application.DTOs.MaterialDto, HDEMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], HDEMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-01-21 17:17:04.995 +08:00 [INF] Executed action HDEMS.Api.Controllers.MaterialController.GetPaged (HDEMS.Api) in 370.7511ms
+2026-01-21 17:17:05.006 +08:00 [INF] Executed endpoint 'HDEMS.Api.Controllers.MaterialController.GetPaged (HDEMS.Api)'
+2026-01-21 17:17:05.010 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/api/Material - 200 null application/json; charset=utf-8 529.9883ms
+2026-01-21 17:22:24.092 +08:00 [INF] Request starting HTTP/1.1 POST http://localhost:57356/api/Material - application/json 286
+2026-01-21 17:22:24.097 +08:00 [INF] CORS policy execution successful.
+2026-01-21 17:22:24.101 +08:00 [INF] Executing endpoint 'HDEMS.Api.Controllers.MaterialController.Create (HDEMS.Api)'
+2026-01-21 17:22:24.108 +08:00 [INF] Route matched with {action = "Create", controller = "Material"}. Executing controller action with signature System.Threading.Tasks.Task`1[HDEMS.Application.DTOs.ApiResponse`1[HDEMS.Application.DTOs.MaterialDto]] Create(HDEMS.Application.DTOs.MaterialCreateRequest) on controller HDEMS.Api.Controllers.MaterialController (HDEMS.Api).
+2026-01-21 17:22:24.238 +08:00 [INF] Executing ObjectResult, writing value of type 'HDEMS.Application.DTOs.ApiResponse`1[[HDEMS.Application.DTOs.MaterialDto, HDEMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-01-21 17:22:24.262 +08:00 [INF] Executed action HDEMS.Api.Controllers.MaterialController.Create (HDEMS.Api) in 149.3539ms
+2026-01-21 17:22:24.274 +08:00 [INF] Executed endpoint 'HDEMS.Api.Controllers.MaterialController.Create (HDEMS.Api)'
+2026-01-21 17:22:24.280 +08:00 [INF] Request finished HTTP/1.1 POST http://localhost:57356/api/Material - 200 null application/json; charset=utf-8 188.0036ms
+2026-01-21 17:28:06.748 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/api/Schedule - null null
+2026-01-21 17:28:06.932 +08:00 [INF] Executing endpoint 'HDEMS.Api.Controllers.ScheduleController.GetPaged (HDEMS.Api)'
+2026-01-21 17:28:06.963 +08:00 [INF] Route matched with {action = "GetPaged", controller = "Schedule"}. Executing controller action with signature System.Threading.Tasks.Task`1[HDEMS.Application.DTOs.ApiResponse`1[HDEMS.Application.DTOs.PagedResult`1[HDEMS.Application.DTOs.ScheduleDto]]] GetPaged(HDEMS.Application.DTOs.ScheduleQueryRequest) on controller HDEMS.Api.Controllers.ScheduleController (HDEMS.Api).
+2026-01-21 17:28:07.770 +08:00 [ERR] 未捕获的异常: SQL logic error
+index idx_hospital_id already exists
+System.Exception: SQL logic error
+index idx_hospital_id already exists
+ ---> code = Error (1), message = System.Data.SQLite.SQLiteException (0x800007BF): SQL logic error
+index idx_hospital_id already exists
+   at System.Data.SQLite.SQLite3.Prepare(SQLiteConnection cnn, String strSql, SQLiteStatement previous, UInt32 timeoutMS, String& strRemain)
+   at System.Data.SQLite.SQLiteCommand.BuildNextCommand()
+   at System.Data.SQLite.SQLiteDataReader.NextResult()
+   at System.Data.SQLite.SQLiteDataReader..ctor(SQLiteCommand cmd, CommandBehavior behave)
+   at System.Data.SQLite.SQLiteCommand.ExecuteReader(CommandBehavior behavior)
+   at System.Data.SQLite.SQLiteCommand.ExecuteNonQuery(CommandBehavior behavior)
+   at System.Data.SQLite.SQLiteCommand.ExecuteNonQuery()
+   at FreeSql.Internal.CommonProvider.AdoProvider.ExecuteNonQuery(DbConnection connection, DbTransaction transaction, CommandType cmdType, String cmdText, Int32 cmdTimeout, Action`1 cmdAfterHandler, DbParameter[] cmdParms)
+   --- End of inner exception stack trace ---
+   at FreeSql.Internal.CommonProvider.AdoProvider.LoggerException(IObjectPool`1 pool, PrepareCommandResult pc, Exception ex, DateTime dt, StringBuilder logtxt, Boolean isThrowException)
+   at FreeSql.Internal.CommonProvider.AdoProvider.ExecuteNonQuery(DbConnection connection, DbTransaction transaction, CommandType cmdType, String cmdText, Int32 cmdTimeout, Action`1 cmdAfterHandler, DbParameter[] cmdParms)
+   at FreeSql.Internal.CommonProvider.AdoProvider.ExecuteNonQuery(CommandType cmdType, String cmdText, DbParameter[] cmdParms)
+   at FreeSql.Internal.CommonProvider.CodeFirstProvider.ExecuteDDLStatements(String ddl)
+   at FreeSql.Internal.CommonProvider.CodeFirstProvider.SyncStructure(TypeSchemaAndName[] objects)
+   at FreeSql.Internal.CommonProvider.CodeFirstProvider.SyncStructure[TEntity]()
+   at FreeSql.Internal.CommonProvider.Select0Provider`2..ctor(IFreeSql orm, CommonUtils commonUtils, CommonExpression commonExpression, Object dywhere)
+   at FreeSql.Internal.CommonProvider.Select1Provider`1..ctor(IFreeSql orm, CommonUtils commonUtils, CommonExpression commonExpression, Object dywhere)
+   at FreeSql.Sqlite.Curd.SqliteSelect`1..ctor(IFreeSql orm, CommonUtils commonUtils, CommonExpression commonExpression, Object dywhere)
+   at FreeSql.Sqlite.SqliteProvider`1.CreateSelectProvider[T1](Object dywhere)
+   at FreeSql.Internal.CommonProvider.BaseDbProvider.Select[T1]()
+   at HDEMS.Application.Services.ScheduleService.GetPagedAsync(ScheduleQueryRequest request) in D:\Project\HDEMS\backend\HDEMS.Application\Services\ScheduleService.cs:line 31
+   at HDEMS.Api.Controllers.ScheduleController.GetPaged(ScheduleQueryRequest request) in D:\Project\HDEMS\backend\HDEMS.Api\Controllers\ScheduleController.cs:line 33
+   at lambda_method150(Closure, Object)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeNextExceptionFilterAsync>g__Awaited|26_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+2026-01-21 17:28:07.932 +08:00 [INF] Executing ObjectResult, writing value of type '<>f__AnonymousType0`4[[System.Int32, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Int64, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-01-21 17:28:07.947 +08:00 [INF] Executed action HDEMS.Api.Controllers.ScheduleController.GetPaged (HDEMS.Api) in 979.5039ms
+2026-01-21 17:28:07.949 +08:00 [INF] Executed endpoint 'HDEMS.Api.Controllers.ScheduleController.GetPaged (HDEMS.Api)'
+2026-01-21 17:28:07.951 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/api/Schedule - 500 null application/json; charset=utf-8 1203.1324ms
+2026-01-21 17:34:34.357 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/api/Material - null null
+2026-01-21 17:34:34.363 +08:00 [INF] Executing endpoint 'HDEMS.Api.Controllers.MaterialController.GetPaged (HDEMS.Api)'
+2026-01-21 17:34:34.367 +08:00 [INF] Route matched with {action = "GetPaged", controller = "Material"}. Executing controller action with signature System.Threading.Tasks.Task`1[HDEMS.Application.DTOs.ApiResponse`1[HDEMS.Application.DTOs.PagedResult`1[HDEMS.Application.DTOs.MaterialDto]]] GetPaged(HDEMS.Application.DTOs.MaterialQueryRequest) on controller HDEMS.Api.Controllers.MaterialController (HDEMS.Api).
+2026-01-21 17:34:34.387 +08:00 [INF] Executing ObjectResult, writing value of type 'HDEMS.Application.DTOs.ApiResponse`1[[HDEMS.Application.DTOs.PagedResult`1[[HDEMS.Application.DTOs.MaterialDto, HDEMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], HDEMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-01-21 17:34:34.421 +08:00 [INF] Executed action HDEMS.Api.Controllers.MaterialController.GetPaged (HDEMS.Api) in 43.5557ms
+2026-01-21 17:34:34.442 +08:00 [INF] Executed endpoint 'HDEMS.Api.Controllers.MaterialController.GetPaged (HDEMS.Api)'
+2026-01-21 17:34:34.445 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/api/Material - 200 null application/json; charset=utf-8 88.1356ms
+2026-01-21 17:34:45.443 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/api/Schedule - null null
+2026-01-21 17:34:45.448 +08:00 [INF] Executing endpoint 'HDEMS.Api.Controllers.ScheduleController.GetPaged (HDEMS.Api)'
+2026-01-21 17:34:45.449 +08:00 [INF] Route matched with {action = "GetPaged", controller = "Schedule"}. Executing controller action with signature System.Threading.Tasks.Task`1[HDEMS.Application.DTOs.ApiResponse`1[HDEMS.Application.DTOs.PagedResult`1[HDEMS.Application.DTOs.ScheduleDto]]] GetPaged(HDEMS.Application.DTOs.ScheduleQueryRequest) on controller HDEMS.Api.Controllers.ScheduleController (HDEMS.Api).
+2026-01-21 17:34:46.316 +08:00 [ERR] 未捕获的异常: SQL logic error
+index idx_hospital_id already exists
+System.Exception: SQL logic error
+index idx_hospital_id already exists
+ ---> code = Error (1), message = System.Data.SQLite.SQLiteException (0x800007BF): SQL logic error
+index idx_hospital_id already exists
+   at System.Data.SQLite.SQLite3.Prepare(SQLiteConnection cnn, String strSql, SQLiteStatement previous, UInt32 timeoutMS, String& strRemain)
+   at System.Data.SQLite.SQLiteCommand.BuildNextCommand()
+   at System.Data.SQLite.SQLiteDataReader.NextResult()
+   at System.Data.SQLite.SQLiteDataReader..ctor(SQLiteCommand cmd, CommandBehavior behave)
+   at System.Data.SQLite.SQLiteCommand.ExecuteReader(CommandBehavior behavior)
+   at System.Data.SQLite.SQLiteCommand.ExecuteNonQuery(CommandBehavior behavior)
+   at System.Data.SQLite.SQLiteCommand.ExecuteNonQuery()
+   at FreeSql.Internal.CommonProvider.AdoProvider.ExecuteNonQuery(DbConnection connection, DbTransaction transaction, CommandType cmdType, String cmdText, Int32 cmdTimeout, Action`1 cmdAfterHandler, DbParameter[] cmdParms)
+   --- End of inner exception stack trace ---
+   at FreeSql.Internal.CommonProvider.AdoProvider.LoggerException(IObjectPool`1 pool, PrepareCommandResult pc, Exception ex, DateTime dt, StringBuilder logtxt, Boolean isThrowException)
+   at FreeSql.Internal.CommonProvider.AdoProvider.ExecuteNonQuery(DbConnection connection, DbTransaction transaction, CommandType cmdType, String cmdText, Int32 cmdTimeout, Action`1 cmdAfterHandler, DbParameter[] cmdParms)
+   at FreeSql.Internal.CommonProvider.AdoProvider.ExecuteNonQuery(CommandType cmdType, String cmdText, DbParameter[] cmdParms)
+   at FreeSql.Internal.CommonProvider.CodeFirstProvider.ExecuteDDLStatements(String ddl)
+   at FreeSql.Internal.CommonProvider.CodeFirstProvider.SyncStructure(TypeSchemaAndName[] objects)
+   at FreeSql.Internal.CommonProvider.CodeFirstProvider.SyncStructure[TEntity]()
+   at FreeSql.Internal.CommonProvider.Select0Provider`2..ctor(IFreeSql orm, CommonUtils commonUtils, CommonExpression commonExpression, Object dywhere)
+   at FreeSql.Internal.CommonProvider.Select1Provider`1..ctor(IFreeSql orm, CommonUtils commonUtils, CommonExpression commonExpression, Object dywhere)
+   at FreeSql.Sqlite.Curd.SqliteSelect`1..ctor(IFreeSql orm, CommonUtils commonUtils, CommonExpression commonExpression, Object dywhere)
+   at FreeSql.Sqlite.SqliteProvider`1.CreateSelectProvider[T1](Object dywhere)
+   at FreeSql.Internal.CommonProvider.BaseDbProvider.Select[T1]()
+   at HDEMS.Application.Services.ScheduleService.GetPagedAsync(ScheduleQueryRequest request) in D:\Project\HDEMS\backend\HDEMS.Application\Services\ScheduleService.cs:line 31
+   at HDEMS.Api.Controllers.ScheduleController.GetPaged(ScheduleQueryRequest request) in D:\Project\HDEMS\backend\HDEMS.Api\Controllers\ScheduleController.cs:line 33
+   at lambda_method150(Closure, Object)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeNextExceptionFilterAsync>g__Awaited|26_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+2026-01-21 17:34:46.336 +08:00 [INF] Executing ObjectResult, writing value of type '<>f__AnonymousType0`4[[System.Int32, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Int64, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-01-21 17:34:46.338 +08:00 [INF] Executed action HDEMS.Api.Controllers.ScheduleController.GetPaged (HDEMS.Api) in 887.0716ms
+2026-01-21 17:34:46.340 +08:00 [INF] Executed endpoint 'HDEMS.Api.Controllers.ScheduleController.GetPaged (HDEMS.Api)'
+2026-01-21 17:34:46.342 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/api/Schedule - 500 null application/json; charset=utf-8 899.6856ms
+2026-01-21 17:41:40.226 +08:00 [INF] 开始初始化种子数据...
+2026-01-21 17:41:41.076 +08:00 [INF] 初始化医院数据: 10 条
+2026-01-21 17:41:41.244 +08:00 [INF] 初始化科室数据: 20 条
+2026-01-21 17:41:41.372 +08:00 [INF] 初始化班次数据: 10 条
+2026-01-21 17:41:41.458 +08:00 [INF] 初始化人员职级数据: 14 条
+2026-01-21 17:41:41.507 +08:00 [INF] 初始化人员职称数据: 12 条
+2026-01-21 17:41:41.612 +08:00 [INF] 初始化物资阈值数据: 5 条
+2026-01-21 17:41:41.710 +08:00 [INF] 系统初始化密钥已生成: d9b72ebb72904d4db7a31066913d0bb1d9bb1ea3fc344c48 (请妥善保管)
+2026-01-21 17:41:41.774 +08:00 [INF] 种子数据初始化完成
+2026-01-21 17:41:42.337 +08:00 [INF] User profile is available. Using 'C:\Users\SY\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-01-21 17:41:43.027 +08:00 [INF] Now listening on: http://localhost:57356
+2026-01-21 17:41:43.167 +08:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-01-21 17:41:43.168 +08:00 [INF] Hosting environment: Development
+2026-01-21 17:41:43.171 +08:00 [INF] Content root path: D:\Project\HDEMS\backend\HDEMS.Api
+2026-01-21 17:41:44.940 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/swagger/index.html - null null
+2026-01-21 17:41:45.582 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/swagger/index.html - 200 null text/html;charset=utf-8 677.3133ms
+2026-01-21 17:41:47.225 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/_vs/browserLink - null null
+2026-01-21 17:41:47.225 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/_framework/aspnetcore-browser-refresh.js - null null
+2026-01-21 17:41:47.239 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/_framework/aspnetcore-browser-refresh.js - 200 13770 application/javascript; charset=utf-8 12.4811ms
+2026-01-21 17:41:47.301 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/_vs/browserLink - 200 null text/javascript; charset=UTF-8 75.9544ms
+2026-01-21 17:41:48.091 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/swagger/v1/swagger.json - null null
+2026-01-21 17:41:48.367 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 276.5701ms
+2026-01-21 17:41:59.342 +08:00 [INF] Request starting HTTP/1.1 POST http://localhost:57356/api/Auth/login - application/json 49
+2026-01-21 17:41:59.499 +08:00 [INF] CORS policy execution successful.
+2026-01-21 17:41:59.672 +08:00 [INF] Executing endpoint 'HDEMS.Api.Controllers.AuthController.Login (HDEMS.Api)'
+2026-01-21 17:41:59.711 +08:00 [INF] Route matched with {action = "Login", controller = "Auth"}. Executing controller action with signature System.Threading.Tasks.Task`1[HDEMS.Application.DTOs.ApiResponse`1[HDEMS.Application.DTOs.LoginResponse]] Login(HDEMS.Application.DTOs.LoginRequest) on controller HDEMS.Api.Controllers.AuthController (HDEMS.Api).
+2026-01-21 17:41:59.870 +08:00 [INF] Executing ObjectResult, writing value of type 'HDEMS.Application.DTOs.ApiResponse`1[[HDEMS.Application.DTOs.LoginResponse, HDEMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-01-21 17:41:59.892 +08:00 [INF] Executed action HDEMS.Api.Controllers.AuthController.Login (HDEMS.Api) in 175.2877ms
+2026-01-21 17:41:59.894 +08:00 [INF] Executed endpoint 'HDEMS.Api.Controllers.AuthController.Login (HDEMS.Api)'
+2026-01-21 17:41:59.896 +08:00 [INF] Request finished HTTP/1.1 POST http://localhost:57356/api/Auth/login - 200 null application/json; charset=utf-8 553.7183ms
+2026-01-21 17:42:16.485 +08:00 [INF] Request starting HTTP/1.1 POST http://localhost:57356/api/Auth/reset-admin-password - application/json 8
+2026-01-21 17:42:16.493 +08:00 [INF] CORS policy execution successful.
+2026-01-21 17:42:16.529 +08:00 [INF] Executing endpoint 'HDEMS.Api.Controllers.AuthController.ResetAdminPassword (HDEMS.Api)'
+2026-01-21 17:42:16.535 +08:00 [INF] Route matched with {action = "ResetAdminPassword", controller = "Auth"}. Executing controller action with signature System.Threading.Tasks.Task`1[HDEMS.Application.DTOs.ApiResponse] ResetAdminPassword(System.String) on controller HDEMS.Api.Controllers.AuthController (HDEMS.Api).
+2026-01-21 17:42:17.344 +08:00 [INF] 管理员账户已创建
+2026-01-21 17:42:17.346 +08:00 [INF] Executing ObjectResult, writing value of type 'HDEMS.Application.DTOs.ApiResponse'.
+2026-01-21 17:42:17.351 +08:00 [INF] Executed action HDEMS.Api.Controllers.AuthController.ResetAdminPassword (HDEMS.Api) in 813.5337ms
+2026-01-21 17:42:17.355 +08:00 [INF] Executed endpoint 'HDEMS.Api.Controllers.AuthController.ResetAdminPassword (HDEMS.Api)'
+2026-01-21 17:42:17.358 +08:00 [INF] Request finished HTTP/1.1 POST http://localhost:57356/api/Auth/reset-admin-password - 200 null application/json; charset=utf-8 872.6158ms
+2026-01-21 17:42:19.987 +08:00 [INF] Request starting HTTP/1.1 POST http://localhost:57356/api/Auth/login - application/json 49
+2026-01-21 17:42:19.990 +08:00 [INF] CORS policy execution successful.
+2026-01-21 17:42:19.993 +08:00 [INF] Executing endpoint 'HDEMS.Api.Controllers.AuthController.Login (HDEMS.Api)'
+2026-01-21 17:42:19.994 +08:00 [INF] Route matched with {action = "Login", controller = "Auth"}. Executing controller action with signature System.Threading.Tasks.Task`1[HDEMS.Application.DTOs.ApiResponse`1[HDEMS.Application.DTOs.LoginResponse]] Login(HDEMS.Application.DTOs.LoginRequest) on controller HDEMS.Api.Controllers.AuthController (HDEMS.Api).
+2026-01-21 17:42:20.383 +08:00 [INF] Executing ObjectResult, writing value of type 'HDEMS.Application.DTOs.ApiResponse`1[[HDEMS.Application.DTOs.LoginResponse, HDEMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-01-21 17:42:20.392 +08:00 [INF] Executed action HDEMS.Api.Controllers.AuthController.Login (HDEMS.Api) in 394.7115ms
+2026-01-21 17:42:20.395 +08:00 [INF] Executed endpoint 'HDEMS.Api.Controllers.AuthController.Login (HDEMS.Api)'
+2026-01-21 17:42:20.399 +08:00 [INF] Request finished HTTP/1.1 POST http://localhost:57356/api/Auth/login - 200 null application/json; charset=utf-8 412.2676ms
+2026-01-21 17:42:40.087 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/api/Material - null null
+2026-01-21 17:42:40.182 +08:00 [INF] Executing endpoint 'HDEMS.Api.Controllers.MaterialController.GetPaged (HDEMS.Api)'
+2026-01-21 17:42:40.198 +08:00 [INF] Route matched with {action = "GetPaged", controller = "Material"}. Executing controller action with signature System.Threading.Tasks.Task`1[HDEMS.Application.DTOs.ApiResponse`1[HDEMS.Application.DTOs.PagedResult`1[HDEMS.Application.DTOs.MaterialDto]]] GetPaged(HDEMS.Application.DTOs.MaterialQueryRequest) on controller HDEMS.Api.Controllers.MaterialController (HDEMS.Api).
+2026-01-21 17:42:40.428 +08:00 [INF] Executing ObjectResult, writing value of type 'HDEMS.Application.DTOs.ApiResponse`1[[HDEMS.Application.DTOs.PagedResult`1[[HDEMS.Application.DTOs.MaterialDto, HDEMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], HDEMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-01-21 17:42:40.455 +08:00 [INF] Executed action HDEMS.Api.Controllers.MaterialController.GetPaged (HDEMS.Api) in 253.4244ms
+2026-01-21 17:42:40.458 +08:00 [INF] Executed endpoint 'HDEMS.Api.Controllers.MaterialController.GetPaged (HDEMS.Api)'
+2026-01-21 17:42:40.461 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/api/Material - 200 null application/json; charset=utf-8 374.2482ms
+2026-01-21 17:42:46.883 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/api/Schedule - null null
+2026-01-21 17:42:46.889 +08:00 [INF] Executing endpoint 'HDEMS.Api.Controllers.ScheduleController.GetPaged (HDEMS.Api)'
+2026-01-21 17:42:46.900 +08:00 [INF] Route matched with {action = "GetPaged", controller = "Schedule"}. Executing controller action with signature System.Threading.Tasks.Task`1[HDEMS.Application.DTOs.ApiResponse`1[HDEMS.Application.DTOs.PagedResult`1[HDEMS.Application.DTOs.ScheduleDto]]] GetPaged(HDEMS.Application.DTOs.ScheduleQueryRequest) on controller HDEMS.Api.Controllers.ScheduleController (HDEMS.Api).
+2026-01-21 17:42:46.945 +08:00 [INF] Executing ObjectResult, writing value of type 'HDEMS.Application.DTOs.ApiResponse`1[[HDEMS.Application.DTOs.PagedResult`1[[HDEMS.Application.DTOs.ScheduleDto, HDEMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], HDEMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-01-21 17:42:46.960 +08:00 [INF] Executed action HDEMS.Api.Controllers.ScheduleController.GetPaged (HDEMS.Api) in 54.7503ms
+2026-01-21 17:42:46.963 +08:00 [INF] Executed endpoint 'HDEMS.Api.Controllers.ScheduleController.GetPaged (HDEMS.Api)'
+2026-01-21 17:42:46.965 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/api/Schedule - 200 null application/json; charset=utf-8 82.0175ms
+2026-01-21 17:42:59.520 +08:00 [INF] 开始初始化种子数据...
+2026-01-21 17:43:00.588 +08:00 [INF] 系统初始化密钥已生成: d610247e52da4665bca5e58aa24f2ee138f2a561609c4949 (请妥善保管)
+2026-01-21 17:43:00.759 +08:00 [INF] 种子数据初始化完成
+2026-01-21 17:43:02.097 +08:00 [INF] User profile is available. Using 'C:\Users\SY\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-01-21 17:43:02.700 +08:00 [INF] Now listening on: http://localhost:57356
+2026-01-21 17:43:02.878 +08:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-01-21 17:43:02.880 +08:00 [INF] Hosting environment: Development
+2026-01-21 17:43:02.890 +08:00 [INF] Content root path: D:\Project\HDEMS\backend\HDEMS.Api
+2026-01-21 17:43:04.317 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/swagger/index.html - null null
+2026-01-21 17:43:05.016 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/swagger/index.html - 200 null text/html;charset=utf-8 707.1432ms
+2026-01-21 17:43:05.123 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/_framework/aspnetcore-browser-refresh.js - null null
+2026-01-21 17:43:05.164 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/_framework/aspnetcore-browser-refresh.js - 200 13770 application/javascript; charset=utf-8 41.0838ms
+2026-01-21 17:43:06.778 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/_vs/browserLink - null null
+2026-01-21 17:43:07.131 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/_vs/browserLink - 200 null text/javascript; charset=UTF-8 355.3665ms
+2026-01-21 17:43:07.802 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/swagger/v1/swagger.json - null null
+2026-01-21 17:43:08.135 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 332.8321ms
+2026-01-21 17:43:18.059 +08:00 [INF] Request starting HTTP/1.1 POST http://localhost:57356/api/Auth/login - application/json 49
+2026-01-21 17:43:18.068 +08:00 [INF] CORS policy execution successful.
+2026-01-21 17:43:18.194 +08:00 [INF] Executing endpoint 'HDEMS.Api.Controllers.AuthController.Login (HDEMS.Api)'
+2026-01-21 17:43:18.229 +08:00 [INF] Route matched with {action = "Login", controller = "Auth"}. Executing controller action with signature System.Threading.Tasks.Task`1[HDEMS.Application.DTOs.ApiResponse`1[HDEMS.Application.DTOs.LoginResponse]] Login(HDEMS.Application.DTOs.LoginRequest) on controller HDEMS.Api.Controllers.AuthController (HDEMS.Api).
+2026-01-21 17:43:19.142 +08:00 [INF] Executing ObjectResult, writing value of type 'HDEMS.Application.DTOs.ApiResponse`1[[HDEMS.Application.DTOs.LoginResponse, HDEMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-01-21 17:43:19.191 +08:00 [INF] Executed action HDEMS.Api.Controllers.AuthController.Login (HDEMS.Api) in 951.5883ms
+2026-01-21 17:43:19.193 +08:00 [INF] Executed endpoint 'HDEMS.Api.Controllers.AuthController.Login (HDEMS.Api)'
+2026-01-21 17:43:19.195 +08:00 [INF] Request finished HTTP/1.1 POST http://localhost:57356/api/Auth/login - 200 null application/json; charset=utf-8 1136.1868ms
+2026-01-21 17:43:40.664 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/api/Material - null null
+2026-01-21 17:43:40.791 +08:00 [INF] Executing endpoint 'HDEMS.Api.Controllers.MaterialController.GetPaged (HDEMS.Api)'
+2026-01-21 17:43:40.801 +08:00 [INF] Route matched with {action = "GetPaged", controller = "Material"}. Executing controller action with signature System.Threading.Tasks.Task`1[HDEMS.Application.DTOs.ApiResponse`1[HDEMS.Application.DTOs.PagedResult`1[HDEMS.Application.DTOs.MaterialDto]]] GetPaged(HDEMS.Application.DTOs.MaterialQueryRequest) on controller HDEMS.Api.Controllers.MaterialController (HDEMS.Api).
+2026-01-21 17:43:41.009 +08:00 [INF] Executing ObjectResult, writing value of type 'HDEMS.Application.DTOs.ApiResponse`1[[HDEMS.Application.DTOs.PagedResult`1[[HDEMS.Application.DTOs.MaterialDto, HDEMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], HDEMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-01-21 17:43:41.026 +08:00 [INF] Executed action HDEMS.Api.Controllers.MaterialController.GetPaged (HDEMS.Api) in 221.0344ms
+2026-01-21 17:43:41.028 +08:00 [INF] Executed endpoint 'HDEMS.Api.Controllers.MaterialController.GetPaged (HDEMS.Api)'
+2026-01-21 17:43:41.029 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/api/Material - 200 null application/json; charset=utf-8 376.0496ms
+2026-01-21 17:43:46.361 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/api/Schedule - null null
+2026-01-21 17:43:46.369 +08:00 [INF] Executing endpoint 'HDEMS.Api.Controllers.ScheduleController.GetPaged (HDEMS.Api)'
+2026-01-21 17:43:46.380 +08:00 [INF] Route matched with {action = "GetPaged", controller = "Schedule"}. Executing controller action with signature System.Threading.Tasks.Task`1[HDEMS.Application.DTOs.ApiResponse`1[HDEMS.Application.DTOs.PagedResult`1[HDEMS.Application.DTOs.ScheduleDto]]] GetPaged(HDEMS.Application.DTOs.ScheduleQueryRequest) on controller HDEMS.Api.Controllers.ScheduleController (HDEMS.Api).
+2026-01-21 17:43:46.481 +08:00 [INF] Executing ObjectResult, writing value of type 'HDEMS.Application.DTOs.ApiResponse`1[[HDEMS.Application.DTOs.PagedResult`1[[HDEMS.Application.DTOs.ScheduleDto, HDEMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], HDEMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-01-21 17:43:46.498 +08:00 [INF] Executed action HDEMS.Api.Controllers.ScheduleController.GetPaged (HDEMS.Api) in 112.3834ms
+2026-01-21 17:43:46.505 +08:00 [INF] Executed endpoint 'HDEMS.Api.Controllers.ScheduleController.GetPaged (HDEMS.Api)'
+2026-01-21 17:43:46.511 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/api/Schedule - 200 null application/json; charset=utf-8 149.6417ms
+2026-01-21 17:47:02.035 +08:00 [INF] Request starting HTTP/1.1 POST http://localhost:57356/api/Schedule - application/json 416
+2026-01-21 17:47:02.044 +08:00 [INF] CORS policy execution successful.
+2026-01-21 17:47:02.061 +08:00 [INF] Executing endpoint 'HDEMS.Api.Controllers.ScheduleController.Create (HDEMS.Api)'
+2026-01-21 17:47:02.073 +08:00 [INF] Route matched with {action = "Create", controller = "Schedule"}. Executing controller action with signature System.Threading.Tasks.Task`1[HDEMS.Application.DTOs.ApiResponse`1[HDEMS.Application.DTOs.ScheduleDto]] Create(HDEMS.Application.DTOs.ScheduleCreateRequest) on controller HDEMS.Api.Controllers.ScheduleController (HDEMS.Api).
+2026-01-21 17:47:02.335 +08:00 [INF] Executing ObjectResult, writing value of type 'HDEMS.Application.DTOs.ApiResponse`1[[HDEMS.Application.DTOs.ScheduleDto, HDEMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-01-21 17:47:02.357 +08:00 [INF] Executed action HDEMS.Api.Controllers.ScheduleController.Create (HDEMS.Api) in 281.7817ms
+2026-01-21 17:47:02.374 +08:00 [INF] Executed endpoint 'HDEMS.Api.Controllers.ScheduleController.Create (HDEMS.Api)'
+2026-01-21 17:47:02.380 +08:00 [INF] Request finished HTTP/1.1 POST http://localhost:57356/api/Schedule - 200 null application/json; charset=utf-8 344.6396ms
+2026-01-21 17:47:21.983 +08:00 [INF] Request starting HTTP/1.1 POST http://localhost:57356/api/Schedule - application/json 416
+2026-01-21 17:47:21.987 +08:00 [INF] CORS policy execution successful.
+2026-01-21 17:47:21.989 +08:00 [INF] Executing endpoint 'HDEMS.Api.Controllers.ScheduleController.Create (HDEMS.Api)'
+2026-01-21 17:47:21.991 +08:00 [INF] Route matched with {action = "Create", controller = "Schedule"}. Executing controller action with signature System.Threading.Tasks.Task`1[HDEMS.Application.DTOs.ApiResponse`1[HDEMS.Application.DTOs.ScheduleDto]] Create(HDEMS.Application.DTOs.ScheduleCreateRequest) on controller HDEMS.Api.Controllers.ScheduleController (HDEMS.Api).
+2026-01-21 17:47:22.017 +08:00 [INF] Executing ObjectResult, writing value of type 'HDEMS.Application.DTOs.ApiResponse`1[[HDEMS.Application.DTOs.ScheduleDto, HDEMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-01-21 17:47:22.025 +08:00 [INF] Executed action HDEMS.Api.Controllers.ScheduleController.Create (HDEMS.Api) in 31.583ms
+2026-01-21 17:47:22.028 +08:00 [INF] Executed endpoint 'HDEMS.Api.Controllers.ScheduleController.Create (HDEMS.Api)'
+2026-01-21 17:47:22.030 +08:00 [INF] Request finished HTTP/1.1 POST http://localhost:57356/api/Schedule - 200 null application/json; charset=utf-8 46.9275ms
+2026-01-21 17:47:36.028 +08:00 [INF] Request starting HTTP/1.1 POST http://localhost:57356/api/Schedule - application/json 416
+2026-01-21 17:47:36.054 +08:00 [INF] CORS policy execution successful.
+2026-01-21 17:47:36.064 +08:00 [INF] Executing endpoint 'HDEMS.Api.Controllers.ScheduleController.Create (HDEMS.Api)'
+2026-01-21 17:47:36.096 +08:00 [INF] Route matched with {action = "Create", controller = "Schedule"}. Executing controller action with signature System.Threading.Tasks.Task`1[HDEMS.Application.DTOs.ApiResponse`1[HDEMS.Application.DTOs.ScheduleDto]] Create(HDEMS.Application.DTOs.ScheduleCreateRequest) on controller HDEMS.Api.Controllers.ScheduleController (HDEMS.Api).
+2026-01-21 17:47:36.141 +08:00 [INF] Executing ObjectResult, writing value of type 'HDEMS.Application.DTOs.ApiResponse`1[[HDEMS.Application.DTOs.ScheduleDto, HDEMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-01-21 17:47:36.196 +08:00 [INF] Executed action HDEMS.Api.Controllers.ScheduleController.Create (HDEMS.Api) in 91.0416ms
+2026-01-21 17:47:36.256 +08:00 [INF] Executed endpoint 'HDEMS.Api.Controllers.ScheduleController.Create (HDEMS.Api)'
+2026-01-21 17:47:36.261 +08:00 [INF] Request finished HTTP/1.1 POST http://localhost:57356/api/Schedule - 200 null application/json; charset=utf-8 233.0378ms
+2026-01-21 17:47:41.695 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/api/Schedule - null null
+2026-01-21 17:47:41.724 +08:00 [INF] Executing endpoint 'HDEMS.Api.Controllers.ScheduleController.GetPaged (HDEMS.Api)'
+2026-01-21 17:47:41.733 +08:00 [INF] Route matched with {action = "GetPaged", controller = "Schedule"}. Executing controller action with signature System.Threading.Tasks.Task`1[HDEMS.Application.DTOs.ApiResponse`1[HDEMS.Application.DTOs.PagedResult`1[HDEMS.Application.DTOs.ScheduleDto]]] GetPaged(HDEMS.Application.DTOs.ScheduleQueryRequest) on controller HDEMS.Api.Controllers.ScheduleController (HDEMS.Api).
+2026-01-21 17:47:41.753 +08:00 [INF] Executing ObjectResult, writing value of type 'HDEMS.Application.DTOs.ApiResponse`1[[HDEMS.Application.DTOs.PagedResult`1[[HDEMS.Application.DTOs.ScheduleDto, HDEMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], HDEMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-01-21 17:47:41.771 +08:00 [INF] Executed action HDEMS.Api.Controllers.ScheduleController.GetPaged (HDEMS.Api) in 24.557ms
+2026-01-21 17:47:41.787 +08:00 [INF] Executed endpoint 'HDEMS.Api.Controllers.ScheduleController.GetPaged (HDEMS.Api)'
+2026-01-21 17:47:41.796 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/api/Schedule - 200 null application/json; charset=utf-8 100.3092ms
+2026-01-21 17:48:50.108 +08:00 [INF] Request starting HTTP/1.1 POST http://localhost:57356/api/Material - application/json 280
+2026-01-21 17:48:50.177 +08:00 [INF] CORS policy execution successful.
+2026-01-21 17:48:50.207 +08:00 [INF] Executing endpoint 'HDEMS.Api.Controllers.MaterialController.Create (HDEMS.Api)'
+2026-01-21 17:48:50.268 +08:00 [INF] Route matched with {action = "Create", controller = "Material"}. Executing controller action with signature System.Threading.Tasks.Task`1[HDEMS.Application.DTOs.ApiResponse`1[HDEMS.Application.DTOs.MaterialDto]] Create(HDEMS.Application.DTOs.MaterialCreateRequest) on controller HDEMS.Api.Controllers.MaterialController (HDEMS.Api).
+2026-01-21 17:48:50.516 +08:00 [INF] Executing ObjectResult, writing value of type 'HDEMS.Application.DTOs.ApiResponse`1[[HDEMS.Application.DTOs.MaterialDto, HDEMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-01-21 17:48:50.543 +08:00 [INF] Executed action HDEMS.Api.Controllers.MaterialController.Create (HDEMS.Api) in 259.1247ms
+2026-01-21 17:48:50.548 +08:00 [INF] Executed endpoint 'HDEMS.Api.Controllers.MaterialController.Create (HDEMS.Api)'
+2026-01-21 17:48:50.551 +08:00 [INF] Request finished HTTP/1.1 POST http://localhost:57356/api/Material - 200 null application/json; charset=utf-8 478.7664ms
+2026-01-21 17:48:57.445 +08:00 [INF] Request starting HTTP/1.1 POST http://localhost:57356/api/Material - application/json 279
+2026-01-21 17:48:57.448 +08:00 [INF] CORS policy execution successful.
+2026-01-21 17:48:57.449 +08:00 [INF] Executing endpoint 'HDEMS.Api.Controllers.MaterialController.Create (HDEMS.Api)'
+2026-01-21 17:48:57.450 +08:00 [INF] Route matched with {action = "Create", controller = "Material"}. Executing controller action with signature System.Threading.Tasks.Task`1[HDEMS.Application.DTOs.ApiResponse`1[HDEMS.Application.DTOs.MaterialDto]] Create(HDEMS.Application.DTOs.MaterialCreateRequest) on controller HDEMS.Api.Controllers.MaterialController (HDEMS.Api).
+2026-01-21 17:48:57.471 +08:00 [INF] Executing ObjectResult, writing value of type 'HDEMS.Application.DTOs.ApiResponse`1[[HDEMS.Application.DTOs.MaterialDto, HDEMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-01-21 17:48:57.490 +08:00 [INF] Executed action HDEMS.Api.Controllers.MaterialController.Create (HDEMS.Api) in 37.6299ms
+2026-01-21 17:48:57.494 +08:00 [INF] Executed endpoint 'HDEMS.Api.Controllers.MaterialController.Create (HDEMS.Api)'
+2026-01-21 17:48:57.499 +08:00 [INF] Request finished HTTP/1.1 POST http://localhost:57356/api/Material - 200 null application/json; charset=utf-8 54.1287ms
+2026-01-21 17:49:02.622 +08:00 [INF] Request starting HTTP/1.1 POST http://localhost:57356/api/Material - application/json 279
+2026-01-21 17:49:02.624 +08:00 [INF] CORS policy execution successful.
+2026-01-21 17:49:02.625 +08:00 [INF] Executing endpoint 'HDEMS.Api.Controllers.MaterialController.Create (HDEMS.Api)'
+2026-01-21 17:49:02.627 +08:00 [INF] Route matched with {action = "Create", controller = "Material"}. Executing controller action with signature System.Threading.Tasks.Task`1[HDEMS.Application.DTOs.ApiResponse`1[HDEMS.Application.DTOs.MaterialDto]] Create(HDEMS.Application.DTOs.MaterialCreateRequest) on controller HDEMS.Api.Controllers.MaterialController (HDEMS.Api).
+2026-01-21 17:49:02.644 +08:00 [INF] Executing ObjectResult, writing value of type 'HDEMS.Application.DTOs.ApiResponse`1[[HDEMS.Application.DTOs.MaterialDto, HDEMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-01-21 17:49:02.654 +08:00 [INF] Executed action HDEMS.Api.Controllers.MaterialController.Create (HDEMS.Api) in 25.6782ms
+2026-01-21 17:49:02.657 +08:00 [INF] Executed endpoint 'HDEMS.Api.Controllers.MaterialController.Create (HDEMS.Api)'
+2026-01-21 17:49:02.662 +08:00 [INF] Request finished HTTP/1.1 POST http://localhost:57356/api/Material - 200 null application/json; charset=utf-8 40.5276ms
+2026-01-21 17:49:07.194 +08:00 [INF] Request starting HTTP/1.1 POST http://localhost:57356/api/Material - application/json 279
+2026-01-21 17:49:07.201 +08:00 [INF] CORS policy execution successful.
+2026-01-21 17:49:07.204 +08:00 [INF] Executing endpoint 'HDEMS.Api.Controllers.MaterialController.Create (HDEMS.Api)'
+2026-01-21 17:49:07.209 +08:00 [INF] Route matched with {action = "Create", controller = "Material"}. Executing controller action with signature System.Threading.Tasks.Task`1[HDEMS.Application.DTOs.ApiResponse`1[HDEMS.Application.DTOs.MaterialDto]] Create(HDEMS.Application.DTOs.MaterialCreateRequest) on controller HDEMS.Api.Controllers.MaterialController (HDEMS.Api).
+2026-01-21 17:49:07.256 +08:00 [INF] Executing ObjectResult, writing value of type 'HDEMS.Application.DTOs.ApiResponse`1[[HDEMS.Application.DTOs.MaterialDto, HDEMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-01-21 17:49:07.312 +08:00 [INF] Executed action HDEMS.Api.Controllers.MaterialController.Create (HDEMS.Api) in 94.6318ms
+2026-01-21 17:49:07.328 +08:00 [INF] Executed endpoint 'HDEMS.Api.Controllers.MaterialController.Create (HDEMS.Api)'
+2026-01-21 17:49:07.341 +08:00 [INF] Request finished HTTP/1.1 POST http://localhost:57356/api/Material - 200 null application/json; charset=utf-8 146.4445ms
+2026-01-21 17:49:31.644 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/api/Material - null null
+2026-01-21 17:49:31.650 +08:00 [INF] Executing endpoint 'HDEMS.Api.Controllers.MaterialController.GetPaged (HDEMS.Api)'
+2026-01-21 17:49:31.668 +08:00 [INF] Route matched with {action = "GetPaged", controller = "Material"}. Executing controller action with signature System.Threading.Tasks.Task`1[HDEMS.Application.DTOs.ApiResponse`1[HDEMS.Application.DTOs.PagedResult`1[HDEMS.Application.DTOs.MaterialDto]]] GetPaged(HDEMS.Application.DTOs.MaterialQueryRequest) on controller HDEMS.Api.Controllers.MaterialController (HDEMS.Api).
+2026-01-21 17:49:31.752 +08:00 [INF] Executing ObjectResult, writing value of type 'HDEMS.Application.DTOs.ApiResponse`1[[HDEMS.Application.DTOs.PagedResult`1[[HDEMS.Application.DTOs.MaterialDto, HDEMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], HDEMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-01-21 17:49:31.772 +08:00 [INF] Executed action HDEMS.Api.Controllers.MaterialController.GetPaged (HDEMS.Api) in 27.7462ms
+2026-01-21 17:49:31.785 +08:00 [INF] Executed endpoint 'HDEMS.Api.Controllers.MaterialController.GetPaged (HDEMS.Api)'
+2026-01-21 17:49:31.790 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/api/Material - 200 null application/json; charset=utf-8 157.5217ms
+2026-01-21 17:49:48.921 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/api/ImportExport/material-template - null null
+2026-01-21 17:49:48.925 +08:00 [INF] Executing endpoint 'HDEMS.Api.Controllers.ImportExportController.GetMaterialTemplate (HDEMS.Api)'
+2026-01-21 17:49:48.934 +08:00 [INF] Route matched with {action = "GetMaterialTemplate", controller = "ImportExport"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetMaterialTemplate() on controller HDEMS.Api.Controllers.ImportExportController (HDEMS.Api).
+2026-01-21 17:49:50.297 +08:00 [ERR] 未捕获的异常: Can't set color when patterntype is not set.
+System.ArgumentException: Can't set color when patterntype is not set.
+   at OfficeOpenXml.Style.XmlAccess.ExcelXfs.GetIdFill(eStyleClass styleClass, eStyleProperty styleProperty, Object value)
+   at OfficeOpenXml.Style.XmlAccess.ExcelXfs.GetNewID(ExcelStyleCollection`1 xfsCol, StyleBase styleObject, eStyleClass styleClass, eStyleProperty styleProperty, Object value)
+   at OfficeOpenXml.ExcelStyles.SetStyleCells(StyleBase sender, StyleChangeEventArgs e, ExcelAddressBase address, ExcelWorksheet ws, Dictionary`2 styleCashe)
+   at OfficeOpenXml.ExcelStyles.SetStyleAddress(StyleBase sender, StyleChangeEventArgs e, ExcelAddressBase address, ExcelWorksheet ws, Dictionary`2& styleCashe)
+   at OfficeOpenXml.ExcelStyles.PropertyChange(StyleBase sender, StyleChangeEventArgs e)
+   at OfficeOpenXml.Style.ExcelColor.set_Rgb(String value)
+   at OfficeOpenXml.Style.ExcelColor.SetColor(Color color)
+   at HDEMS.Application.Services.ImportExportService.GetMaterialTemplateAsync() in D:\Project\HDEMS\backend\HDEMS.Application\Services\ImportExportService.cs:line 56
+   at HDEMS.Api.Controllers.ImportExportController.GetMaterialTemplate() in D:\Project\HDEMS\backend\HDEMS.Api\Controllers\ImportExportController.cs:line 29
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeNextExceptionFilterAsync>g__Awaited|26_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+2026-01-21 17:49:50.370 +08:00 [INF] Executing ObjectResult, writing value of type '<>f__AnonymousType0`4[[System.Int32, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Int64, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-01-21 17:49:50.382 +08:00 [INF] Executed action HDEMS.Api.Controllers.ImportExportController.GetMaterialTemplate (HDEMS.Api) in 1444.9251ms
+2026-01-21 17:49:50.386 +08:00 [INF] Executed endpoint 'HDEMS.Api.Controllers.ImportExportController.GetMaterialTemplate (HDEMS.Api)'
+2026-01-21 17:49:50.388 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/api/ImportExport/material-template - 500 null application/json; charset=utf-8 1466.3551ms
+2026-01-21 18:03:44.371 +08:00 [INF] 开始初始化种子数据...
+2026-01-21 18:03:45.000 +08:00 [INF] 系统初始化密钥已生成: 28e4c6bda1074d098ec23045ee29a5d2290e6ab927b240fd (请妥善保管)
+2026-01-21 18:03:45.008 +08:00 [INF] 种子数据初始化完成
+2026-01-21 18:03:46.303 +08:00 [INF] User profile is available. Using 'C:\Users\SY\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-01-21 18:03:46.880 +08:00 [INF] Now listening on: http://localhost:57356
+2026-01-21 18:03:47.268 +08:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-01-21 18:03:47.295 +08:00 [INF] Hosting environment: Development
+2026-01-21 18:03:47.357 +08:00 [INF] Content root path: D:\Project\HDEMS\backend\HDEMS.Api
+2026-01-21 18:03:48.444 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/swagger/index.html - null null
+2026-01-21 18:03:49.147 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/swagger/index.html - 200 null text/html;charset=utf-8 723.5813ms
+2026-01-21 18:03:49.183 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/_framework/aspnetcore-browser-refresh.js - null null
+2026-01-21 18:03:49.191 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/_framework/aspnetcore-browser-refresh.js - 200 13770 application/javascript; charset=utf-8 8.6227ms
+2026-01-21 18:03:50.668 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/_vs/browserLink - null null
+2026-01-21 18:03:50.882 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/_vs/browserLink - 200 null text/javascript; charset=UTF-8 214.1528ms
+2026-01-21 18:03:51.823 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/swagger/v1/swagger.json - null null
+2026-01-21 18:03:52.011 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 188.5147ms
+2026-01-21 18:04:07.256 +08:00 [INF] Request starting HTTP/1.1 POST http://localhost:57356/api/Auth/login - application/json 49
+2026-01-21 18:04:07.278 +08:00 [INF] CORS policy execution successful.
+2026-01-21 18:04:07.417 +08:00 [INF] Executing endpoint 'HDEMS.Api.Controllers.AuthController.Login (HDEMS.Api)'
+2026-01-21 18:04:07.455 +08:00 [INF] Route matched with {action = "Login", controller = "Auth"}. Executing controller action with signature System.Threading.Tasks.Task`1[HDEMS.Application.DTOs.ApiResponse`1[HDEMS.Application.DTOs.LoginResponse]] Login(HDEMS.Application.DTOs.LoginRequest) on controller HDEMS.Api.Controllers.AuthController (HDEMS.Api).
+2026-01-21 18:04:08.307 +08:00 [INF] Executing ObjectResult, writing value of type 'HDEMS.Application.DTOs.ApiResponse`1[[HDEMS.Application.DTOs.LoginResponse, HDEMS.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-01-21 18:04:08.330 +08:00 [INF] Executed action HDEMS.Api.Controllers.AuthController.Login (HDEMS.Api) in 869.4689ms
+2026-01-21 18:04:08.333 +08:00 [INF] Executed endpoint 'HDEMS.Api.Controllers.AuthController.Login (HDEMS.Api)'
+2026-01-21 18:04:08.334 +08:00 [INF] Request finished HTTP/1.1 POST http://localhost:57356/api/Auth/login - 200 null application/json; charset=utf-8 1078.092ms
+2026-01-21 18:04:44.008 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/api/ImportExport/material-template - null null
+2026-01-21 18:04:44.151 +08:00 [INF] Executing endpoint 'HDEMS.Api.Controllers.ImportExportController.GetMaterialTemplate (HDEMS.Api)'
+2026-01-21 18:04:44.157 +08:00 [INF] Route matched with {action = "GetMaterialTemplate", controller = "ImportExport"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetMaterialTemplate() on controller HDEMS.Api.Controllers.ImportExportController (HDEMS.Api).
+2026-01-21 18:04:44.620 +08:00 [INF] Executing FileContentResult, sending file with download name '物资导入模板.xlsx' ...
+2026-01-21 18:04:44.635 +08:00 [INF] Executed action HDEMS.Api.Controllers.ImportExportController.GetMaterialTemplate (HDEMS.Api) in 475.8251ms
+2026-01-21 18:04:44.637 +08:00 [INF] Executed endpoint 'HDEMS.Api.Controllers.ImportExportController.GetMaterialTemplate (HDEMS.Api)'
+2026-01-21 18:04:44.638 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/api/ImportExport/material-template - 200 3091 application/vnd.openxmlformats-officedocument.spreadsheetml.sheet 655.6375ms
+2026-01-21 18:05:44.006 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:57356/api/ImportExport/schedule-template/1 - null null
+2026-01-21 18:05:44.023 +08:00 [INF] Executing endpoint 'HDEMS.Api.Controllers.ImportExportController.GetScheduleTemplate (HDEMS.Api)'
+2026-01-21 18:05:44.074 +08:00 [INF] Route matched with {action = "GetScheduleTemplate", controller = "ImportExport"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetScheduleTemplate(HDEMS.Domain.Enums.ScheduleType) on controller HDEMS.Api.Controllers.ImportExportController (HDEMS.Api).
+2026-01-21 18:05:44.127 +08:00 [INF] Executing FileContentResult, sending file with download name 'Bureau排班导入模板.xlsx' ...
+2026-01-21 18:05:44.131 +08:00 [INF] Executed action HDEMS.Api.Controllers.ImportExportController.GetScheduleTemplate (HDEMS.Api) in 54.4394ms
+2026-01-21 18:05:44.134 +08:00 [INF] Executed endpoint 'HDEMS.Api.Controllers.ImportExportController.GetScheduleTemplate (HDEMS.Api)'
+2026-01-21 18:05:44.137 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:57356/api/ImportExport/schedule-template/1 - 200 2994 application/vnd.openxmlformats-officedocument.spreadsheetml.sheet 181.9209ms
+2026-01-21 18:07:30.931 +08:00 [INF] Request starting HTTP/1.1 POST http://localhost:57356/api/Material/export - application/json 147
+2026-01-21 18:07:30.936 +08:00 [INF] CORS policy execution successful.
+2026-01-21 18:07:30.941 +08:00 [INF] Executing endpoint 'HDEMS.Api.Controllers.MaterialController.Export (HDEMS.Api)'
+2026-01-21 18:07:30.951 +08:00 [INF] Route matched with {action = "Export", controller = "Material"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Export(HDEMS.Application.DTOs.MaterialQueryRequest) on controller HDEMS.Api.Controllers.MaterialController (HDEMS.Api).
+2026-01-21 18:07:33.496 +08:00 [INF] Executing FileContentResult, sending file with download name '物资数据_20260121180733.xlsx' ...
+2026-01-21 18:07:33.498 +08:00 [INF] Executed action HDEMS.Api.Controllers.MaterialController.Export (HDEMS.Api) in 2541.936ms
+2026-01-21 18:07:33.499 +08:00 [INF] Executed endpoint 'HDEMS.Api.Controllers.MaterialController.Export (HDEMS.Api)'
+2026-01-21 18:07:33.501 +08:00 [INF] Request finished HTTP/1.1 POST http://localhost:57356/api/Material/export - 200 2971 application/vnd.openxmlformats-officedocument.spreadsheetml.sheet 2626.1441ms
+2026-01-21 18:07:39.166 +08:00 [INF] Request starting HTTP/1.1 POST http://localhost:57356/api/Material/export - application/json 141
+2026-01-21 18:07:39.170 +08:00 [INF] CORS policy execution successful.
+2026-01-21 18:07:39.172 +08:00 [INF] Executing endpoint 'HDEMS.Api.Controllers.MaterialController.Export (HDEMS.Api)'
+2026-01-21 18:07:39.173 +08:00 [INF] Route matched with {action = "Export", controller = "Material"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Export(HDEMS.Application.DTOs.MaterialQueryRequest) on controller HDEMS.Api.Controllers.MaterialController (HDEMS.Api).
+2026-01-21 18:07:39.271 +08:00 [INF] Executing FileContentResult, sending file with download name '物资数据_20260121180739.xlsx' ...
+2026-01-21 18:07:39.273 +08:00 [INF] Executed action HDEMS.Api.Controllers.MaterialController.Export (HDEMS.Api) in 96.6406ms
+2026-01-21 18:07:39.279 +08:00 [INF] Executed endpoint 'HDEMS.Api.Controllers.MaterialController.Export (HDEMS.Api)'
+2026-01-21 18:07:39.281 +08:00 [INF] Request finished HTTP/1.1 POST http://localhost:57356/api/Material/export - 200 3351 application/vnd.openxmlformats-officedocument.spreadsheetml.sheet 114.9491ms

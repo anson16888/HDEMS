@@ -8,7 +8,6 @@ namespace HDEMS.Domain.Entities;
 /// </summary>
 [Table(Name = "t_user")]
 [Index("idx_username", "Username", true)]
-[Index("idx_status", "Status")]
 public class User : BaseEntity
 {
     /// <summary>

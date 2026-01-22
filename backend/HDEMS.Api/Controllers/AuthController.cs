@@ -89,14 +89,14 @@ public class AuthController : ControllerBase
     }
 
     /// <summary>
-    /// 重置管理员密码（需要系统初始化密钥）
+    /// 重置管理员密码
     /// </summary>
-    /// <param name="initKey">系统初始化密钥</param>
+    /// <param name="newPassword">新密码</param>
     /// <returns>操作结果</returns>
     [HttpPost("reset-admin-password")]
-    public async Task<ApiResponse> ResetAdminPassword([FromBody] string initKey)
+    public async Task<ApiResponse> ResetAdminPassword([FromBody] string newPassword)
     {
-        return await _authService.ResetAdminPasswordAsync(initKey);
+        return await _authService.ResetAdminPasswordAsync(newPassword);
     }
 
     /// <summary>

@@ -39,6 +39,16 @@ public class ImportExportController : ControllerBase
     public async Task<IActionResult> GetScheduleTemplate(Domain.Enums.ScheduleType scheduleType)
     {
         var data = await _importExportService.GetScheduleTemplateAsync(scheduleType);
-        return File(data, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"{scheduleType}排班导入模板.xlsx");
+
+        // 获取排班类型中文名称用于文件名
+        var scheduleTypeName = scheduleType switch
+        {
+            Domain.Enums.ScheduleType.Bureau => "局级行政",
+            Domain.Enums.ScheduleType.Hospital => "院级行政",
+            Domain.Enums.ScheduleType.Director => "院内主任",
+            _ => scheduleType.ToString()
+        };
+
+        return File(data, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"{scheduleTypeName}排班导入模板.xlsx");
     }
 }

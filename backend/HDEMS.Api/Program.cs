@@ -45,9 +45,13 @@ var dbType = dbConfig.DbType?.ToLower() switch
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 IFreeSql fsql = new FreeSqlBuilder()
     .UseConnectionString(dbType, connectionString!)
-    .UseAutoSyncStructure(dbConfig.AutoSyncStructure ?? false)
+    .UseAutoSyncStructure(false)  // 禁用自动同步结构
+    .UseNoneCommandParameter(true)  // 禁用参数化命令
     .UseMonitorCommand(cmd => Log.Debug("SQL: {Sql}", cmd.CommandText))
     .Build();
+
+// 初始化数据库表结构（首次启动时）
+await InitializeDatabaseAsync(fsql);
 
 // 注册 FreeSql
 builder.Services.AddSingleton(fsql);
@@ -171,3 +175,41 @@ app.MapGet("/health", () => Results.Ok(new { status = "healthy", timestamp = Dat
 app.MapControllers();
 
 app.Run();
+
+/// <summary>
+/// 初始化数据库表结构
+/// </summary>
+static async Task InitializeDatabaseAsync(IFreeSql fsql)
+{
+    // 检查 Hospital 表是否存在
+    var tableExists = await fsql.Ado.ExecuteScalarAsync(
+        "SELECT name FROM sqlite_master WHERE type='table' AND name='t_hospital'");
+
+    if (tableExists == null)
+    {
+        // 表不存在，创建所有表
+        try
+        {
+            fsql.CodeFirst.SyncStructure(typeof(HDEMS.Domain.Entities.Hospital));
+            fsql.CodeFirst.SyncStructure(typeof(HDEMS.Domain.Entities.Department));
+            fsql.CodeFirst.SyncStructure(typeof(HDEMS.Domain.Entities.Shift));
+            fsql.CodeFirst.SyncStructure(typeof(HDEMS.Domain.Entities.PersonRank));
+            fsql.CodeFirst.SyncStructure(typeof(HDEMS.Domain.Entities.PersonTitle));
+            fsql.CodeFirst.SyncStructure(typeof(HDEMS.Domain.Entities.Person));
+            fsql.CodeFirst.SyncStructure(typeof(HDEMS.Domain.Entities.User));
+            fsql.CodeFirst.SyncStructure(typeof(HDEMS.Domain.Entities.Material));
+            fsql.CodeFirst.SyncStructure(typeof(HDEMS.Domain.Entities.MaterialThreshold));
+            fsql.CodeFirst.SyncStructure(typeof(HDEMS.Domain.Entities.Schedule));
+
+            Console.WriteLine("数据库表结构初始化完成");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"数据库初始化警告: {ex.Message}");
+        }
+    }
+    else
+    {
+        Console.WriteLine("数据库表已存在，跳过初始化");
+    }
+}

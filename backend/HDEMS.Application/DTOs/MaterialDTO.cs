@@ -33,7 +33,10 @@ public class MaterialDto
 /// </summary>
 public class MaterialCreateRequest
 {
-    public string MaterialCode { get; set; } = string.Empty;
+    /// <summary>
+    /// 物资编码（可选，为空时自动生成：EM-YYMMDD-序号）
+    /// </summary>
+    public string? MaterialCode { get; set; }
     public string MaterialName { get; set; } = string.Empty;
     public MaterialType MaterialType { get; set; }
     public string? Specification { get; set; }

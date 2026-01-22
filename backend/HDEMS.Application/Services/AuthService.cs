@@ -3,6 +3,7 @@ using HDEMS.Application.DTOs;
 using HDEMS.Application.Interfaces;
 using HDEMS.Domain.Entities;
 using HDEMS.Domain.Enums;
+using HDEMS.Infrastructure.Configuration;
 using HDEMS.Infrastructure.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -20,13 +21,15 @@ public class AuthService : IAuthService
     private readonly JwtService _jwtService;
     private readonly PasswordService _passwordService;
     private readonly ILogger<AuthService> _logger;
+    private readonly SystemConfig _systemConfig;
 
-    public AuthService(IFreeSql fsql, JwtService jwtService, PasswordService passwordService, ILogger<AuthService> logger)
+    public AuthService(IFreeSql fsql, JwtService jwtService, PasswordService passwordService, ILogger<AuthService> logger, IOptions<SystemConfig> systemConfig)
     {
         _fsql = fsql;
         _jwtService = jwtService;
         _passwordService = passwordService;
         _logger = logger;
+        _systemConfig = systemConfig.Value;
     }
 
     public async Task<ApiResponse<LoginResponse>> LoginAsync(LoginRequest request)
@@ -60,7 +63,8 @@ public class AuthService : IAuthService
         }
 
         // 生成 Token
-        var roles = user.GetRoleList().Select(r => r.ToString()).ToList();
+        var roleList = user.GetRoleList();
+        var roles = roleList.Select(r => r.ToString()).ToList();
         var token = _jwtService.GenerateToken(user.Id, user.Username, roles, user.HospitalId, user.IsCommissionUser);
 
         // 更新最后登录时间
@@ -80,9 +84,11 @@ public class AuthService : IAuthService
                 RealName = user.RealName,
                 Phone = user.Phone,
                 Department = user.Department,
-                Roles = user.GetRoleList(),
+                RoleStrings = roles,
                 HospitalId = user.HospitalId,
                 HospitalName = user.Hospital?.HospitalName,
+                SystemHospitalName = _systemConfig.HospitalName,
+                SystemLevel = _systemConfig.SystemLevel,
                 IsCommissionUser = user.IsCommissionUser
             }
         };
@@ -134,10 +140,12 @@ public class AuthService : IAuthService
         return ApiResponse.Ok("密码修改成功");
     }
 
-    public async Task<ApiResponse> ResetAdminPasswordAsync(string initKey)
+    public async Task<ApiResponse> ResetAdminPasswordAsync(string newPassword)
     {
-        // 验证初始化密钥（在实际应用中，应该验证从配置文件中获取的密钥）
-        // 这里简化处理，仅作示例
+        if (string.IsNullOrWhiteSpace(newPassword))
+        {
+            return ApiResponse.Fail(400, "密码不能为空");
+        }
 
         var adminUser = await _fsql.Select<User>()
             .Where(u => u.Username == "admin")
@@ -150,21 +158,23 @@ public class AuthService : IAuthService
             {
                 Id = Guid.NewGuid(),
                 Username = "admin",
-                Password = _passwordService.HashPassword("123456"),
+                Password = _passwordService.HashPassword(newPassword),
                 RealName = "系统管理员",
                 Phone = "13800000000",
                 Department = "信息科",
                 Status = UserStatus.Active,
-                IsCommissionUser = true
+                IsCommissionUser = true,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now
             };
-            adminUser.SetRoleList(new List<UserRole> { UserRole.Admin });
+            adminUser.SetRoleList(new List<UserRole> { UserRole.SYSTEM_ADMIN });
 
             await _fsql.Insert(adminUser).ExecuteAffrowsAsync();
+            _logger.LogInformation("管理员账户已创建");
         }
         else
         {
             // 重置密码
-            var newPassword = _passwordService.GenerateRandomPassword();
             adminUser.Password = _passwordService.HashPassword(newPassword);
             adminUser.UpdatedAt = DateTime.Now;
 
@@ -172,10 +182,9 @@ public class AuthService : IAuthService
                 .SetSource(adminUser)
                 .ExecuteAffrowsAsync();
 
-            _logger.LogWarning("管理员密码已重置为: {Password}", newPassword);
-            return ApiResponse.Ok($"管理员密码已重置为: {newPassword}");
+            _logger.LogInformation("管理员密码已重置");
         }
 
-        return ApiResponse.Ok("管理员账户已创建，默认密码: 123456");
+        return ApiResponse.Ok("管理员密码已设置成功");
     }
 }
