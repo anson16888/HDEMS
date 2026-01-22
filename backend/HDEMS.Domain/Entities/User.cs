@@ -84,7 +84,12 @@ public class User : BaseEntity
 
         try
         {
-            return System.Text.Json.JsonSerializer.Deserialize<List<UserRole>>(Roles) ?? new List<UserRole>();
+            // 从字符串数组解析为枚举
+            var roleStrings = System.Text.Json.JsonSerializer.Deserialize<List<string>>(Roles);
+            if (roleStrings == null || roleStrings.Count == 0)
+                return new List<UserRole>();
+
+            return roleStrings.Select(r => Enum.Parse<UserRole>(r)).ToList();
         }
         catch
         {
@@ -97,7 +102,9 @@ public class User : BaseEntity
     /// </summary>
     public void SetRoleList(List<UserRole> roles)
     {
-        Roles = System.Text.Json.JsonSerializer.Serialize(roles);
+        // 存储为字符串数组
+        var roleStrings = roles.Select(r => r.ToString()).ToList();
+        Roles = System.Text.Json.JsonSerializer.Serialize(roleStrings);
     }
 
     /// <summary>

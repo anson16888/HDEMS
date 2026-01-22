@@ -164,6 +164,10 @@ if (app.Environment.IsDevelopment())
 
 //app.UseHttpsRedirection();
 app.UseCors("AllowAll");
+
+// 启用静态文件服务
+app.UseStaticFiles();
+
 app.UseAuthentication();
 app.UseAuthorization();
 

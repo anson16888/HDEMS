@@ -1,4 +1,5 @@
 using HDEMS.Domain.Enums;
+using System.ComponentModel;
 using System.Text.Json.Serialization;
 
 namespace HDEMS.Application.DTOs;
@@ -54,6 +55,9 @@ public class UserInfo
         set => RoleStrings = value.Select(r => r.ToString()).ToList();
     }
 
+    [JsonPropertyName("roleDescriptions")]
+    public List<string> RoleDescriptions { get; set; } = new List<string>();
+
     [JsonPropertyName("hospitalId")]
     public Guid? HospitalId { get; set; }
 
@@ -71,6 +75,22 @@ public class UserInfo
 }
 
 /// <summary>
+/// 设置用户权限请求
+/// </summary>
+public class SetUserRolesRequest
+{
+    /// <summary>
+    /// 用户ID
+    /// </summary>
+    public Guid UserId { get; set; }
+
+    /// <summary>
+    /// 角色列表
+    /// </summary>
+    public List<UserRole> Roles { get; set; } = new List<UserRole>();
+}
+
+/// <summary>
 /// 用户DTO
 /// </summary>
 public class UserDto
@@ -80,7 +100,8 @@ public class UserDto
     public string RealName { get; set; } = string.Empty;
     public string Phone { get; set; } = string.Empty;
     public string? Department { get; set; }
-    public List<UserRole> Roles { get; set; } = new List<UserRole>();
+    public List<string> Roles { get; set; } = new List<string>();
+    public List<string> RoleDescriptions { get; set; } = new List<string>();
     public UserStatus Status { get; set; }
     public DateTime? LastLoginAt { get; set; }
     public Guid? HospitalId { get; set; }
@@ -97,7 +118,17 @@ public class UserCreateRequest
     public string RealName { get; set; } = string.Empty;
     public string Phone { get; set; } = string.Empty;
     public string? Department { get; set; }
-    public List<UserRole> Roles { get; set; } = new List<UserRole>();
+
+    [JsonPropertyName("roles")]
+    public List<string> RoleStrings { get; set; } = new List<string>();
+
+    [JsonIgnore]
+    public List<UserRole> Roles
+    {
+        get => RoleStrings.Select(r => Enum.Parse<UserRole>(r)).ToList();
+        set => RoleStrings = value.Select(r => r.ToString()).ToList();
+    }
+
     public Guid? HospitalId { get; set; }
     public bool IsCommissionUser { get; set; }
 }
@@ -110,7 +141,17 @@ public class UserUpdateRequest
     public string RealName { get; set; } = string.Empty;
     public string Phone { get; set; } = string.Empty;
     public string? Department { get; set; }
-    public List<UserRole> Roles { get; set; } = new List<UserRole>();
+
+    [JsonPropertyName("roles")]
+    public List<string> RoleStrings { get; set; } = new List<string>();
+
+    [JsonIgnore]
+    public List<UserRole> Roles
+    {
+        get => RoleStrings.Select(r => Enum.Parse<UserRole>(r)).ToList();
+        set => RoleStrings = value.Select(r => r.ToString()).ToList();
+    }
+
     public UserStatus Status { get; set; }
     public Guid? HospitalId { get; set; }
     public bool IsCommissionUser { get; set; }

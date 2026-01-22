@@ -124,8 +124,8 @@ public class MaterialService : IMaterialService
             material.ExpiryDate = request.ProductionDate.Value.AddMonths(request.ShelfLife.Value);
         }
 
-        // 更新库存状态
-        material.Status = GetMaterialStatus(material.Quantity);
+        // 更新库存状态（优先检查过期，再检查库存）
+        material.Status = GetMaterialStatus(material.Quantity, material.ExpiryDate);
 
         material.Id = Guid.NewGuid();
         material.CreatedAt = DateTime.Now;
@@ -198,8 +198,8 @@ public class MaterialService : IMaterialService
             material.ExpiryDate = request.ProductionDate.Value.AddMonths(request.ShelfLife.Value);
         }
 
-        // 更新库存状态
-        material.Status = GetMaterialStatus(material.Quantity);
+        // 更新库存状态（优先检查过期，再检查库存）
+        material.Status = GetMaterialStatus(material.Quantity, material.ExpiryDate);
         material.UpdatedAt = DateTime.Now;
 
         await _fsql.Update<Material>()
@@ -333,21 +333,26 @@ public class MaterialService : IMaterialService
                     HospitalId = hospital.Id,
                     Specification = specification,
                     Remark = remark,
-                    Status = GetMaterialStatus(quantity),
+                    Status = MaterialStatus.Normal,  // 先设置默认值，后面会重新计算
                     CreatedAt = DateTime.Now,
                     UpdatedAt = DateTime.Now
                 };
 
                 // 解析生产日期和质保期
+                DateTime? expiryDate = null;
                 if (DateTime.TryParse(productionDateStr, out var productionDate))
                 {
                     material.ProductionDate = productionDate;
                     if (int.TryParse(shelfLifeStr, out var shelfLife))
                     {
                         material.ShelfLife = shelfLife;
-                        material.ExpiryDate = productionDate.AddMonths(shelfLife);
+                        expiryDate = productionDate.AddMonths(shelfLife);
+                        material.ExpiryDate = expiryDate;
                     }
                 }
+
+                // 更新库存状态（优先检查过期，再检查库存）
+                material.Status = GetMaterialStatus(quantity, expiryDate);
 
                 await _fsql.Insert(material).ExecuteAffrowsAsync();
                 result.SuccessCount++;
@@ -467,13 +472,29 @@ public class MaterialService : IMaterialService
         });
     }
 
-    private MaterialStatus GetMaterialStatus(decimal quantity)
+    private MaterialStatus GetMaterialStatus(decimal quantity, DateTime? expiryDate = null)
     {
+        // 优先检查过期状态
+        if (expiryDate.HasValue)
+        {
+            if (expiryDate.Value < DateTime.Now)
+            {
+                return MaterialStatus.Expired;  // 已过期
+            }
+
+            // 即将过期（30天内）
+            if (expiryDate.Value <= DateTime.Now.AddDays(30))
+            {
+                return MaterialStatus.ExpiringSoon;  // 即将过期
+            }
+        }
+
+        // 没有过期问题，再按库存数量判断
         return quantity switch
         {
-            0 => MaterialStatus.Out,
-            <= 5 => MaterialStatus.Low,
-            _ => MaterialStatus.Normal
+            0 => MaterialStatus.Out,  // 已耗尽
+            <= 5 => MaterialStatus.Low,  // 库存偏低
+            _ => MaterialStatus.Normal  // 正常
         };
     }
 }

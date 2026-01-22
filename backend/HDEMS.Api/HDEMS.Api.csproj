@@ -42,4 +42,8 @@
     <ProjectReference Include="..\HDEMS.Infrastructure\HDEMS.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
 </Project>

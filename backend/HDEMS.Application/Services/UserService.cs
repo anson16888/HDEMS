@@ -1,5 +1,6 @@
 using FreeSql;
 using HDEMS.Application.DTOs;
+using HDEMS.Application.Extensions;
 using HDEMS.Application.Interfaces;
 using HDEMS.Domain.Entities;
 using HDEMS.Domain.Enums;
@@ -43,6 +44,12 @@ public class UserService : IUserService
 
         var dtos = _mapper.Map<List<UserDto>>(items);
 
+        // 填充角色相关字段
+        for (int i = 0; i < dtos.Count; i++)
+        {
+            PopulateRoleFields(dtos[i], items[i]);
+        }
+
         var result = new PagedResult<UserDto>
         {
             Total = (int)total,
@@ -67,6 +74,7 @@ public class UserService : IUserService
         }
 
         var dto = _mapper.Map<UserDto>(user);
+        PopulateRoleFields(dto, user);
         return ApiResponse<UserDto>.Ok(dto);
     }
 
@@ -89,6 +97,9 @@ public class UserService : IUserService
         user.CreatedAt = DateTime.Now;
         user.UpdatedAt = DateTime.Now;
 
+        // 手动设置角色（从字符串转换为枚举）
+        user.SetRoleList(request.Roles);
+
         await _fsql.Insert(user).ExecuteAffrowsAsync();
 
         var result = await GetByIdAsync(user.Id);
@@ -103,8 +114,17 @@ public class UserService : IUserService
             return ApiResponse<UserDto>.Fail(404, "用户不存在");
         }
 
-        _mapper.Map(request, user);
+        // 手动映射字段
+        user.RealName = request.RealName;
+        user.Phone = request.Phone;
+        user.Department = request.Department;
+        user.Status = request.Status;
+        user.HospitalId = request.HospitalId;
+        user.IsCommissionUser = request.IsCommissionUser;
         user.UpdatedAt = DateTime.Now;
+
+        // 手动设置角色（从字符串转换为枚举）
+        user.SetRoleList(request.Roles);
 
         await _fsql.Update<User>()
             .SetSource(user)
@@ -122,11 +142,8 @@ public class UserService : IUserService
             return ApiResponse.Fail(404, "用户不存在");
         }
 
-        // 软删除
-        user.DeletedAt = DateTime.Now;
-        await _fsql.Update<User>()
-            .SetSource(user)
-            .ExecuteAffrowsAsync();
+        // 硬删除
+        await _fsql.Delete<User>().Where(u => u.Id == id).ExecuteAffrowsAsync();
 
         return ApiResponse.Ok("删除成功");
     }
@@ -147,5 +164,77 @@ public class UserService : IUserService
             .ExecuteAffrowsAsync();
 
         return ApiResponse.Ok("密码重置成功");
+    }
+
+    public async Task<ApiResponse> SetUserRolesAsync(Guid userId, List<UserRole> roles)
+    {
+        var user = await _fsql.Select<User>().Where(u => u.Id == userId).FirstAsync();
+        if (user == null)
+        {
+            return ApiResponse.Fail(404, "用户不存在");
+        }
+
+        user.SetRoleList(roles);
+        user.UpdatedAt = DateTime.Now;
+
+        await _fsql.Update<User>()
+            .Set(u => u.Roles, user.Roles)
+            .Set(u => u.UpdatedAt, user.UpdatedAt)
+            .Where(u => u.Id == userId)
+            .ExecuteAffrowsAsync();
+
+        return ApiResponse.Ok("权限设置成功");
+    }
+
+    public async Task<ApiResponse<List<UserDto>>> GetAdminsAsync()
+    {
+        var users = await _fsql.Select<User>()
+            .Include(u => u.Hospital)
+            .Where(u => u.DeletedAt == null)
+            .OrderByDescending(u => u.CreatedAt)
+            .ToListAsync();
+
+        var dtos = _mapper.Map<List<UserDto>>(users);
+
+        // 填充角色相关字段
+        for (int i = 0; i < dtos.Count; i++)
+        {
+            PopulateRoleFields(dtos[i], users[i]);
+        }
+
+        // 过滤出有角色的用户（管理员）
+        var admins = dtos.Where(u => u.Roles != null && u.Roles.Count > 0).ToList();
+
+        return DTOs.ApiResponse<List<UserDto>>.Ok(admins);
+    }
+
+    public async Task<ApiResponse> UpdateUserRolesAsync(Guid userId, List<Domain.Enums.UserRole> roles)
+    {
+        var user = await _fsql.Select<User>().Where(u => u.Id == userId).FirstAsync();
+        if (user == null)
+        {
+            return ApiResponse.Fail(404, "用户不存在");
+        }
+
+        user.SetRoleList(roles);
+        user.UpdatedAt = DateTime.Now;
+
+        await _fsql.Update<User>()
+            .Set(u => u.Roles, user.Roles)
+            .Set(u => u.UpdatedAt, user.UpdatedAt)
+            .Where(u => u.Id == userId)
+            .ExecuteAffrowsAsync();
+
+        return ApiResponse.Ok("用户权限修改成功");
+    }
+
+    /// <summary>
+    /// 填充用户DTO的角色相关字段
+    /// </summary>
+    private void PopulateRoleFields(UserDto dto, User user)
+    {
+        var roleList = user.GetRoleList();
+        dto.Roles = roleList.Select(r => r.ToString()).ToList();
+        dto.RoleDescriptions = roleList.Select(r => r.GetDescription()).ToList();
     }
 }

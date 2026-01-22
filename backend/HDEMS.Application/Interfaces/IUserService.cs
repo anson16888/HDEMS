@@ -36,4 +36,19 @@ public interface IUserService
     /// 重置用户密码
     /// </summary>
     Task<ApiResponse> ResetPasswordAsync(Guid id, string newPassword);
+
+    /// <summary>
+    /// 设置用户权限
+    /// </summary>
+    Task<ApiResponse> SetUserRolesAsync(Guid userId, List<Domain.Enums.UserRole> roles);
+
+    /// <summary>
+    /// 获取管理员列表
+    /// </summary>
+    Task<ApiResponse<List<UserDto>>> GetAdminsAsync();
+
+    /// <summary>
+    /// 修改用户权限
+    /// </summary>
+    Task<ApiResponse> UpdateUserRolesAsync(Guid userId, List<Domain.Enums.UserRole> roles);
 }

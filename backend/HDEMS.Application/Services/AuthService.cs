@@ -1,5 +1,6 @@
 using FreeSql;
 using HDEMS.Application.DTOs;
+using HDEMS.Application.Extensions;
 using HDEMS.Application.Interfaces;
 using HDEMS.Domain.Entities;
 using HDEMS.Domain.Enums;
@@ -65,6 +66,7 @@ public class AuthService : IAuthService
         // 生成 Token
         var roleList = user.GetRoleList();
         var roles = roleList.Select(r => r.ToString()).ToList();
+        var roleDescriptions = roleList.Select(r => r.GetDescription()).ToList();
         var token = _jwtService.GenerateToken(user.Id, user.Username, roles, user.HospitalId, user.IsCommissionUser);
 
         // 更新最后登录时间
@@ -85,6 +87,7 @@ public class AuthService : IAuthService
                 Phone = user.Phone,
                 Department = user.Department,
                 RoleStrings = roles,
+                RoleDescriptions = roleDescriptions,
                 HospitalId = user.HospitalId,
                 HospitalName = user.Hospital?.HospitalName,
                 SystemHospitalName = _systemConfig.HospitalName,

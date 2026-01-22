@@ -33,10 +33,15 @@ public class MappingProfile : Profile
         // User 映射
         CreateMap<User, UserDto>()
             .ForMember(d => d.HospitalName, opt => opt.MapFrom(s => s.Hospital != null ? s.Hospital.HospitalName : null))
-            .ForMember(d => d.Roles, opt => opt.MapFrom(s => s.GetRoleList()));
+            .ForMember(d => d.Roles, opt => opt.Ignore())           // 手动填充
+            .ForMember(d => d.RoleDescriptions, opt => opt.Ignore()); // 手动填充
 
-        CreateMap<UserCreateRequest, User>();
-        CreateMap<UserUpdateRequest, User>();
+        CreateMap<UserCreateRequest, User>()
+            .ForMember(d => d.Roles, opt => opt.Ignore());  // Roles 通过 SetRoleList 设置
+
+        CreateMap<UserUpdateRequest, User>()
+            .ForMember(d => d.Roles, opt => opt.Ignore())  // Roles 通过 SetRoleList 设置
+            .ForMember(d => d.Username, opt => opt.Ignore());  // 用户名不允许修改
 
         // Hospital 映射
         CreateMap<Hospital, HospitalDto>()

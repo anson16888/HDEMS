@@ -94,4 +94,40 @@ public class UserController : ControllerBase
     {
         return await _userService.ResetPasswordAsync(id, newPassword);
     }
+
+    /// <summary>
+    /// 设置用户权限
+    /// </summary>
+    /// <param name="id">用户ID</param>
+    /// <param name="roles">角色编码列表，如 ["SYSTEM_ADMIN", "MATERIAL_ADMIN"]</param>
+    /// <returns>操作结果</returns>
+    [HttpPost("{id}/set-roles")]
+    public async Task<ApiResponse> SetUserRoles(Guid id, [FromBody] List<string> roles)
+    {
+        var roleList = roles.Select(r => Enum.Parse<Domain.Enums.UserRole>(r)).ToList();
+        return await _userService.SetUserRolesAsync(id, roleList);
+    }
+
+    /// <summary>
+    /// 获取管理员列表
+    /// </summary>
+    /// <returns>管理员列表</returns>
+    [HttpGet("admins")]
+    public async Task<ApiResponse<List<UserDto>>> GetAdmins()
+    {
+        return await _userService.GetAdminsAsync();
+    }
+
+    /// <summary>
+    /// 修改用户权限
+    /// </summary>
+    /// <param name="id">用户ID</param>
+    /// <param name="roles">角色编码列表，如 ["SYSTEM_ADMIN", "MATERIAL_ADMIN"]</param>
+    /// <returns>操作结果</returns>
+    [HttpPut("{id}/roles")]
+    public async Task<ApiResponse> UpdateUserRoles(Guid id, [FromBody] List<string> roles)
+    {
+        var roleList = roles.Select(r => Enum.Parse<Domain.Enums.UserRole>(r)).ToList();
+        return await _userService.UpdateUserRolesAsync(id, roleList);
+    }
 }
