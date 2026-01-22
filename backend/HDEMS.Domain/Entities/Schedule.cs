@@ -8,7 +8,6 @@ namespace HDEMS.Domain.Entities;
 /// </summary>
 [Table(Name = "t_schedule")]
 [Index("idx_schedule_date", "ScheduleDate")]
-[Index("idx_hospital_id", "HospitalId")]
 [Index("idx_schedule_type", "ScheduleType")]
 public class Schedule : BaseEntity
 {
@@ -19,57 +18,51 @@ public class Schedule : BaseEntity
     public DateTime ScheduleDate { get; set; }
 
     /// <summary>
-    /// 医院ID
-    /// </summary>
-    [Column(Position = 3, IsNullable = false)]
-    public Guid HospitalId { get; set; }
-
-    /// <summary>
     /// 排班类型
     /// </summary>
-    [Column(Position = 4, IsNullable = false)]
+    [Column(Position = 3, IsNullable = false)]
     public ScheduleType ScheduleType { get; set; }
 
     /// <summary>
     /// 班次ID
     /// </summary>
-    [Column(Position = 5, IsNullable = false)]
+    [Column(Position = 4, IsNullable = false)]
     public Guid ShiftId { get; set; }
 
     /// <summary>
     /// 人员ID（可选，关联人员表）
     /// </summary>
-    [Column(Position = 6)]
+    [Column(Position = 5)]
     public Guid? PersonId { get; set; }
 
     /// <summary>
     /// 人员姓名
     /// </summary>
-    [Column(StringLength = 50, Position = 7, IsNullable = false)]
+    [Column(StringLength = 50, Position = 6, IsNullable = false)]
     public string PersonName { get; set; } = string.Empty;
 
     /// <summary>
     /// 联系电话
     /// </summary>
-    [Column(StringLength = 20, Position = 8, IsNullable = false)]
+    [Column(StringLength = 20, Position = 7, IsNullable = false)]
     public string Phone { get; set; } = string.Empty;
 
     /// <summary>
     /// 职级ID
     /// </summary>
-    [Column(Position = 9)]
+    [Column(Position = 8)]
     public Guid? RankId { get; set; }
 
     /// <summary>
     /// 科室ID
     /// </summary>
-    [Column(Position = 10)]
+    [Column(Position = 9)]
     public Guid? DepartmentId { get; set; }
 
     /// <summary>
     /// 职称ID
     /// </summary>
-    [Column(Position = 11)]
+    [Column(Position = 10)]
     public Guid? TitleId { get; set; }
 
     /// <summary>
@@ -79,9 +72,6 @@ public class Schedule : BaseEntity
     public string? Remark { get; set; }
 
     // 导航属性
-    [Navigate(nameof(HospitalId))]
-    public Hospital? Hospital { get; set; }
-
     [Navigate(nameof(ShiftId))]
     public Shift? Shift { get; set; }
 

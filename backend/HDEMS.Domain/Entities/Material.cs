@@ -1,5 +1,4 @@
 using FreeSql.DataAnnotations;
-using HDEMS.Domain.Enums;
 
 namespace HDEMS.Domain.Entities;
 
@@ -8,8 +7,7 @@ namespace HDEMS.Domain.Entities;
 /// </summary>
 [Table(Name = "t_material")]
 [Index("idx_material_code", "MaterialCode", true)]
-[Index("idx_material_type", "MaterialType")]
-[Index("idx_hospital_id", "HospitalId")]
+[Index("idx_material_type_id", "MaterialTypeId")]
 public class Material : BaseEntity
 {
     /// <summary>
@@ -25,10 +23,16 @@ public class Material : BaseEntity
     public string MaterialName { get; set; } = string.Empty;
 
     /// <summary>
+    /// 物资类型ID
+    /// </summary>
+    [Column(IsNullable = false)]
+    public int MaterialTypeId { get; set; }
+
+    /// <summary>
     /// 物资类型
     /// </summary>
-    [Column]
-    public MaterialType MaterialType { get; set; }
+    [Navigate(nameof(MaterialTypeId))]
+    public MaterialTypeDict? MaterialType { get; set; }
 
     /// <summary>
     /// 物资规格
@@ -73,24 +77,14 @@ public class Material : BaseEntity
     public string Location { get; set; } = string.Empty;
 
     /// <summary>
-    /// 医院ID
-    /// </summary>
-    [Column(Position = 11)]
-    public Guid HospitalId { get; set; }
-
-    /// <summary>
     /// 备注
     /// </summary>
     [Column(StringLength = -1)]
     public string? Remark { get; set; }
 
     /// <summary>
-    /// 库存状态
+    /// 库存状态 (0-正常, 1-库存偏低, 2-已耗尽, 3-已过期, 4-即将过期)
     /// </summary>
     [Column(Position = 6, IsNullable = false)]
-    public MaterialStatus Status { get; set; } = MaterialStatus.Normal;
-
-    // 导航属性
-    [Navigate(nameof(HospitalId))]
-    public Hospital? Hospital { get; set; }
+    public int Status { get; set; }
 }

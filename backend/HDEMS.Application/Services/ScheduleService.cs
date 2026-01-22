@@ -3,11 +3,9 @@ using HDEMS.Application.DTOs;
 using HDEMS.Application.Interfaces;
 using HDEMS.Domain.Entities;
 using HDEMS.Domain.Enums;
-using HDEMS.Infrastructure.Configuration;
 using HDEMS.Infrastructure.Services;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using OfficeOpenXml;
 
 namespace HDEMS.Application.Services;
@@ -20,20 +18,17 @@ public class ScheduleService : IScheduleService
     private readonly IFreeSql _fsql;
     private readonly IMapper _mapper;
     private readonly ILogger<ScheduleService> _logger;
-    private readonly SystemConfig _systemConfig;
 
-    public ScheduleService(IFreeSql fsql, IMapper mapper, ILogger<ScheduleService> logger, IOptions<SystemConfig> systemConfig)
+    public ScheduleService(IFreeSql fsql, IMapper mapper, ILogger<ScheduleService> logger)
     {
         _fsql = fsql;
         _mapper = mapper;
         _logger = logger;
-        _systemConfig = systemConfig.Value;
     }
 
     public async Task<ApiResponse<PagedResult<ScheduleDto>>> GetPagedAsync(ScheduleQueryRequest request)
     {
         var query = _fsql.Select<Schedule>()
-            .Include(s => s.Hospital)
             .Include(s => s.Shift)
             .Include(s => s.Rank)
             .Include(s => s.Department)
@@ -48,11 +43,6 @@ public class ScheduleService : IScheduleService
         if (request.EndDate.HasValue)
         {
             query = query.Where(s => s.ScheduleDate <= request.EndDate.Value);
-        }
-
-        if (request.HospitalId.HasValue)
-        {
-            query = query.Where(s => s.HospitalId == request.HospitalId.Value);
         }
 
         if (request.ScheduleType.HasValue)
@@ -98,7 +88,6 @@ public class ScheduleService : IScheduleService
     public async Task<ApiResponse<ScheduleDto>> GetByIdAsync(Guid id)
     {
         var schedule = await _fsql.Select<Schedule>()
-            .Include(s => s.Hospital)
             .Include(s => s.Shift)
             .Include(s => s.Rank)
             .Include(s => s.Department)
@@ -120,7 +109,6 @@ public class ScheduleService : IScheduleService
         // 检查是否已存在相同排班
         var exists = await _fsql.Select<Schedule>()
             .Where(s => s.ScheduleDate == request.ScheduleDate
-                && s.HospitalId == request.HospitalId
                 && s.ScheduleType == request.ScheduleType
                 && s.ShiftId == request.ShiftId
                 && s.PersonName == request.PersonName)
@@ -198,7 +186,6 @@ public class ScheduleService : IScheduleService
     public async Task<ApiResponse<PagedResult<ScheduleOverviewItem>>> GetOverviewAsync(ScheduleQueryRequest request)
     {
         var query = _fsql.Select<Schedule>()
-            .Include(s => s.Hospital)
             .Include(s => s.Shift)
             .Include(s => s.Rank)
             .Include(s => s.Department)
@@ -213,11 +200,6 @@ public class ScheduleService : IScheduleService
         if (request.EndDate.HasValue)
         {
             query = query.Where(s => s.ScheduleDate <= request.EndDate.Value);
-        }
-
-        if (request.HospitalId.HasValue)
-        {
-            query = query.Where(s => s.HospitalId == request.HospitalId.Value);
         }
 
         if (request.ScheduleType.HasValue)
@@ -246,7 +228,6 @@ public class ScheduleService : IScheduleService
         var overviewItems = items.Select(s => new ScheduleOverviewItem
         {
             ScheduleDate = s.ScheduleDate,
-            HospitalName = s.Hospital?.HospitalName ?? "",
             DepartmentName = s.Department?.DepartmentName ?? "",
             ScheduleType = s.ScheduleType,
             ScheduleTypeName = s.ScheduleType switch
@@ -275,12 +256,25 @@ public class ScheduleService : IScheduleService
         return ApiResponse.OkPaged(result);
     }
 
-    public async Task<ApiResponse<ScheduleStatistics>> GetStatisticsAsync()
+    public async Task<ApiResponse<ScheduleStatistics>> GetStatisticsAsync(DateTime? startDate = null, DateTime? endDate = null)
     {
-        var total = await _fsql.Select<Schedule>().CountAsync();
-        var bureauCount = await _fsql.Select<Schedule>().Where(s => s.ScheduleType == ScheduleType.Bureau).CountAsync();
-        var hospitalCount = await _fsql.Select<Schedule>().Where(s => s.ScheduleType == ScheduleType.Hospital).CountAsync();
-        var directorCount = await _fsql.Select<Schedule>().Where(s => s.ScheduleType == ScheduleType.Director).CountAsync();
+        var query = _fsql.Select<Schedule>();
+
+        // 时间范围过滤
+        if (startDate.HasValue)
+        {
+            query = query.Where(s => s.ScheduleDate >= startDate.Value);
+        }
+
+        if (endDate.HasValue)
+        {
+            query = query.Where(s => s.ScheduleDate <= endDate.Value);
+        }
+
+        var total = await query.CountAsync();
+        var bureauCount = await query.Where(s => s.ScheduleType == ScheduleType.Bureau).CountAsync();
+        var hospitalCount = await query.Where(s => s.ScheduleType == ScheduleType.Hospital).CountAsync();
+        var directorCount = await query.Where(s => s.ScheduleType == ScheduleType.Director).CountAsync();
 
         var stats = new ScheduleStatistics
         {
@@ -302,25 +296,23 @@ public class ScheduleService : IScheduleService
 
         // 表头
         worksheet.Cells[1, 1].Value = "日期";
-        worksheet.Cells[1, 2].Value = "医院名称";
-        worksheet.Cells[1, 3].Value = "排班类型";
-        worksheet.Cells[1, 4].Value = "班次";
-        worksheet.Cells[1, 5].Value = "人员姓名";
-        worksheet.Cells[1, 6].Value = "联系电话";
-        worksheet.Cells[1, 7].Value = "职级";
-        worksheet.Cells[1, 8].Value = "科室";
-        worksheet.Cells[1, 9].Value = "职称";
-        worksheet.Cells[1, 10].Value = "备注";
+        worksheet.Cells[1, 2].Value = "排班类型";
+        worksheet.Cells[1, 3].Value = "班次";
+        worksheet.Cells[1, 4].Value = "人员姓名";
+        worksheet.Cells[1, 5].Value = "联系电话";
+        worksheet.Cells[1, 6].Value = "职级";
+        worksheet.Cells[1, 7].Value = "科室";
+        worksheet.Cells[1, 8].Value = "职称";
+        worksheet.Cells[1, 9].Value = "备注";
 
         // 设置表头样式
-        using (var range = worksheet.Cells[1, 1, 1, 10])
+        using (var range = worksheet.Cells[1, 1, 1, 9])
         {
             range.Style.Font.Bold = true;
         }
 
         // 获取数据
         var query = _fsql.Select<Schedule>()
-            .Include(s => s.Hospital)
             .Include(s => s.Shift)
             .Include(s => s.Rank)
             .Include(s => s.Department)
@@ -334,11 +326,6 @@ public class ScheduleService : IScheduleService
         if (request.EndDate.HasValue)
         {
             query = query.Where(s => s.ScheduleDate <= request.EndDate.Value);
-        }
-
-        if (request.HospitalId.HasValue)
-        {
-            query = query.Where(s => s.HospitalId == request.HospitalId.Value);
         }
 
         if (request.ScheduleType.HasValue)
@@ -365,15 +352,14 @@ public class ScheduleService : IScheduleService
             };
 
             worksheet.Cells[row, 1].Value = schedule.ScheduleDate.ToString("yyyy-MM-dd");
-            worksheet.Cells[row, 2].Value = schedule.Hospital?.HospitalName;
-            worksheet.Cells[row, 3].Value = scheduleTypeName;
-            worksheet.Cells[row, 4].Value = schedule.Shift?.ShiftName;
-            worksheet.Cells[row, 5].Value = schedule.PersonName;
-            worksheet.Cells[row, 6].Value = schedule.Phone;
-            worksheet.Cells[row, 7].Value = schedule.Rank?.RankName;
-            worksheet.Cells[row, 8].Value = schedule.Department?.DepartmentName;
-            worksheet.Cells[row, 9].Value = schedule.Title?.TitleName;
-            worksheet.Cells[row, 10].Value = schedule.Remark;
+            worksheet.Cells[row, 2].Value = scheduleTypeName;
+            worksheet.Cells[row, 3].Value = schedule.Shift?.ShiftName;
+            worksheet.Cells[row, 4].Value = schedule.PersonName;
+            worksheet.Cells[row, 5].Value = schedule.Phone;
+            worksheet.Cells[row, 6].Value = schedule.Rank?.RankName;
+            worksheet.Cells[row, 7].Value = schedule.Department?.DepartmentName;
+            worksheet.Cells[row, 8].Value = schedule.Title?.TitleName;
+            worksheet.Cells[row, 9].Value = schedule.Remark;
             row++;
         }
 
@@ -395,16 +381,7 @@ public class ScheduleService : IScheduleService
         }
 
         var rowCount = worksheet.Dimension.Rows;
-        result.TotalCount = rowCount - 3; // 减去标题和说明行
-
-        // 从配置获取医院名称
-        var hospitalName = _systemConfig.HospitalName ?? "宝安人民医院";
-        var hospital = await _fsql.Select<Hospital>().Where(h => h.HospitalName == hospitalName).FirstAsync();
-
-        if (hospital == null)
-        {
-            return ApiResponse<MaterialImportResult>.Fail(400, $"系统配置的医院 '{hospitalName}' 不存在，请先在系统中创建该医院");
-        }
+        result.TotalCount = rowCount - 2; // 减去标题+说明行和表头行
 
         var shifts = await _fsql.Select<Shift>().ToListAsync();
         var shiftDict = shifts.ToDictionary(s => s.ShiftName, s => s.Id);
@@ -418,7 +395,7 @@ public class ScheduleService : IScheduleService
         var titles = await _fsql.Select<PersonTitle>().ToListAsync();
         var titleDict = titles.ToDictionary(t => t.TitleName, t => t.Id);
 
-        for (int row = 4; row <= rowCount; row++)
+        for (int row = 3; row <= rowCount; row++)
         {
             try
             {
@@ -450,7 +427,6 @@ public class ScheduleService : IScheduleService
                 {
                     Id = Guid.NewGuid(),
                     ScheduleDate = scheduleDate,
-                    HospitalId = hospital.Id,
                     ScheduleType = scheduleType,
                     ShiftId = shiftDict[shiftName],
                     PersonName = personName,

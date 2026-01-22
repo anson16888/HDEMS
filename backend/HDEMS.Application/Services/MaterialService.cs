@@ -2,12 +2,9 @@ using FreeSql;
 using HDEMS.Application.DTOs;
 using HDEMS.Application.Interfaces;
 using HDEMS.Domain.Entities;
-using HDEMS.Domain.Enums;
-using HDEMS.Infrastructure.Configuration;
 using HDEMS.Infrastructure.Services;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using OfficeOpenXml;
 
 namespace HDEMS.Application.Services;
@@ -19,23 +16,18 @@ public class MaterialService : IMaterialService
 {
     private readonly IFreeSql _fsql;
     private readonly IMapper _mapper;
-    private readonly PasswordService _passwordService;
     private readonly ILogger<MaterialService> _logger;
-    private readonly SystemConfig _systemConfig;
 
-    public MaterialService(IFreeSql fsql, IMapper mapper, PasswordService passwordService, ILogger<MaterialService> logger, IOptions<SystemConfig> systemConfig)
+    public MaterialService(IFreeSql fsql, IMapper mapper, ILogger<MaterialService> logger)
     {
         _fsql = fsql;
         _mapper = mapper;
-        _passwordService = passwordService;
         _logger = logger;
-        _systemConfig = systemConfig.Value;
     }
 
     public async Task<ApiResponse<PagedResult<MaterialDto>>> GetPagedAsync(MaterialQueryRequest request)
     {
-        var query = _fsql.Select<Material>()
-            .Include(m => m.Hospital);
+        var query = _fsql.Select<Material>().Include(m => m.MaterialType);
 
         // 条件过滤
         if (!string.IsNullOrWhiteSpace(request.Keyword))
@@ -43,19 +35,14 @@ public class MaterialService : IMaterialService
             query = query.Where(m => m.MaterialName.Contains(request.Keyword) || m.MaterialCode.Contains(request.Keyword));
         }
 
-        if (request.MaterialType.HasValue)
+        if (request.MaterialTypeId.HasValue)
         {
-            query = query.Where(m => m.MaterialType == request.MaterialType.Value);
+            query = query.Where(m => m.MaterialTypeId == request.MaterialTypeId.Value);
         }
 
         if (request.Status.HasValue)
         {
             query = query.Where(m => m.Status == request.Status.Value);
-        }
-
-        if (request.HospitalId.HasValue)
-        {
-            query = query.Where(m => m.HospitalId == request.HospitalId.Value);
         }
 
         var total = await query.CountAsync();
@@ -81,7 +68,7 @@ public class MaterialService : IMaterialService
     public async Task<ApiResponse<MaterialDto>> GetByIdAsync(Guid id)
     {
         var material = await _fsql.Select<Material>()
-            .Include(m => m.Hospital)
+            .Include(m => m.MaterialType)
             .Where(m => m.Id == id)
             .FirstAsync();
 
@@ -96,6 +83,16 @@ public class MaterialService : IMaterialService
 
     public async Task<ApiResponse<MaterialDto>> CreateAsync(MaterialCreateRequest request)
     {
+        // 验证物资类型是否存在
+        var materialType = await _fsql.Select<MaterialTypeDict>()
+            .Where(t => t.Id == request.MaterialTypeId && t.IsEnabled)
+            .FirstAsync();
+
+        if (materialType == null)
+        {
+            return ApiResponse<MaterialDto>.Fail(400, "物资类型不存在或已禁用");
+        }
+
         // 如果物资编码为空，自动生成
         string materialCode = request.MaterialCode;
         if (string.IsNullOrWhiteSpace(materialCode))
@@ -171,6 +168,16 @@ public class MaterialService : IMaterialService
             return ApiResponse<MaterialDto>.Fail(404, "物资不存在");
         }
 
+        // 验证物资类型是否存在
+        var materialType = await _fsql.Select<MaterialTypeDict>()
+            .Where(t => t.Id == request.MaterialTypeId && t.IsEnabled)
+            .FirstAsync();
+
+        if (materialType == null)
+        {
+            return ApiResponse<MaterialDto>.Fail(400, "物资类型不存在或已禁用");
+        }
+
         // 如果传入了新的物资编码，检查是否冲突
         if (!string.IsNullOrWhiteSpace(request.MaterialCode))
         {
@@ -241,6 +248,11 @@ public class MaterialService : IMaterialService
     {
         var result = new MaterialImportResult();
 
+        // 获取所有启用的物资类型
+        var materialTypes = await _fsql.Select<MaterialTypeDict>()
+            .Where(t => t.IsEnabled)
+            .ToListAsync();
+
         using var package = new ExcelPackage(fileStream);
         var worksheet = package.Workbook.Worksheets[0];
 
@@ -250,22 +262,13 @@ public class MaterialService : IMaterialService
         }
 
         var rowCount = worksheet.Dimension.Rows;
-        result.TotalCount = rowCount - 3; // 减去标题和说明行
+        result.TotalCount = rowCount - 2; // 减去标题行
 
-        // 从配置获取医院名称
-        var hospitalName = _systemConfig.HospitalName ?? "宝安人民医院";
-        var hospital = await _fsql.Select<Hospital>().Where(h => h.HospitalName == hospitalName).FirstAsync();
-
-        if (hospital == null)
-        {
-            return ApiResponse<MaterialImportResult>.Fail(400, $"系统配置的医院 '{hospitalName}' 不存在，请先在系统中创建该医院");
-        }
-
-        for (int row = 4; row <= rowCount; row++)
+        for (int row = 3; row <= rowCount; row++)
         {
             try
             {
-                // 去掉医院列，列号调整：1-编码,2-名称,3-类型,4-数量,5-单位,6-位置,7-规格,8-生产日期,9-质保期,10-备注
+                // 列号调整：1-编码,2-名称,3-类型,4-数量,5-单位,6-位置,7-规格,8-生产日期,9-质保期,10-备注
                 var materialCode = worksheet.Cells[row, 1].Text?.Trim();
                 var materialName = worksheet.Cells[row, 2].Text?.Trim();
                 var materialTypeName = worksheet.Cells[row, 3].Text?.Trim();
@@ -292,16 +295,14 @@ public class MaterialService : IMaterialService
                     continue;
                 }
 
-                // 解析物资类型（中文转枚举）
-                MaterialType materialType = materialTypeName switch
+                // 查找物资类型（按名称匹配）
+                var materialType = materialTypes.FirstOrDefault(t => t.TypeName == materialTypeName);
+                if (materialType == null)
                 {
-                    "食品" => MaterialType.Food,
-                    "医疗" => MaterialType.Medical,
-                    "设备" => MaterialType.Equipment,
-                    "衣物" => MaterialType.Clothing,
-                    "其他" => MaterialType.Other,
-                    _ => Enum.TryParse<MaterialType>(materialTypeName, out var parsedType) ? parsedType : MaterialType.Other
-                };
+                    result.Errors.Add(new MaterialImportError { RowNumber = row, ErrorMessage = $"物资类型 '{materialTypeName}' 不存在或已禁用" });
+                    result.FailedCount++;
+                    continue;
+                }
 
                 // 如果物资编码为空，自动生成
                 if (string.IsNullOrWhiteSpace(materialCode))
@@ -326,14 +327,13 @@ public class MaterialService : IMaterialService
                     Id = Guid.NewGuid(),
                     MaterialCode = materialCode,
                     MaterialName = materialName,
-                    MaterialType = materialType,
+                    MaterialTypeId = materialType.Id,
                     Quantity = quantity,
                     Unit = unit,
                     Location = location,
-                    HospitalId = hospital.Id,
                     Specification = specification,
                     Remark = remark,
-                    Status = MaterialStatus.Normal,  // 先设置默认值，后面会重新计算
+                    Status = 0,  // 先设置默认值，后面会重新计算
                     CreatedAt = DateTime.Now,
                     UpdatedAt = DateTime.Now
                 };
@@ -384,29 +384,24 @@ public class MaterialService : IMaterialService
         worksheet.Cells[1, 7].Value = "生产日期";
         worksheet.Cells[1, 8].Value = "质保期(月)";
         worksheet.Cells[1, 9].Value = "存放位置";
-        worksheet.Cells[1, 10].Value = "医院";
-        worksheet.Cells[1, 11].Value = "状态";
-        worksheet.Cells[1, 12].Value = "备注";
+        worksheet.Cells[1, 10].Value = "状态";
+        worksheet.Cells[1, 11].Value = "备注";
 
         // 设置表头样式
-        using (var range = worksheet.Cells[1, 1, 1, 12])
+        using (var range = worksheet.Cells[1, 1, 1, 11])
         {
             range.Style.Font.Bold = true;
         }
 
         // 获取数据
-        var query = _fsql.Select<Material>().Include(m => m.Hospital);
+        var query = _fsql.Select<Material>().Include(m => m.MaterialType);
         if (!string.IsNullOrWhiteSpace(request.Keyword))
         {
             query = query.Where(m => m.MaterialName.Contains(request.Keyword) || m.MaterialCode.Contains(request.Keyword));
         }
-        if (request.MaterialType.HasValue)
+        if (request.MaterialTypeId.HasValue)
         {
-            query = query.Where(m => m.MaterialType == request.MaterialType.Value);
-        }
-        if (request.HospitalId.HasValue)
-        {
-            query = query.Where(m => m.HospitalId == request.HospitalId.Value);
+            query = query.Where(m => m.MaterialTypeId == request.MaterialTypeId.Value);
         }
 
         var materials = await query.OrderByDescending(m => m.UpdatedAt).Take(10000).ToListAsync();
@@ -417,16 +412,15 @@ public class MaterialService : IMaterialService
         {
             worksheet.Cells[row, 1].Value = material.MaterialCode;
             worksheet.Cells[row, 2].Value = material.MaterialName;
-            worksheet.Cells[row, 3].Value = material.MaterialType.ToString();
+            worksheet.Cells[row, 3].Value = material.MaterialType?.TypeName ?? "";
             worksheet.Cells[row, 4].Value = material.Specification;
             worksheet.Cells[row, 5].Value = material.Quantity.ToString();
             worksheet.Cells[row, 6].Value = material.Unit;
             worksheet.Cells[row, 7].Value = material.ProductionDate?.ToString("yyyy-MM-dd");
             worksheet.Cells[row, 8].Value = material.ShelfLife?.ToString();
             worksheet.Cells[row, 9].Value = material.Location;
-            worksheet.Cells[row, 10].Value = material.Hospital?.HospitalName;
-            worksheet.Cells[row, 11].Value = material.Status.ToString();
-            worksheet.Cells[row, 12].Value = material.Remark;
+            worksheet.Cells[row, 10].Value = GetMaterialStatusName(material.Status);
+            worksheet.Cells[row, 11].Value = material.Remark;
             row++;
         }
 
@@ -436,27 +430,22 @@ public class MaterialService : IMaterialService
         return ApiResponse<byte[]>.Ok(package.GetAsByteArray(), "导出成功");
     }
 
-    public async Task<ApiResponse<object>> GetStatisticsAsync(Guid? hospitalId = null)
+    public async Task<ApiResponse<object>> GetStatisticsAsync()
     {
         var query = _fsql.Select<Material>();
-
-        if (hospitalId.HasValue)
-        {
-            query = query.Where(m => m.HospitalId == hospitalId.Value);
-        }
-
         var total = await query.CountAsync();
-        var normal = await query.Where(m => m.Status == MaterialStatus.Normal).CountAsync();
-        var low = await query.Where(m => m.Status == MaterialStatus.Low).CountAsync();
-        var outStock = await query.Where(m => m.Status == MaterialStatus.Out).CountAsync();
+        var normal = await query.Where(m => m.Status == 0).CountAsync();
+        var low = await query.Where(m => m.Status == 1).CountAsync();
+        var outStock = await query.Where(m => m.Status == 2).CountAsync();
 
         // 获取所有物资然后内存分组
-        var allMaterials = await query.ToListAsync();
+        var allMaterials = await query.Include(m => m.MaterialType).ToListAsync();
         var typeStats = allMaterials
-            .GroupBy(m => m.MaterialType)
+            .GroupBy(m => new { m.MaterialTypeId, m.MaterialType?.TypeName })
             .Select(g => new
             {
-                Type = g.Key,
+                TypeId = g.Key.MaterialTypeId,
+                TypeName = g.Key.TypeName ?? "未知",
                 Count = g.Count(),
                 Quantity = g.Sum(x => x.Quantity)
             })
@@ -472,29 +461,45 @@ public class MaterialService : IMaterialService
         });
     }
 
-    private MaterialStatus GetMaterialStatus(decimal quantity, DateTime? expiryDate = null)
+    private int GetMaterialStatus(decimal quantity, DateTime? expiryDate = null)
     {
         // 优先检查过期状态
         if (expiryDate.HasValue)
         {
             if (expiryDate.Value < DateTime.Now)
             {
-                return MaterialStatus.Expired;  // 已过期
+                return 3;  // 已过期 Expired
             }
 
             // 即将过期（30天内）
             if (expiryDate.Value <= DateTime.Now.AddDays(30))
             {
-                return MaterialStatus.ExpiringSoon;  // 即将过期
+                return 4;  // 即将过期 ExpiringSoon
             }
         }
 
         // 没有过期问题，再按库存数量判断
         return quantity switch
         {
-            0 => MaterialStatus.Out,  // 已耗尽
-            <= 5 => MaterialStatus.Low,  // 库存偏低
-            _ => MaterialStatus.Normal  // 正常
+            0 => 2,  // 已耗尽 Out
+            <= 5 => 1,  // 库存偏低 Low
+            _ => 0  // 正常 Normal
+        };
+    }
+
+    /// <summary>
+    /// 获取物资状态中文名称
+    /// </summary>
+    private string GetMaterialStatusName(int status)
+    {
+        return status switch
+        {
+            0 => "正常",
+            1 => "库存偏低",
+            2 => "已耗尽",
+            3 => "已过期",
+            4 => "即将过期",
+            _ => "未知"
         };
     }
 }

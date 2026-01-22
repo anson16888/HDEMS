@@ -1,6 +1,5 @@
 using FreeSql;
 using HDEMS.Domain.Entities;
-using HDEMS.Infrastructure.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace HDEMS.Infrastructure.Services;
@@ -28,8 +27,11 @@ public class DataSeeder
 
         try
         {
-            // 初始化医院数据
-            await SeedHospitalsAsync();
+            // 初始化医院配置数据
+            await SeedHospitalConfigAsync();
+
+            // 初始化物资类型数据
+            await SeedMaterialTypesAsync();
 
             // 初始化科室数据
             await SeedDepartmentsAsync();
@@ -43,9 +45,6 @@ public class DataSeeder
             // 初始化人员职称数据
             await SeedPersonTitlesAsync();
 
-            // 初始化物资阈值配置
-            await SeedMaterialThresholdsAsync();
-
             // 检查并创建系统初始化密钥
             await SeedSystemInitKeyAsync();
 
@@ -58,27 +57,21 @@ public class DataSeeder
         }
     }
 
-    private async Task SeedHospitalsAsync()
+    private async Task SeedHospitalConfigAsync()
     {
-        if (await _fsql.Select<Hospital>().AnyAsync())
+        if (await _fsql.Select<HospitalConfig>().AnyAsync())
             return;
 
-        var hospitals = new List<Hospital>
+        var hospitalConfig = new HospitalConfig
         {
-            new() { HospitalCode = "H001", HospitalName = "宝安人民医院", ShortName = "宝安医院", SortOrder = 1 },
-            new() { HospitalCode = "H002", HospitalName = "宝安中医院", ShortName = "宝安中医院", SortOrder = 2 },
-            new() { HospitalCode = "H003", HospitalName = "宝安妇幼保健院", ShortName = "宝安妇幼", SortOrder = 3 },
-            new() { HospitalCode = "H004", HospitalName = "宝安区中心医院", ShortName = "中心医院", SortOrder = 4 },
-            new() { HospitalCode = "H005", HospitalName = "沙井人民医院", ShortName = "沙井医院", SortOrder = 5 },
-            new() { HospitalCode = "H006", HospitalName = "福永人民医院", ShortName = "福永医院", SortOrder = 6 },
-            new() { HospitalCode = "H007", HospitalName = "松岗人民医院", ShortName = "松岗医院", SortOrder = 7 },
-            new() { HospitalCode = "H008", HospitalName = "石岩人民医院", ShortName = "石岩医院", SortOrder = 8 },
-            new() { HospitalCode = "H009", HospitalName = "西乡人民医院", ShortName = "西乡医院", SortOrder = 9 },
-            new() { HospitalCode = "H010", HospitalName = "新安人民医院", ShortName = "新安医院", SortOrder = 10 }
+            HospitalName = "宝安区域急救应急物资及值班管理系统",
+            HospitalPhone = "0755-12345678",
+            CreatedAt = DateTime.Now,
+            UpdatedAt = DateTime.Now
         };
 
-        await _fsql.Insert(hospitals).ExecuteAffrowsAsync();
-        _logger.LogInformation("初始化医院数据: {Count} 条", hospitals.Count);
+        await _fsql.Insert(hospitalConfig).ExecuteAffrowsAsync();
+        _logger.LogInformation("初始化医院配置数据: 1 条");
     }
 
     private async Task SeedDepartmentsAsync()
@@ -191,22 +184,22 @@ public class DataSeeder
         _logger.LogInformation("初始化人员职称数据: {Count} 条", titles.Count);
     }
 
-    private async Task SeedMaterialThresholdsAsync()
+    private async Task SeedMaterialTypesAsync()
     {
-        if (await _fsql.Select<MaterialThreshold>().AnyAsync())
+        if (await _fsql.Select<MaterialTypeDict>().AnyAsync())
             return;
 
-        var thresholds = new List<MaterialThreshold>
+        var materialTypes = new List<MaterialTypeDict>
         {
-            new() { MaterialType = Domain.Enums.MaterialType.Food, Threshold = 10 },
-            new() { MaterialType = Domain.Enums.MaterialType.Medical, Threshold = 2 },
-            new() { MaterialType = Domain.Enums.MaterialType.Equipment, Threshold = 5 },
-            new() { MaterialType = Domain.Enums.MaterialType.Clothing, Threshold = 10 },
-            new() { MaterialType = Domain.Enums.MaterialType.Other, Threshold = 5 }
+            new() { TypeCode = "FOOD", TypeName = "食品", Color = "#52c41a", SortOrder = 1, IsEnabled = true },
+            new() { TypeCode = "MEDICAL", TypeName = "医疗", Color = "#1890ff", SortOrder = 2, IsEnabled = true },
+            new() { TypeCode = "EQUIPMENT", TypeName = "设备", Color = "#fa8c16", SortOrder = 3, IsEnabled = true },
+            new() { TypeCode = "CLOTHING", TypeName = "衣物", Color = "#722ed1", SortOrder = 4, IsEnabled = true },
+            new() { TypeCode = "OTHER", TypeName = "其他", Color = "#8c8c8c", SortOrder = 5, IsEnabled = true }
         };
 
-        await _fsql.Insert(thresholds).ExecuteAffrowsAsync();
-        _logger.LogInformation("初始化物资阈值数据: {Count} 条", thresholds.Count);
+        await _fsql.Insert(materialTypes).ExecuteAffrowsAsync();
+        _logger.LogInformation("初始化物资类型数据: {Count} 条", materialTypes.Count);
     }
 
     private async Task SeedSystemInitKeyAsync()

@@ -57,21 +57,6 @@ public class UserInfo
 
     [JsonPropertyName("roleDescriptions")]
     public List<string> RoleDescriptions { get; set; } = new List<string>();
-
-    [JsonPropertyName("hospitalId")]
-    public Guid? HospitalId { get; set; }
-
-    [JsonPropertyName("hospitalName")]
-    public string? HospitalName { get; set; }
-
-    [JsonPropertyName("systemHospitalName")]
-    public string? SystemHospitalName { get; set; }
-
-    [JsonPropertyName("systemLevel")]
-    public string? SystemLevel { get; set; }
-
-    [JsonPropertyName("isCommissionUser")]
-    public bool IsCommissionUser { get; set; }
 }
 
 /// <summary>
@@ -104,9 +89,6 @@ public class UserDto
     public List<string> RoleDescriptions { get; set; } = new List<string>();
     public UserStatus Status { get; set; }
     public DateTime? LastLoginAt { get; set; }
-    public Guid? HospitalId { get; set; }
-    public string? HospitalName { get; set; }
-    public bool IsCommissionUser { get; set; }
 }
 
 /// <summary>
@@ -128,9 +110,6 @@ public class UserCreateRequest
         get => RoleStrings.Select(r => Enum.Parse<UserRole>(r)).ToList();
         set => RoleStrings = value.Select(r => r.ToString()).ToList();
     }
-
-    public Guid? HospitalId { get; set; }
-    public bool IsCommissionUser { get; set; }
 }
 
 /// <summary>
@@ -153,8 +132,6 @@ public class UserUpdateRequest
     }
 
     public UserStatus Status { get; set; }
-    public Guid? HospitalId { get; set; }
-    public bool IsCommissionUser { get; set; }
 }
 
 /// <summary>

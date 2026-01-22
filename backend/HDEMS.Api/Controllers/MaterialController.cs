@@ -129,8 +129,8 @@ public class MaterialController : ControllerBase
     /// <param name="hospitalId">医院ID（可选）</param>
     /// <returns>统计数据</returns>
     [HttpGet("statistics")]
-    public async Task<ApiResponse<object>> GetStatistics([FromQuery] Guid? hospitalId)
+    public async Task<ApiResponse<object>> GetStatistics()
     {
-        return await _materialService.GetStatisticsAsync(hospitalId);
+        return await _materialService.GetStatisticsAsync();
     }
 }

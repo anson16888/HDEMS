@@ -1,5 +1,3 @@
-using HDEMS.Domain.Enums;
-
 namespace HDEMS.Application.DTOs;
 
 /// <summary>
@@ -10,8 +8,9 @@ public class MaterialDto
     public Guid Id { get; set; }
     public string MaterialCode { get; set; } = string.Empty;
     public string MaterialName { get; set; } = string.Empty;
-    public MaterialType MaterialType { get; set; }
+    public int MaterialTypeId { get; set; }
     public string MaterialTypeName { get; set; } = string.Empty;
+    public string? MaterialTypeColor { get; set; }
     public string? Specification { get; set; }
     public decimal Quantity { get; set; }
     public string? Unit { get; set; }
@@ -19,10 +18,8 @@ public class MaterialDto
     public int? ShelfLife { get; set; }
     public DateTime? ExpiryDate { get; set; }
     public string Location { get; set; } = string.Empty;
-    public Guid HospitalId { get; set; }
-    public string? HospitalName { get; set; }
     public string? Remark { get; set; }
-    public MaterialStatus Status { get; set; }
+    public int Status { get; set; }
     public string StatusName { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
@@ -38,14 +35,13 @@ public class MaterialCreateRequest
     /// </summary>
     public string? MaterialCode { get; set; }
     public string MaterialName { get; set; } = string.Empty;
-    public MaterialType MaterialType { get; set; }
+    public int MaterialTypeId { get; set; }
     public string? Specification { get; set; }
     public decimal Quantity { get; set; }
     public string? Unit { get; set; }
     public DateTime? ProductionDate { get; set; }
     public int? ShelfLife { get; set; }
     public string Location { get; set; } = string.Empty;
-    public Guid HospitalId { get; set; }
     public string? Remark { get; set; }
 }
 
@@ -55,9 +51,8 @@ public class MaterialCreateRequest
 public class MaterialQueryRequest
 {
     public string? Keyword { get; set; }
-    public MaterialType? MaterialType { get; set; }
-    public MaterialStatus? Status { get; set; }
-    public Guid? HospitalId { get; set; }
+    public int? MaterialTypeId { get; set; }
+    public int? Status { get; set; }
     public int Page { get; set; } = 1;
     public int PageSize { get; set; } = 20;
 }

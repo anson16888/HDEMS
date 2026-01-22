@@ -28,7 +28,7 @@ public class UserService : IUserService
 
     public async Task<ApiResponse<PagedResult<UserDto>>> GetPagedAsync(int page = 1, int pageSize = 20, string? keyword = null)
     {
-        var query = _fsql.Select<User>().Include(u => u.Hospital);
+        var query = _fsql.Select<User>();
 
         if (!string.IsNullOrWhiteSpace(keyword))
         {
@@ -64,7 +64,6 @@ public class UserService : IUserService
     public async Task<ApiResponse<UserDto>> GetByIdAsync(Guid id)
     {
         var user = await _fsql.Select<User>()
-            .Include(u => u.Hospital)
             .Where(u => u.Id == id)
             .FirstAsync();
 
@@ -119,8 +118,6 @@ public class UserService : IUserService
         user.Phone = request.Phone;
         user.Department = request.Department;
         user.Status = request.Status;
-        user.HospitalId = request.HospitalId;
-        user.IsCommissionUser = request.IsCommissionUser;
         user.UpdatedAt = DateTime.Now;
 
         // 手动设置角色（从字符串转换为枚举）
@@ -189,7 +186,6 @@ public class UserService : IUserService
     public async Task<ApiResponse<List<UserDto>>> GetAdminsAsync()
     {
         var users = await _fsql.Select<User>()
-            .Include(u => u.Hospital)
             .Where(u => u.DeletedAt == null)
             .OrderByDescending(u => u.CreatedAt)
             .ToListAsync();

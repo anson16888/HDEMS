@@ -59,22 +59,6 @@ public class User : BaseEntity
     public DateTime? LastLoginAt { get; set; }
 
     /// <summary>
-    /// 医院ID（用于数据隔离）
-    /// </summary>
-    [Column(Position = 9)]
-    public Guid? HospitalId { get; set; }
-
-    /// <summary>
-    /// 是否是卫健委用户（具有跨院查看权限）
-    /// </summary>
-    [Column(Position = 10)]
-    public bool IsCommissionUser { get; set; }
-
-    // 导航属性
-    [Navigate(nameof(HospitalId))]
-    public Hospital? Hospital { get; set; }
-
-    /// <summary>
     /// 获取角色列表
     /// </summary>
     public List<UserRole> GetRoleList()

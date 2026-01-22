@@ -185,22 +185,23 @@ app.Run();
 /// </summary>
 static async Task InitializeDatabaseAsync(IFreeSql fsql)
 {
-    // 检查 Hospital 表是否存在
+    // 检查 HospitalConfig 表是否存在
     var tableExists = await fsql.Ado.ExecuteScalarAsync(
-        "SELECT name FROM sqlite_master WHERE type='table' AND name='t_hospital'");
+        "SELECT name FROM sqlite_master WHERE type='table' AND name='t_hospital_config'");
 
     if (tableExists == null)
     {
         // 表不存在，创建所有表
         try
         {
-            fsql.CodeFirst.SyncStructure(typeof(HDEMS.Domain.Entities.Hospital));
+            fsql.CodeFirst.SyncStructure(typeof(HDEMS.Domain.Entities.HospitalConfig));
             fsql.CodeFirst.SyncStructure(typeof(HDEMS.Domain.Entities.Department));
             fsql.CodeFirst.SyncStructure(typeof(HDEMS.Domain.Entities.Shift));
             fsql.CodeFirst.SyncStructure(typeof(HDEMS.Domain.Entities.PersonRank));
             fsql.CodeFirst.SyncStructure(typeof(HDEMS.Domain.Entities.PersonTitle));
             fsql.CodeFirst.SyncStructure(typeof(HDEMS.Domain.Entities.Person));
             fsql.CodeFirst.SyncStructure(typeof(HDEMS.Domain.Entities.User));
+            fsql.CodeFirst.SyncStructure(typeof(HDEMS.Domain.Entities.MaterialTypeDict));
             fsql.CodeFirst.SyncStructure(typeof(HDEMS.Domain.Entities.Material));
             fsql.CodeFirst.SyncStructure(typeof(HDEMS.Domain.Entities.MaterialThreshold));
             fsql.CodeFirst.SyncStructure(typeof(HDEMS.Domain.Entities.Schedule));

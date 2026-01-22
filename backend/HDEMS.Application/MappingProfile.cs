@@ -13,15 +13,33 @@ public class MappingProfile : Profile
     {
         // Material 映射
         CreateMap<Material, MaterialDto>()
-            .ForMember(d => d.MaterialTypeName, opt => opt.MapFrom(s => s.MaterialType.ToString()))
-            .ForMember(d => d.HospitalName, opt => opt.MapFrom(s => s.Hospital != null ? s.Hospital.HospitalName : null))
+            .ForMember(d => d.MaterialTypeName, opt => opt.MapFrom(s => s.MaterialType != null ? s.MaterialType.TypeName : ""))
+            .ForMember(d => d.MaterialTypeColor, opt => opt.MapFrom(s => s.MaterialType != null ? s.MaterialType.Color : null))
             .ForMember(d => d.StatusName, opt => opt.MapFrom(s => GetStatusName(s.Status)));
 
         CreateMap<MaterialCreateRequest, Material>();
 
+        // MaterialTypeDict 映射
+        CreateMap<MaterialTypeDict, MaterialTypeDto>()
+            .ReverseMap();
+
+        CreateMap<MaterialTypeDict, MaterialTypeOptionDto>()
+            .ReverseMap();
+
+        CreateMap<MaterialTypeCreateRequest, MaterialTypeDict>();
+
+        CreateMap<MaterialTypeUpdateRequest, MaterialTypeDict>();
+
+        // HospitalConfig 映射
+        CreateMap<HospitalConfig, HospitalConfigDto>()
+            .ReverseMap();
+
+        CreateMap<HospitalConfigUpdateRequest, HospitalConfig>()
+            .ForMember(d => d.Id, opt => opt.Ignore())
+            .ForMember(d => d.CreatedAt, opt => opt.Ignore());
+
         // Schedule 映射
         CreateMap<Schedule, ScheduleDto>()
-            .ForMember(d => d.HospitalName, opt => opt.MapFrom(s => s.Hospital != null ? s.Hospital.HospitalName : null))
             .ForMember(d => d.ScheduleTypeName, opt => opt.MapFrom(s => s.ScheduleType.ToString()))
             .ForMember(d => d.ShiftName, opt => opt.MapFrom(s => s.Shift != null ? s.Shift.ShiftName : null))
             .ForMember(d => d.RankName, opt => opt.MapFrom(s => s.Rank != null ? s.Rank.RankName : null))
@@ -32,7 +50,6 @@ public class MappingProfile : Profile
 
         // User 映射
         CreateMap<User, UserDto>()
-            .ForMember(d => d.HospitalName, opt => opt.MapFrom(s => s.Hospital != null ? s.Hospital.HospitalName : null))
             .ForMember(d => d.Roles, opt => opt.Ignore())           // 手动填充
             .ForMember(d => d.RoleDescriptions, opt => opt.Ignore()); // 手动填充
 
@@ -42,10 +59,6 @@ public class MappingProfile : Profile
         CreateMap<UserUpdateRequest, User>()
             .ForMember(d => d.Roles, opt => opt.Ignore())  // Roles 通过 SetRoleList 设置
             .ForMember(d => d.Username, opt => opt.Ignore());  // 用户名不允许修改
-
-        // Hospital 映射
-        CreateMap<Hospital, HospitalDto>()
-            .ReverseMap();
 
         // Department 映射
         CreateMap<Department, DepartmentDto>()
@@ -67,19 +80,18 @@ public class MappingProfile : Profile
         CreateMap<Person, PersonDto>()
             .ForMember(d => d.DepartmentName, opt => opt.MapFrom(s => s.Department != null ? s.Department.DepartmentName : null))
             .ForMember(d => d.RankName, opt => opt.MapFrom(s => s.Rank != null ? s.Rank.RankName : null))
-            .ForMember(d => d.TitleName, opt => opt.MapFrom(s => s.Title != null ? s.Title.TitleName : null))
-            .ForMember(d => d.HospitalName, opt => opt.MapFrom(s => s.Hospital != null ? s.Hospital.HospitalName : null));
+            .ForMember(d => d.TitleName, opt => opt.MapFrom(s => s.Title != null ? s.Title.TitleName : null));
     }
 
-    private static string GetStatusName(Domain.Enums.MaterialStatus status)
+    private static string GetStatusName(int status)
     {
         return status switch
         {
-            Domain.Enums.MaterialStatus.Normal => "正常",
-            Domain.Enums.MaterialStatus.Low => "库存偏低",
-            Domain.Enums.MaterialStatus.Out => "已耗尽",
-            Domain.Enums.MaterialStatus.Expired => "已过期",
-            Domain.Enums.MaterialStatus.ExpiringSoon => "即将过期",
+            0 => "正常",
+            1 => "库存偏低",
+            2 => "已耗尽",
+            3 => "已过期",
+            4 => "即将过期",
             _ => "未知"
         };
     }

@@ -9,8 +9,6 @@ public class ScheduleDto
 {
     public Guid Id { get; set; }
     public DateTime ScheduleDate { get; set; }
-    public Guid HospitalId { get; set; }
-    public string? HospitalName { get; set; }
     public ScheduleType ScheduleType { get; set; }
     public string ScheduleTypeName { get; set; } = string.Empty;
     public Guid ShiftId { get; set; }
@@ -35,7 +33,6 @@ public class ScheduleDto
 public class ScheduleCreateRequest
 {
     public DateTime ScheduleDate { get; set; }
-    public Guid HospitalId { get; set; }
     public ScheduleType ScheduleType { get; set; }
     public Guid ShiftId { get; set; }
     public string PersonName { get; set; } = string.Empty;
@@ -53,7 +50,6 @@ public class ScheduleQueryRequest
 {
     public DateTime? StartDate { get; set; }
     public DateTime? EndDate { get; set; }
-    public Guid? HospitalId { get; set; }
     public ScheduleType? ScheduleType { get; set; }
     public Guid? DepartmentId { get; set; }
     public Guid? ShiftId { get; set; }
@@ -79,7 +75,6 @@ public class ScheduleStatistics
 public class ScheduleOverviewItem
 {
     public DateTime ScheduleDate { get; set; }
-    public string HospitalName { get; set; } = string.Empty;
     public string DepartmentName { get; set; } = string.Empty;
     public ScheduleType ScheduleType { get; set; }
     public string ScheduleTypeName { get; set; } = string.Empty;

@@ -50,5 +50,5 @@ public interface IMaterialService
     /// <summary>
     /// 获取物资统计数据
     /// </summary>
-    Task<ApiResponse<object>> GetStatisticsAsync(Guid? hospitalId = null);
+    Task<ApiResponse<object>> GetStatisticsAsync();
 }

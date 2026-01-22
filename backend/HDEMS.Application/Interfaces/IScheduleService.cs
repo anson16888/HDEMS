@@ -51,7 +51,9 @@ public interface IScheduleService
     /// <summary>
     /// 获取排班统计数据
     /// </summary>
-    Task<ApiResponse<ScheduleStatistics>> GetStatisticsAsync();
+    /// <param name="startDate">开始日期（可选）</param>
+    /// <param name="endDate">结束日期（可选）</param>
+    Task<ApiResponse<ScheduleStatistics>> GetStatisticsAsync(DateTime? startDate = null, DateTime? endDate = null);
 
     /// <summary>
     /// 导出排班数据

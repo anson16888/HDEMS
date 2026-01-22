@@ -4,12 +4,8 @@ using HDEMS.Application.Extensions;
 using HDEMS.Application.Interfaces;
 using HDEMS.Domain.Entities;
 using HDEMS.Domain.Enums;
-using HDEMS.Infrastructure.Configuration;
 using HDEMS.Infrastructure.Services;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using System.Security.Cryptography;
-using System.Text;
 
 namespace HDEMS.Application.Services;
 
@@ -22,22 +18,19 @@ public class AuthService : IAuthService
     private readonly JwtService _jwtService;
     private readonly PasswordService _passwordService;
     private readonly ILogger<AuthService> _logger;
-    private readonly SystemConfig _systemConfig;
 
-    public AuthService(IFreeSql fsql, JwtService jwtService, PasswordService passwordService, ILogger<AuthService> logger, IOptions<SystemConfig> systemConfig)
+    public AuthService(IFreeSql fsql, JwtService jwtService, PasswordService passwordService, ILogger<AuthService> logger)
     {
         _fsql = fsql;
         _jwtService = jwtService;
         _passwordService = passwordService;
         _logger = logger;
-        _systemConfig = systemConfig.Value;
     }
 
     public async Task<ApiResponse<LoginResponse>> LoginAsync(LoginRequest request)
     {
         // 查找用户
         var user = await _fsql.Select<User>()
-            .Include(u => u.Hospital)
             .Where(u => u.Username == request.Username)
             .FirstAsync();
 
@@ -67,7 +60,7 @@ public class AuthService : IAuthService
         var roleList = user.GetRoleList();
         var roles = roleList.Select(r => r.ToString()).ToList();
         var roleDescriptions = roleList.Select(r => r.GetDescription()).ToList();
-        var token = _jwtService.GenerateToken(user.Id, user.Username, roles, user.HospitalId, user.IsCommissionUser);
+        var token = _jwtService.GenerateToken(user.Id, user.Username, roles, null, false);
 
         // 更新最后登录时间
         user.LastLoginAt = DateTime.Now;
@@ -87,12 +80,7 @@ public class AuthService : IAuthService
                 Phone = user.Phone,
                 Department = user.Department,
                 RoleStrings = roles,
-                RoleDescriptions = roleDescriptions,
-                HospitalId = user.HospitalId,
-                HospitalName = user.Hospital?.HospitalName,
-                SystemHospitalName = _systemConfig.HospitalName,
-                SystemLevel = _systemConfig.SystemLevel,
-                IsCommissionUser = user.IsCommissionUser
+                RoleDescriptions = roleDescriptions
             }
         };
 
@@ -166,7 +154,6 @@ public class AuthService : IAuthService
                 Phone = "13800000000",
                 Department = "信息科",
                 Status = UserStatus.Active,
-                IsCommissionUser = true,
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now
             };

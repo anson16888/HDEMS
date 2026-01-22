@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using HDEMS.Application.DTOs;
+using HDEMS.Application.Extensions;
 using HDEMS.Application.Interfaces;
+using HDEMS.Domain.Enums;
 using System.Security.Claims;
 
 namespace HDEMS.Api.Controllers;
@@ -63,11 +65,15 @@ public class AuthController : ControllerBase
     [Authorize]
     public ApiResponse<CurrentUser> GetCurrentUser()
     {
+        var roles = User.FindAll(ClaimTypes.Role).Select(c => c.Value).ToList();
+        var roleDescriptions = roles.Select(r => Enum.Parse<UserRole>(r).GetDescription()).ToList();
+
         var user = new CurrentUser
         {
             Id = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? Guid.Empty.ToString()),
             Username = User.FindFirst(ClaimTypes.Name)?.Value ?? "",
-            Roles = User.FindAll(ClaimTypes.Role).Select(c => c.Value).ToList(),
+            Roles = roles,
+            RoleDescriptions = roleDescriptions,
             HospitalId = Guid.TryParse(User.FindFirst("HospitalId")?.Value, out var hid) ? hid : null,
             IsCommissionUser = bool.Parse(User.FindFirst("IsCommissionUser")?.Value ?? "false")
         };
@@ -107,6 +113,7 @@ public class AuthController : ControllerBase
         public Guid Id { get; set; }
         public string Username { get; set; } = string.Empty;
         public List<string> Roles { get; set; } = new List<string>();
+        public List<string> RoleDescriptions { get; set; } = new List<string>();
         public Guid? HospitalId { get; set; }
         public bool IsCommissionUser { get; set; }
     }

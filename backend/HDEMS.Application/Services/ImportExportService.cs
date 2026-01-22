@@ -26,48 +26,53 @@ public class ImportExportService : IImportExportService
         using var package = new ExcelPackage();
         var worksheet = package.Workbook.Worksheets.Add("物资导入模板");
 
-        // 物资类型枚举值
-        var materialTypes = new List<string> { "食品", "医疗", "设备", "衣物", "其他" };
+        // 从数据库获取物资类型列表
+        var materialTypes = await _fsql.Select<MaterialTypeDict>()
+            .Where(t => t.IsEnabled)
+            .OrderBy(t => t.SortOrder)
+            .ToListAsync();
 
-        // 第1行：标题
+        var materialTypeNames = materialTypes.Select(t => t.TypeName).ToList();
+
+        // 第1行：标题和说明合并成一行（显示为两行，通过设置行高实现）
         worksheet.Cells[1, 1, 1, 10].Merge = true;
-        worksheet.Cells[1, 1].Value = "物资导入模板";
-        worksheet.Cells[1, 1].Style.Font.Bold = true;
-        worksheet.Cells[1, 1].Style.Font.Size = 16;
+        worksheet.Cells[1, 1].Style.WrapText = true;
         worksheet.Cells[1, 1].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
         worksheet.Cells[1, 1].Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
+        worksheet.Row(1).Height = 36; // 设置行高以容纳两行文字
 
-        // 第2行：说明（红色小字，居中）
-        worksheet.Cells[2, 1, 2, 10].Merge = true;
-        worksheet.Cells[2, 1].Value = "说明：物资编码不填则自动生成（格式为EM-YYMMDDHHMMSS-XXXXX）；带*号为必填项；物资类型从下拉列表中选择。";
-        worksheet.Cells[2, 1].Style.Font.Color.SetColor(System.Drawing.Color.Red);
-        worksheet.Cells[2, 1].Style.Font.Size = 10;
-        worksheet.Cells[2, 1].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
-        worksheet.Cells[2, 1].Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
+        // 使用 RichText 设置不同样式
+        var titleText = worksheet.Cells[1, 1].RichText.Add("物资导入模板\n");
+        titleText.Bold = true;
+        titleText.Size = 12;
 
-        // 第3行：表头
-        worksheet.Cells[3, 1].Value = "物资编码";
-        worksheet.Cells[3, 2].Value = "物资名称*";
-        worksheet.Cells[3, 3].Value = "物资类型*";
-        worksheet.Cells[3, 4].Value = "库存数量*";
-        worksheet.Cells[3, 5].Value = "单位";
-        worksheet.Cells[3, 6].Value = "存放位置*";
-        worksheet.Cells[3, 7].Value = "规格";
-        worksheet.Cells[3, 8].Value = "生产日期";
-        worksheet.Cells[3, 9].Value = "质保期(月)";
-        worksheet.Cells[3, 10].Value = "备注";
+        var descText = worksheet.Cells[1, 1].RichText.Add("说明：物资编码不填则自动生成（格式为EM-YYMMDDHHMMSS-XXXXX）；带*号为必填项；物资类型请从下拉列表中选择。");
+        descText.Color = System.Drawing.Color.Red;
+        descText.Size = 10;
 
-        // 第4行：示例数据
-        worksheet.Cells[4, 1].Value = "留空自动生成";
-        worksheet.Cells[4, 2].Value = "急救包（标准型）";
-        worksheet.Cells[4, 3].Value = "医疗";
-        worksheet.Cells[4, 4].Value = "100";
-        worksheet.Cells[4, 5].Value = "个";
-        worksheet.Cells[4, 6].Value = "A区-1排-3号";
-        worksheet.Cells[4, 7].Value = "30x20x10cm";
-        worksheet.Cells[4, 8].Value = "2023-01-01";
-        worksheet.Cells[4, 9].Value = "36";
-        worksheet.Cells[4, 10].Value = "常规急救包";
+        // 第2行：表头
+        worksheet.Cells[2, 1].Value = "物资编码";
+        worksheet.Cells[2, 2].Value = "物资名称*";
+        worksheet.Cells[2, 3].Value = "物资类型*";
+        worksheet.Cells[2, 4].Value = "库存数量*";
+        worksheet.Cells[2, 5].Value = "单位";
+        worksheet.Cells[2, 6].Value = "存放位置*";
+        worksheet.Cells[2, 7].Value = "规格";
+        worksheet.Cells[2, 8].Value = "生产日期";
+        worksheet.Cells[2, 9].Value = "质保期(月)";
+        worksheet.Cells[2, 10].Value = "备注";
+
+        // 第3行：示例数据
+        worksheet.Cells[3, 1].Value = "留空自动生成";
+        worksheet.Cells[3, 2].Value = "急救包（标准型）";
+        worksheet.Cells[3, 3].Value = materialTypeNames.FirstOrDefault() ?? "医疗";
+        worksheet.Cells[3, 4].Value = "100";
+        worksheet.Cells[3, 5].Value = "个";
+        worksheet.Cells[3, 6].Value = "A区-1排-3号";
+        worksheet.Cells[3, 7].Value = "30x20x10cm";
+        worksheet.Cells[3, 8].Value = "2023-01-01";
+        worksheet.Cells[3, 9].Value = "36";
+        worksheet.Cells[3, 10].Value = "常规急救包";
 
         // 设置列宽
         worksheet.Column(1).Width = 20;  // 物资编码
@@ -90,17 +95,8 @@ public class ImportExportService : IImportExportService
             range.Style.Border.Right.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
         }
 
-        // 说明行边框
-        using (var range = worksheet.Cells[2, 1, 2, 10])
-        {
-            range.Style.Border.Top.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
-            range.Style.Border.Bottom.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
-            range.Style.Border.Left.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
-            range.Style.Border.Right.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
-        }
-
         // 表头样式（加粗，带边框）
-        using (var range = worksheet.Cells[3, 1, 3, 10])
+        using (var range = worksheet.Cells[2, 1, 2, 10])
         {
             range.Style.Font.Bold = true;
             range.Style.Border.Top.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
@@ -109,9 +105,12 @@ public class ImportExportService : IImportExportService
             range.Style.Border.Right.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
         }
 
-        // 添加物资类型下拉列表验证（从第4行开始，最多允许1000行数据）
-        var materialTypeValidation = worksheet.DataValidations.AddListValidation("C4:C1003");
-        materialTypeValidation.Formula.ExcelFormula = $"\"{string.Join(",", materialTypes)}\"";
+        // 添加物资类型下拉列表验证（从第3行开始，最多允许1000行数据）
+        var materialTypeValidation = worksheet.DataValidations.AddListValidation("C3:C1002");
+        materialTypeValidation.Formula.ExcelFormula = $"\"{string.Join(",", materialTypeNames)}\"";
+        materialTypeValidation.ShowErrorMessage = true;
+        materialTypeValidation.ErrorTitle = "物资类型错误";
+        materialTypeValidation.Error = "请从下拉列表中选择有效的物资类型";
 
         return await Task.FromResult(package.GetAsByteArray());
     }
@@ -146,41 +145,41 @@ public class ImportExportService : IImportExportService
         var titles = await _fsql.Select<PersonTitle>().OrderBy(t => t.SortOrder).ToListAsync();
         var titleNames = titles.Select(t => t.TitleName).ToList();
 
-        // 第1行：标题
+        // 第1行：标题和说明合并成一行（显示为两行，通过设置行高实现）
         worksheet.Cells[1, 1, 1, 8].Merge = true;
-        worksheet.Cells[1, 1].Value = $"{scheduleTypeName}排班导入模板";
-        worksheet.Cells[1, 1].Style.Font.Bold = true;
-        worksheet.Cells[1, 1].Style.Font.Size = 16;
+        worksheet.Cells[1, 1].Style.WrapText = true;
         worksheet.Cells[1, 1].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
         worksheet.Cells[1, 1].Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
+        worksheet.Row(1).Height = 36; // 设置行高以容纳两行文字
 
-        // 第2行：说明（红色小字，居中）
-        worksheet.Cells[2, 1, 2, 8].Merge = true;
-        worksheet.Cells[2, 1].Value = "说明：带*号为必填项；班次、职级、科室、职称请从下拉列表中选择。";
-        worksheet.Cells[2, 1].Style.Font.Color.SetColor(System.Drawing.Color.Red);
-        worksheet.Cells[2, 1].Style.Font.Size = 10;
-        worksheet.Cells[2, 1].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
-        worksheet.Cells[2, 1].Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
+        // 使用 RichText 设置不同样式
+        var richText = worksheet.Cells[1, 1].RichText.Add($"{scheduleTypeName}排班导入模板\n");
+        richText.Bold = true;
+        richText.Size = 12;
 
-        // 第3行：表头
-        worksheet.Cells[3, 1].Value = "日期*";
-        worksheet.Cells[3, 2].Value = "班次*";
-        worksheet.Cells[3, 3].Value = "人员姓名*";
-        worksheet.Cells[3, 4].Value = "联系电话*";
-        worksheet.Cells[3, 5].Value = "职级";
-        worksheet.Cells[3, 6].Value = "科室";
-        worksheet.Cells[3, 7].Value = "职称";
-        worksheet.Cells[3, 8].Value = "备注";
+        var descText = worksheet.Cells[1, 1].RichText.Add("说明：带*号为必填项；班次、职级、科室、职称请从下拉列表中选择。");
+        descText.Color = System.Drawing.Color.Red;
+        descText.Size = 10;
 
-        // 第4行：示例数据
-        worksheet.Cells[4, 1].Value = "2023-11-01";
-        worksheet.Cells[4, 2].Value = shiftNames.FirstOrDefault() ?? "早班";
-        worksheet.Cells[4, 3].Value = "张三";
-        worksheet.Cells[4, 4].Value = "13800138000";
-        worksheet.Cells[4, 5].Value = rankNames.FirstOrDefault();
-        worksheet.Cells[4, 6].Value = departmentNames.FirstOrDefault();
-        worksheet.Cells[4, 7].Value = titleNames.FirstOrDefault();
-        worksheet.Cells[4, 8].Value = "常规值班";
+        // 第2行：表头
+        worksheet.Cells[2, 1].Value = "日期*";
+        worksheet.Cells[2, 2].Value = "班次*";
+        worksheet.Cells[2, 3].Value = "人员姓名*";
+        worksheet.Cells[2, 4].Value = "联系电话*";
+        worksheet.Cells[2, 5].Value = "职级*";
+        worksheet.Cells[2, 6].Value = "科室*";
+        worksheet.Cells[2, 7].Value = "职称*";
+        worksheet.Cells[2, 8].Value = "备注";
+
+        // 第3行：示例数据
+        worksheet.Cells[3, 1].Value = "2023-11-01";
+        worksheet.Cells[3, 2].Value = shiftNames.FirstOrDefault() ?? "早班";
+        worksheet.Cells[3, 3].Value = "张三";
+        worksheet.Cells[3, 4].Value = "13800138000";
+        worksheet.Cells[3, 5].Value = rankNames.FirstOrDefault();
+        worksheet.Cells[3, 6].Value = departmentNames.FirstOrDefault();
+        worksheet.Cells[3, 7].Value = titleNames.FirstOrDefault();
+        worksheet.Cells[3, 8].Value = "常规值班";
 
         // 设置列宽
         worksheet.Column(1).Width = 15;  // 日期
@@ -201,17 +200,8 @@ public class ImportExportService : IImportExportService
             range.Style.Border.Right.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
         }
 
-        // 说明行边框
-        using (var range = worksheet.Cells[2, 1, 2, 8])
-        {
-            range.Style.Border.Top.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
-            range.Style.Border.Bottom.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
-            range.Style.Border.Left.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
-            range.Style.Border.Right.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
-        }
-
         // 表头样式（加粗，带边框）
-        using (var range = worksheet.Cells[3, 1, 3, 8])
+        using (var range = worksheet.Cells[2, 1, 2, 8])
         {
             range.Style.Font.Bold = true;
             range.Style.Border.Top.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
@@ -220,15 +210,15 @@ public class ImportExportService : IImportExportService
             range.Style.Border.Right.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
         }
 
-        // 添加班次下拉列表验证（B列-第2列）
-        var shiftValidation = worksheet.DataValidations.AddListValidation("B4:B1003");
+        // 添加班次下拉列表验证（B列-第2列，从第3行开始）
+        var shiftValidation = worksheet.DataValidations.AddListValidation("B3:B1002");
         shiftValidation.Formula.ExcelFormula = $"\"{string.Join(",", shiftNames)}\"";
         shiftValidation.ShowErrorMessage = true;
         shiftValidation.ErrorTitle = "输入错误";
         shiftValidation.Error = "请从下拉列表中选择有效的班次";
 
-        // 添加职级下拉列表验证（E列-第5列）
-        var rankValidation = worksheet.DataValidations.AddListValidation("E4:E1003");
+        // 添加职级下拉列表验证（E列-第5列，从第3行开始）
+        var rankValidation = worksheet.DataValidations.AddListValidation("E3:E1002");
         if (rankNames.Any())
         {
             rankValidation.Formula.ExcelFormula = $"\"{string.Join(",", rankNames)}\"";
@@ -237,8 +227,8 @@ public class ImportExportService : IImportExportService
         rankValidation.ErrorTitle = "输入错误";
         rankValidation.Error = "请从下拉列表中选择有效的职级";
 
-        // 添加科室下拉列表验证（F列-第6列）
-        var departmentValidation = worksheet.DataValidations.AddListValidation("F4:F1003");
+        // 添加科室下拉列表验证（F列-第6列，从第3行开始）
+        var departmentValidation = worksheet.DataValidations.AddListValidation("F3:F1002");
         if (departmentNames.Any())
         {
             departmentValidation.Formula.ExcelFormula = $"\"{string.Join(",", departmentNames)}\"";
@@ -247,8 +237,8 @@ public class ImportExportService : IImportExportService
         departmentValidation.ErrorTitle = "输入错误";
         departmentValidation.Error = "请从下拉列表中选择有效的科室";
 
-        // 添加职称下拉列表验证（G列-第7列）
-        var titleValidation = worksheet.DataValidations.AddListValidation("G4:G1003");
+        // 添加职称下拉列表验证（G列-第7列，从第3行开始）
+        var titleValidation = worksheet.DataValidations.AddListValidation("G3:G1002");
         if (titleNames.Any())
         {
             titleValidation.Formula.ExcelFormula = $"\"{string.Join(",", titleNames)}\"";
