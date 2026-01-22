@@ -113,14 +113,24 @@ public class MaterialTypeService : IMaterialTypeService
         }
 
         var type = _mapper.Map<MaterialTypeDict>(request);
-        type.Id = 0; // 自增ID
         type.CreatedAt = DateTime.Now;
         type.UpdatedAt = DateTime.Now;
 
+        // 插入数据
         await _fsql.Insert(type).ExecuteAffrowsAsync();
 
-        var result = await GetByIdAsync(type.Id);
-        return result;
+        // 通过 TypeCode 查询刚插入的记录
+        var inserted = await _fsql.Select<MaterialTypeDict>()
+            .Where(t => t.TypeCode == request.TypeCode)
+            .FirstAsync();
+
+        if (inserted == null)
+        {
+            return ApiResponse<MaterialTypeDto>.Fail(500, "创建失败");
+        }
+
+        var dto = _mapper.Map<MaterialTypeDto>(inserted);
+        return ApiResponse<MaterialTypeDto>.Ok(dto, "创建成功");
     }
 
     public async Task<ApiResponse<MaterialTypeDto>> UpdateAsync(int id, MaterialTypeUpdateRequest request)
