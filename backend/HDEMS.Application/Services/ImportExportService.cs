@@ -70,8 +70,8 @@ public class ImportExportService : IImportExportService
         worksheet.Cells[3, 5].Value = "个";
         worksheet.Cells[3, 6].Value = "A区-1排-3号";
         worksheet.Cells[3, 7].Value = "30x20x10cm";
-        worksheet.Cells[3, 8].Value = "2023-01-01";
-        worksheet.Cells[3, 9].Value = "36";
+        worksheet.Cells[3, 8].Value = DateTime.Now.ToString("yyyy-MM-dd");
+        worksheet.Cells[3, 9].Value = "24";
         worksheet.Cells[3, 10].Value = "常规急救包";
 
         // 设置列宽
@@ -172,7 +172,7 @@ public class ImportExportService : IImportExportService
         worksheet.Cells[2, 8].Value = "备注";
 
         // 第3行：示例数据
-        worksheet.Cells[3, 1].Value = "2023-11-01";
+        worksheet.Cells[3, 1].Value = DateTime.Now.ToString("yyyy-MM-dd");
         worksheet.Cells[3, 2].Value = shiftNames.FirstOrDefault() ?? "早班";
         worksheet.Cells[3, 3].Value = "张三";
         worksheet.Cells[3, 4].Value = "13800138000";
