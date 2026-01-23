@@ -5,7 +5,7 @@ namespace HDEMS.Application.DTOs;
 /// </summary>
 public class HospitalConfigDto
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
     public string HospitalName { get; set; } = string.Empty;
     public string? HospitalPhone { get; set; }
     public DateTime CreatedAt { get; set; }

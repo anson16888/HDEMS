@@ -26,7 +26,7 @@ public class Material : BaseEntity
     /// 物资类型ID
     /// </summary>
     [Column(IsNullable = false)]
-    public int MaterialTypeId { get; set; }
+    public Guid MaterialTypeId { get; set; }
 
     /// <summary>
     /// 物资类型

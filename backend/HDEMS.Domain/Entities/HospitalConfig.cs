@@ -11,8 +11,8 @@ public class HospitalConfig
     /// <summary>
     /// 主键ID
     /// </summary>
-    [Column(IsPrimary = true, IsIdentity = true)]
-    public int Id { get; set; }
+    [Column(IsPrimary = true)]
+    public Guid Id { get; set; } = Guid.NewGuid();
 
     /// <summary>
     /// 医院名称

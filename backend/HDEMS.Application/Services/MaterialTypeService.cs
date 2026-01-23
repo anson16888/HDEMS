@@ -70,7 +70,7 @@ public class MaterialTypeService : IMaterialTypeService
         return ApiResponse<List<MaterialTypeOptionDto>>.Ok(options);
     }
 
-    public async Task<ApiResponse<MaterialTypeDto>> GetByIdAsync(int id)
+    public async Task<ApiResponse<MaterialTypeDto>> GetByIdAsync(Guid id)
     {
         var type = await _fsql.Select<MaterialTypeDict>()
             .Where(t => t.Id == id)
@@ -113,6 +113,7 @@ public class MaterialTypeService : IMaterialTypeService
         }
 
         var type = _mapper.Map<MaterialTypeDict>(request);
+        type.Id = Guid.NewGuid();
         type.CreatedAt = DateTime.Now;
         type.UpdatedAt = DateTime.Now;
 
@@ -133,7 +134,7 @@ public class MaterialTypeService : IMaterialTypeService
         return ApiResponse<MaterialTypeDto>.Ok(dto, "创建成功");
     }
 
-    public async Task<ApiResponse<MaterialTypeDto>> UpdateAsync(int id, MaterialTypeUpdateRequest request)
+    public async Task<ApiResponse<MaterialTypeDto>> UpdateAsync(Guid id, MaterialTypeUpdateRequest request)
     {
         var type = await _fsql.Select<MaterialTypeDict>().Where(t => t.Id == id).FirstAsync();
         if (type == null)
@@ -155,6 +156,7 @@ public class MaterialTypeService : IMaterialTypeService
         }
 
         _mapper.Map(request, type);
+        type.Id = id;
         type.UpdatedAt = DateTime.Now;
 
         await _fsql.Update<MaterialTypeDict>()
@@ -165,7 +167,7 @@ public class MaterialTypeService : IMaterialTypeService
         return result;
     }
 
-    public async Task<ApiResponse> DeleteAsync(int id)
+    public async Task<ApiResponse> DeleteAsync(Guid id)
     {
         var type = await _fsql.Select<MaterialTypeDict>().Where(t => t.Id == id).FirstAsync();
         if (type == null)
@@ -188,7 +190,7 @@ public class MaterialTypeService : IMaterialTypeService
         return ApiResponse.Ok("删除成功");
     }
 
-    public async Task<ApiResponse> BatchDeleteAsync(List<int> ids)
+    public async Task<ApiResponse> BatchDeleteAsync(List<Guid> ids)
     {
         // 检查是否有物资使用这些类型
         var hasMaterials = await _fsql.Select<Domain.Entities.Material>()
@@ -207,7 +209,7 @@ public class MaterialTypeService : IMaterialTypeService
         return ApiResponse.Ok($"成功删除 {ids.Count} 条记录");
     }
 
-    public async Task<ApiResponse> ToggleEnabledAsync(int id)
+    public async Task<ApiResponse> ToggleEnabledAsync(Guid id)
     {
         var type = await _fsql.Select<MaterialTypeDict>().Where(t => t.Id == id).FirstAsync();
         if (type == null)

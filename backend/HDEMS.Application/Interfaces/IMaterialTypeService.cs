@@ -20,7 +20,7 @@ public interface IMaterialTypeService
     /// <summary>
     /// 根据ID获取物资类型
     /// </summary>
-    Task<ApiResponse<MaterialTypeDto>> GetByIdAsync(int id);
+    Task<ApiResponse<MaterialTypeDto>> GetByIdAsync(Guid id);
 
     /// <summary>
     /// 根据编码获取物资类型
@@ -35,20 +35,20 @@ public interface IMaterialTypeService
     /// <summary>
     /// 更新物资类型
     /// </summary>
-    Task<ApiResponse<MaterialTypeDto>> UpdateAsync(int id, MaterialTypeUpdateRequest request);
+    Task<ApiResponse<MaterialTypeDto>> UpdateAsync(Guid id, MaterialTypeUpdateRequest request);
 
     /// <summary>
     /// 删除物资类型
     /// </summary>
-    Task<ApiResponse> DeleteAsync(int id);
+    Task<ApiResponse> DeleteAsync(Guid id);
 
     /// <summary>
     /// 批量删除物资类型
     /// </summary>
-    Task<ApiResponse> BatchDeleteAsync(List<int> ids);
+    Task<ApiResponse> BatchDeleteAsync(List<Guid> ids);
 
     /// <summary>
     /// 启用/禁用物资类型
     /// </summary>
-    Task<ApiResponse> ToggleEnabledAsync(int id);
+    Task<ApiResponse> ToggleEnabledAsync(Guid id);
 }

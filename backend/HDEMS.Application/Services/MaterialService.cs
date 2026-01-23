@@ -122,7 +122,7 @@ public class MaterialService : IMaterialService
         }
 
         // 更新库存状态（优先检查过期，再检查库存）
-        material.Status = GetMaterialStatus(material.Quantity, material.ExpiryDate);
+        material.Status = await GetMaterialStatus(material.MaterialTypeId, material.Quantity, material.ExpiryDate);
 
         material.Id = Guid.NewGuid();
         material.CreatedAt = DateTime.Now;
@@ -206,7 +206,7 @@ public class MaterialService : IMaterialService
         }
 
         // 更新库存状态（优先检查过期，再检查库存）
-        material.Status = GetMaterialStatus(material.Quantity, material.ExpiryDate);
+        material.Status = await GetMaterialStatus(material.MaterialTypeId, material.Quantity, material.ExpiryDate);
         material.UpdatedAt = DateTime.Now;
 
         await _fsql.Update<Material>()
@@ -352,7 +352,7 @@ public class MaterialService : IMaterialService
                 }
 
                 // 更新库存状态（优先检查过期，再检查库存）
-                material.Status = GetMaterialStatus(quantity, expiryDate);
+                material.Status = await GetMaterialStatus(materialType.Id, quantity, expiryDate);
 
                 await _fsql.Insert(material).ExecuteAffrowsAsync();
                 result.SuccessCount++;
@@ -461,7 +461,7 @@ public class MaterialService : IMaterialService
         });
     }
 
-    private int GetMaterialStatus(decimal quantity, DateTime? expiryDate = null)
+    private async Task<int> GetMaterialStatus(Guid materialTypeId, decimal quantity, DateTime? expiryDate = null)
     {
         // 优先检查过期状态
         if (expiryDate.HasValue)
@@ -478,13 +478,27 @@ public class MaterialService : IMaterialService
             }
         }
 
+        // 查询该物资类型的阈值配置
+        var threshold = await _fsql.Select<Domain.Entities.MaterialThreshold>()
+            .Where(t => t.MaterialTypeId == materialTypeId && t.IsEnabled)
+            .FirstAsync();
+
+        // 如果没有配置阈值，使用默认值 5
+        var thresholdValue = threshold?.Threshold ?? 5;
+
         // 没有过期问题，再按库存数量判断
-        return quantity switch
+        if (quantity == 0)
         {
-            0 => 2,  // 已耗尽 Out
-            <= 5 => 1,  // 库存偏低 Low
-            _ => 0  // 正常 Normal
-        };
+            return 2;  // 已耗尽 Out
+        }
+        else if (quantity <= thresholdValue)
+        {
+            return 1;  // 库存偏低 Low
+        }
+        else
+        {
+            return 0;  // 正常 Normal
+        }
     }
 
     /// <summary>

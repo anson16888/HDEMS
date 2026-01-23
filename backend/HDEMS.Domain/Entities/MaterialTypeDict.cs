@@ -12,8 +12,8 @@ public class MaterialTypeDict
     /// <summary>
     /// 主键ID
     /// </summary>
-    [Column(IsPrimary = true, IsIdentity = true)]
-    public int Id { get; set; }
+    [Column(IsPrimary = true)]
+    public Guid Id { get; set; }
 
     /// <summary>
     /// 类型编码

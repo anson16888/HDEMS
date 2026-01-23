@@ -1,6 +1,8 @@
 using FreeSql;
 using HDEMS.Domain.Entities;
+using HDEMS.Domain.Enums;
 using Microsoft.Extensions.Logging;
+using System.Text.Json;
 
 namespace HDEMS.Infrastructure.Services;
 
@@ -11,11 +13,13 @@ public class DataSeeder
 {
     private readonly IFreeSql _fsql;
     private readonly ILogger<DataSeeder> _logger;
+    private readonly PasswordService _passwordService;
 
-    public DataSeeder(IFreeSql fsql, ILogger<DataSeeder> logger)
+    public DataSeeder(IFreeSql fsql, ILogger<DataSeeder> logger, PasswordService passwordService)
     {
         _fsql = fsql;
         _logger = logger;
+        _passwordService = passwordService;
     }
 
     /// <summary>
@@ -33,6 +37,9 @@ public class DataSeeder
             // 初始化物资类型数据
             await SeedMaterialTypesAsync();
 
+            // 初始化物资阈值数据
+            await SeedMaterialThresholdsAsync();
+
             // 初始化科室数据
             await SeedDepartmentsAsync();
 
@@ -47,6 +54,9 @@ public class DataSeeder
 
             // 检查并创建系统初始化密钥
             await SeedSystemInitKeyAsync();
+
+            // 初始化管理员账户
+            await SeedAdminUserAsync();
 
             _logger.LogInformation("种子数据初始化完成");
         }
@@ -64,6 +74,7 @@ public class DataSeeder
 
         var hospitalConfig = new HospitalConfig
         {
+            Id = Guid.NewGuid(),
             HospitalName = "宝安区域急救应急物资及值班管理系统",
             HospitalPhone = "0755-12345678",
             CreatedAt = DateTime.Now,
@@ -191,15 +202,49 @@ public class DataSeeder
 
         var materialTypes = new List<MaterialTypeDict>
         {
-            new() { TypeCode = "FOOD", TypeName = "食品", Color = "#52c41a", SortOrder = 1, IsEnabled = true },
-            new() { TypeCode = "MEDICAL", TypeName = "医疗", Color = "#1890ff", SortOrder = 2, IsEnabled = true },
-            new() { TypeCode = "EQUIPMENT", TypeName = "设备", Color = "#fa8c16", SortOrder = 3, IsEnabled = true },
-            new() { TypeCode = "CLOTHING", TypeName = "衣物", Color = "#722ed1", SortOrder = 4, IsEnabled = true },
-            new() { TypeCode = "OTHER", TypeName = "其他", Color = "#8c8c8c", SortOrder = 5, IsEnabled = true }
+            new() { Id = Guid.NewGuid(), TypeCode = "FOOD", TypeName = "食品", Color = "#52c41a", SortOrder = 1, IsEnabled = true, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now },
+            new() { Id = Guid.NewGuid(), TypeCode = "MEDICAL", TypeName = "医疗", Color = "#1890ff", SortOrder = 2, IsEnabled = true, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now },
+            new() { Id = Guid.NewGuid(), TypeCode = "EQUIPMENT", TypeName = "设备", Color = "#fa8c16", SortOrder = 3, IsEnabled = true, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now },
+            new() { Id = Guid.NewGuid(), TypeCode = "CLOTHING", TypeName = "衣物", Color = "#722ed1", SortOrder = 4, IsEnabled = true, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now },
+            new() { Id = Guid.NewGuid(), TypeCode = "OTHER", TypeName = "其他", Color = "#8c8c8c", SortOrder = 5, IsEnabled = true, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now }
         };
 
         await _fsql.Insert(materialTypes).ExecuteAffrowsAsync();
         _logger.LogInformation("初始化物资类型数据: {Count} 条", materialTypes.Count);
+    }
+
+    private async Task SeedMaterialThresholdsAsync()
+    {
+        if (await _fsql.Select<MaterialThreshold>().AnyAsync())
+            return;
+
+        // 获取所有物资类型
+        var materialTypes = await _fsql.Select<MaterialTypeDict>()
+            .Where(t => t.IsEnabled)
+            .OrderBy(t => t.SortOrder)
+            .ToListAsync();
+
+        if (materialTypes.Count == 0)
+        {
+            _logger.LogWarning("没有找到启用的物资类型，跳过阈值初始化");
+            return;
+        }
+
+        // 为每个物资类型创建阈值配置（默认阈值为5）
+        var thresholds = materialTypes.Select((mt, index) => new MaterialThreshold
+        {
+            Id = Guid.NewGuid(),
+            MaterialTypeId = mt.Id,
+            Threshold = 5,
+            IsEnabled = true,
+            SortOrder = index + 1,
+            Remark = $"{mt.TypeName}库存低值预警阈值",
+            CreatedAt = DateTime.Now,
+            UpdatedAt = DateTime.Now
+        }).ToList();
+
+        await _fsql.Insert(thresholds).ExecuteAffrowsAsync();
+        _logger.LogInformation("初始化物资阈值数据: {Count} 条", thresholds.Count);
     }
 
     private async Task SeedSystemInitKeyAsync()
@@ -217,5 +262,35 @@ public class DataSeeder
     {
         // 生成32位随机密钥
         return Guid.NewGuid().ToString("N") + Guid.NewGuid().ToString("N").Substring(0, 16);
+    }
+
+    private async Task SeedAdminUserAsync()
+    {
+        if (await _fsql.Select<User>().AnyAsync())
+            return;
+
+        // 创建管理员账户：admin / 123456
+        var adminUser = new User
+        {
+            Id = Guid.NewGuid(),
+            Username = "admin",
+            Password = _passwordService.HashPassword("123456"),
+            RealName = "系统管理员",
+            Phone = "13800138000",
+            Department = "信息科",
+            Roles = JsonSerializer.Serialize(new List<string> { UserRole.SYSTEM_ADMIN.ToString() }),
+            Status = UserStatus.Active,
+            CreatedAt = DateTime.Now,
+            UpdatedAt = DateTime.Now
+        };
+
+        await _fsql.Insert(adminUser).ExecuteAffrowsAsync();
+        _logger.LogInformation("初始化管理员账户: admin / 123456");
+        Console.WriteLine("========================================");
+        Console.WriteLine("管理员账户已创建");
+        Console.WriteLine("用户名: admin");
+        Console.WriteLine("密码: 123456");
+        Console.WriteLine("========================================");
+        Console.WriteLine("请登录后及时修改默认密码");
     }
 }

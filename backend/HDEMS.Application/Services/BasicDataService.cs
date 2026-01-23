@@ -65,6 +65,7 @@ public class BasicDataService : IBasicDataService
         }
 
         _mapper.Map(dto, hospital);
+        hospital.Id = id; // 确保Id不被覆盖
         hospital.UpdatedAt = DateTime.Now;
 
         await _fsql.Update<Hospital>().SetSource(hospital).ExecuteAffrowsAsync();
@@ -128,6 +129,7 @@ public class BasicDataService : IBasicDataService
         }
 
         _mapper.Map(dto, department);
+        department.Id = id; // 确保Id不被覆盖
         department.UpdatedAt = DateTime.Now;
 
         await _fsql.Update<Department>().SetSource(department).ExecuteAffrowsAsync();
@@ -191,6 +193,7 @@ public class BasicDataService : IBasicDataService
         }
 
         _mapper.Map(dto, shift);
+        shift.Id = id; // 确保Id不被覆盖
         shift.UpdatedAt = DateTime.Now;
 
         await _fsql.Update<Shift>().SetSource(shift).ExecuteAffrowsAsync();

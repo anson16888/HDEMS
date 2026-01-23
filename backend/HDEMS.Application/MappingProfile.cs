@@ -30,6 +30,19 @@ public class MappingProfile : Profile
 
         CreateMap<MaterialTypeUpdateRequest, MaterialTypeDict>();
 
+        // MaterialThreshold 映射
+        CreateMap<MaterialThreshold, MaterialThresholdDto>()
+            .ForMember(d => d.MaterialTypeName, opt => opt.MapFrom(s => s.MaterialType != null ? s.MaterialType.TypeName : ""))
+            .ForMember(d => d.MaterialTypeColor, opt => opt.MapFrom(s => s.MaterialType != null ? s.MaterialType.Color : null))
+            .ReverseMap();
+
+        CreateMap<MaterialThresholdCreateRequest, MaterialThreshold>()
+            .ForMember(d => d.Id, opt => opt.Ignore());
+
+        CreateMap<MaterialThresholdUpdateRequest, MaterialThreshold>()
+            .ForMember(d => d.Id, opt => opt.Ignore())
+            .ForMember(d => d.CreatedAt, opt => opt.Ignore());
+
         // HospitalConfig 映射
         CreateMap<HospitalConfig, HospitalConfigDto>()
             .ReverseMap();

@@ -5,7 +5,7 @@ namespace HDEMS.Application.DTOs;
 /// </summary>
 public class MaterialTypeDto
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
     public string TypeCode { get; set; } = string.Empty;
     public string TypeName { get; set; } = string.Empty;
     public string? Color { get; set; }
@@ -34,7 +34,7 @@ public class MaterialTypeCreateRequest
 /// </summary>
 public class MaterialTypeUpdateRequest
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
     public string TypeCode { get; set; } = string.Empty;
     public string TypeName { get; set; } = string.Empty;
     public string? Color { get; set; }
@@ -59,7 +59,7 @@ public class MaterialTypeQueryRequest
 /// </summary>
 public class MaterialTypeOptionDto
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
     public string TypeCode { get; set; } = string.Empty;
     public string TypeName { get; set; } = string.Empty;
     public string? Color { get; set; }

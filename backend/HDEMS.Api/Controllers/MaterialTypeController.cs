@@ -44,7 +44,7 @@ public class MaterialTypeController : ControllerBase
     /// 根据ID获取物资类型
     /// </summary>
     [HttpGet("{id}")]
-    public async Task<ApiResponse<MaterialTypeDto>> GetById(int id)
+    public async Task<ApiResponse<MaterialTypeDto>> GetById(Guid id)
     {
         return await _materialTypeService.GetByIdAsync(id);
     }
@@ -71,7 +71,7 @@ public class MaterialTypeController : ControllerBase
     /// 更新物资类型
     /// </summary>
     [HttpPut("{id}")]
-    public async Task<ApiResponse<MaterialTypeDto>> Update(int id, [FromBody] MaterialTypeUpdateRequest request)
+    public async Task<ApiResponse<MaterialTypeDto>> Update(Guid id, [FromBody] MaterialTypeUpdateRequest request)
     {
         return await _materialTypeService.UpdateAsync(id, request);
     }
@@ -80,7 +80,7 @@ public class MaterialTypeController : ControllerBase
     /// 删除物资类型
     /// </summary>
     [HttpDelete("{id}")]
-    public async Task<ApiResponse> Delete(int id)
+    public async Task<ApiResponse> Delete(Guid id)
     {
         return await _materialTypeService.DeleteAsync(id);
     }
@@ -89,7 +89,7 @@ public class MaterialTypeController : ControllerBase
     /// 批量删除物资类型
     /// </summary>
     [HttpDelete("batch")]
-    public async Task<ApiResponse> BatchDelete([FromBody] List<int> ids)
+    public async Task<ApiResponse> BatchDelete([FromBody] List<Guid> ids)
     {
         return await _materialTypeService.BatchDeleteAsync(ids);
     }
@@ -98,7 +98,7 @@ public class MaterialTypeController : ControllerBase
     /// 启用/禁用物资类型
     /// </summary>
     [HttpPatch("{id}/toggle")]
-    public async Task<ApiResponse> ToggleEnabled(int id)
+    public async Task<ApiResponse> ToggleEnabled(Guid id)
     {
         return await _materialTypeService.ToggleEnabledAsync(id);
     }

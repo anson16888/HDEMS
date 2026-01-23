@@ -8,7 +8,7 @@ public class MaterialDto
     public Guid Id { get; set; }
     public string MaterialCode { get; set; } = string.Empty;
     public string MaterialName { get; set; } = string.Empty;
-    public int MaterialTypeId { get; set; }
+    public Guid MaterialTypeId { get; set; }
     public string MaterialTypeName { get; set; } = string.Empty;
     public string? MaterialTypeColor { get; set; }
     public string? Specification { get; set; }
@@ -35,7 +35,7 @@ public class MaterialCreateRequest
     /// </summary>
     public string? MaterialCode { get; set; }
     public string MaterialName { get; set; } = string.Empty;
-    public int MaterialTypeId { get; set; }
+    public Guid MaterialTypeId { get; set; }
     public string? Specification { get; set; }
     public decimal Quantity { get; set; }
     public string? Unit { get; set; }
@@ -51,7 +51,7 @@ public class MaterialCreateRequest
 public class MaterialQueryRequest
 {
     public string? Keyword { get; set; }
-    public int? MaterialTypeId { get; set; }
+    public Guid? MaterialTypeId { get; set; }
     public int? Status { get; set; }
     public int Page { get; set; } = 1;
     public int PageSize { get; set; } = 20;
