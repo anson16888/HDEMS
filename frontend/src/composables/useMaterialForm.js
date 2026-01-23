@@ -38,7 +38,6 @@ export function useMaterialForm() {
   // 表单验证规则
   const rules = {
     material_code: [
-      { required: true, message: '物资编号不能为空', trigger: 'blur' },
       { max: 50, message: '物资编号最多50个字符', trigger: 'blur' }
     ],
     material_name: [
