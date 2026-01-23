@@ -12,6 +12,7 @@ import PersonRankManagementPage from '../pages/PersonRankManagementPage.vue'
 import PersonTitleManagementPage from '../pages/PersonTitleManagementPage.vue'
 import PersonManagementPage from '../pages/PersonManagementPage.vue'
 import MaterialTypeManagementPage from '../pages/MaterialTypeManagementPage.vue'
+import MaterialThresholdManagementPage from '../pages/MaterialThresholdManagementPage.vue'
 import LoginPage from '../pages/LoginPage.vue'
 import NotFoundPage from '../pages/NotFoundPage.vue'
 
@@ -91,6 +92,12 @@ const routes = [
     path: '/system/material-types',
     name: 'system-material-types',
     component: MaterialTypeManagementPage,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/system/material-thresholds',
+    name: 'system-material-thresholds',
+    component: MaterialThresholdManagementPage,
     meta: { requiresAuth: true }
   },
   {

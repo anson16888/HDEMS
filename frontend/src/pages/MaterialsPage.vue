@@ -33,8 +33,8 @@
                 <a-select-option value="">全部</a-select-option>
                 <a-select-option
                   v-for="option in materialTypeOptions"
-                  :key="option.typeCode"
-                  :value="option.typeCode"
+                  :key="option.id"
+                  :value="option.id"
                 >
                   {{ option.typeName }}
                 </a-select-option>
@@ -104,7 +104,7 @@
           :data-source="materialStore.materials"
           :pagination="false"
           :row-key="record => record.id"
-          :scroll="{ x: 1200, y: 'calc(100vh - 450px)' }"
+          :scroll="{ x: 1600, y: 'calc(100vh - 450px)' }"
         >
           <!-- 物资类型 -->
           <template #bodyCell="{ column, record }">
@@ -120,6 +120,12 @@
                 :status="getStatusBadgeStatus(record.status)"
                 :text="getStatusLabel(record.status)"
               />
+            </template>
+
+            <!-- 生产日期 -->
+            <template v-else-if="column.key === 'production_date'">
+              <span v-if="record.production_date">{{ formatDate(record.production_date) }}</span>
+              <span v-else>-</span>
             </template>
 
             <!-- 过期日期 -->
@@ -219,7 +225,7 @@ import { useMaterialStore } from '../stores/material.store'
 import MaterialFormModal from '../components/modals/MaterialFormModal.vue'
 import MaterialDetailModal from '../components/modals/MaterialDetailModal.vue'
 import MaterialImportModal from '../components/modals/MaterialImportModal.vue'
-import { getEnabledMaterialTypes } from '../api/materialType.api.js'
+import { getMaterialTypes } from '../api/materialType.api.js'
 import dayjs from 'dayjs'
 
 // Store
@@ -263,6 +269,31 @@ const columns = [
     dataIndex: 'quantity',
     key: 'quantity',
     width: 110,
+    align: 'right'
+  },
+   {
+    title: '单位',
+    dataIndex: 'unit',
+    key: 'unit',
+    width: 80
+  },
+  {
+    title: '规格',
+    dataIndex: 'specification',
+    key: 'specification',
+    width: 120
+  },
+  {
+    title: '生产日期',
+    dataIndex: 'production_date',
+    key: 'production_date',
+    width: 120
+  },
+  {
+    title: '保质期(月)',
+    dataIndex: 'shelf_life',
+    key: 'shelf_life',
+    width: 100,
     align: 'right'
   },
   {
@@ -520,13 +551,13 @@ async function handleTableChange(page, pageSize) {
  */
 async function loadMaterialTypeOptions() {
   try {
-    const response = await getEnabledMaterialTypes()
-    if (response.success) {
-      materialTypeOptions.value = response.data || []
+    const response = await getMaterialTypes({ page: 1, pageSize: 1000 })
+    if (response.success && response.data) {
+      materialTypeOptions.value = response.data.items || []
 
       // 创建类型映射，用于快速查找颜色等信息
       materialTypeMap.value = new Map(
-        response.data.map(item => [item.typeCode, item])
+        response.data.items.map(item => [item.id, item])
       )
     }
   } catch (error) {

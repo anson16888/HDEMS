@@ -47,6 +47,13 @@ export const API_ENDPOINTS = {
     TOGGLE: (id) => `/MaterialType/${id}/toggle`
   },
 
+  // Material Threshold endpoints
+  MATERIAL_THRESHOLD: {
+    LIST: '/MaterialThreshold',
+    DETAIL: (id) => `/MaterialThreshold/${id}`,
+    TOGGLE: (id) => `/MaterialThreshold/${id}/toggle`
+  },
+
   // Schedule endpoints
   SCHEDULE: {
     LIST: '/Schedule',

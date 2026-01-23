@@ -130,7 +130,7 @@ class MaterialApi {
    * 获取物资列表
    * @param {Object} params - 查询参数
    * @param {string} params.keyword - 关键词搜索
-   * @param {number} params.materialType - 物资类型 (1-5)
+   * @param {string} params.materialTypeId - 物资类型ID
    * @param {number} params.status - 物资状态 (0-4)
    * @param {string} params.hospitalId - 医院ID
    * @param {number} params.page - 页码
@@ -140,7 +140,7 @@ class MaterialApi {
   async getMaterials(params = {}) {
     const queryParams = {
       Keyword: params.keyword,
-      MaterialType: params.materialType,
+      MaterialTypeId: params.materialTypeId,
       Status: params.status,
       HospitalId: params.hospitalId,
       Page: params.page || 1,
@@ -233,7 +233,7 @@ class MaterialApi {
    * 导出物资
    * @param {Object} filters - 筛选条件
    * @param {string} filters.keyword - 关键词
-   * @param {number} filters.materialType - 物资类型
+   * @param {string} filters.materialTypeId - 物资类型ID
    * @param {number} filters.status - 状态
    * @param {string} filters.hospitalId - 医院ID
    * @param {number} filters.page - 页码
@@ -243,7 +243,7 @@ class MaterialApi {
   async exportMaterials(filters = {}) {
     const queryParams = {
       keyword: filters.keyword,
-      materialType: filters.materialType,
+      materialTypeId: filters.materialTypeId,
       status: filters.status,
       hospitalId: filters.hospitalId,
       page: filters.page || 1,

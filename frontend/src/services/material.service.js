@@ -28,7 +28,7 @@ export class MaterialService {
    * 获取物资列表
    * @param {Object} params - 查询参数
    * @param {string} params.keyword - 关键词
-   * @param {string} params.type - 物资类型 (字符串: 'MEDICAL', 'MEDICINE' 等)
+   * @param {string} params.type - 物资类型ID
    * @param {string} params.status - 状态 (字符串: 'NORMAL', 'EXPIRED' 等)
    * @param {string} params.hospitalId - 医院ID
    * @param {number} params.page - 页码
@@ -43,19 +43,9 @@ export class MaterialService {
       keyword: params.keyword,
       page: params.page,
       pageSize: params.pageSize,
-      hospitalId: params.hospitalId
-    }
-
-    // 转换物资类型字符串为数字
-    if (params.type) {
-      const typeMap = {
-        'MEDICAL': 1,
-        'MEDICINE': 2,
-        'EMERGENCY': 3,
-        'CONSUMABLE': 4,
-        'EQUIPMENT': 5
-      }
-      queryParams.materialType = typeMap[params.type]
+      hospitalId: params.hospitalId,
+      // 直接传递物资类型ID
+      materialTypeId: params.type
     }
 
     // 转换状态字符串为数字
@@ -146,7 +136,7 @@ export class MaterialService {
    * 导出 Excel
    * @param {Object} filters - 筛选条件
    * @param {string} filters.keyword - 关键词
-   * @param {string} filters.type - 物资类型
+   * @param {string} filters.type - 物资类型ID
    * @param {string} filters.status - 状态
    * @param {string} filters.hospitalId - 医院ID
    * @returns {Promise}
@@ -154,17 +144,11 @@ export class MaterialService {
   async export(filters = {}) {
     await this.initialize()
 
-    // 转换物资类型字符串为数字
-    const exportFilters = { ...filters }
-    if (filters.type) {
-      const typeMap = {
-        'MEDICAL': 1,
-        'MEDICINE': 2,
-        'EMERGENCY': 3,
-        'CONSUMABLE': 4,
-        'EQUIPMENT': 5
-      }
-      exportFilters.materialType = typeMap[filters.type]
+    // 直接使用物资类型ID
+    const exportFilters = {
+      keyword: filters.keyword,
+      materialTypeId: filters.type,
+      hospitalId: filters.hospitalId
     }
 
     // 转换状态字符串为数字

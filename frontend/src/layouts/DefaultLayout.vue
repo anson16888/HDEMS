@@ -111,7 +111,8 @@ const iconMap = {
   'fa-solid fa-ranking-star': 'TrophyOutlined',
   'fa-solid fa-award': 'StarOutlined',
   'fa-solid fa-user-tag': 'TagOutlined',
-  'fa-solid fa-tags': 'TagsOutlined'
+  'fa-solid fa-tags': 'TagsOutlined',
+  'fa-solid fa-bell': 'BellOutlined'
 }
 
 // 获取图标组件
@@ -168,7 +169,7 @@ const menuItems = computed(() => {
       getItem('人员职级', '/system/person-ranks', getIcon('fa-solid fa-ranking-star')),
       getItem('人员职称', '/system/person-titles', getIcon('fa-solid fa-award')),
       getItem('物资类型', '/system/material-types', getIcon('fa-solid fa-tags')),
-      getItem('人员信息', '/system/persons', getIcon('fa-solid fa-user-tag'))
+      getItem('库存阈值', '/system/material-thresholds', getIcon('fa-solid fa-bell'))
     ])
   )
 
