@@ -11,7 +11,7 @@
             <a-form-item label="关键字">
               <a-input
                 v-model:value="materialStore.filters.keyword"
-                placeholder="搜索物资名称、编号、规格"
+                placeholder="搜索物资名称、编号"
                 allow-clear
                 @change="handleSearch"
               >

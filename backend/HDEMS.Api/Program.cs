@@ -50,6 +50,10 @@ IFreeSql fsql = new FreeSqlBuilder()
     .UseMonitorCommand(cmd => Log.Debug("SQL: {Sql}", cmd.CommandText))
     .Build();
 
+// 配置全局软删除过滤器（自动过滤已删除的记录）
+fsql.GlobalFilter
+    .Apply<HDEMS.Domain.Entities.BaseEntity>("IsDeleted", a => a.IsDeleted == false);
+
 // 初始化数据库表结构（首次启动时）
 await InitializeDatabaseAsync(fsql);
 

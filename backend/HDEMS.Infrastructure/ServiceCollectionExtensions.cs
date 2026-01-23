@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using HDEMS.Infrastructure.Configuration;
 using HDEMS.Infrastructure.Services;
+using HDEMS.Infrastructure.Contexts;
 
 namespace HDEMS.Infrastructure;
 
@@ -24,10 +25,14 @@ public static class ServiceCollectionExtensions
         services.Configure<SystemConfig>(options =>
             configuration.GetSection(SystemConfig.SectionName).Bind(options));
 
+        // 注册 HTTP 访问器
+        services.AddHttpContextAccessor();
+
         // 注册服务
         services.AddSingleton<JwtService>();
         services.AddScoped<DataSeeder>();
         services.AddScoped<PasswordService>();
+        services.AddScoped<AuditContext>();
 
         return services;
     }

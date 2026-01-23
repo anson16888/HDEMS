@@ -2,6 +2,7 @@ using FreeSql;
 using HDEMS.Application.DTOs;
 using HDEMS.Application.Interfaces;
 using HDEMS.Domain.Entities;
+using HDEMS.Infrastructure.Contexts;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
 
@@ -15,12 +16,14 @@ public class MaterialTypeService : IMaterialTypeService
     private readonly IFreeSql _fsql;
     private readonly IMapper _mapper;
     private readonly ILogger<MaterialTypeService> _logger;
+    private readonly AuditContext _auditContext;
 
-    public MaterialTypeService(IFreeSql fsql, IMapper mapper, ILogger<MaterialTypeService> logger)
+    public MaterialTypeService(IFreeSql fsql, IMapper mapper, ILogger<MaterialTypeService> logger, AuditContext auditContext)
     {
         _fsql = fsql;
         _mapper = mapper;
         _logger = logger;
+        _auditContext = auditContext;
     }
 
     public async Task<ApiResponse<PagedResult<MaterialTypeDto>>> GetPagedAsync(MaterialTypeQueryRequest request)
@@ -114,7 +117,9 @@ public class MaterialTypeService : IMaterialTypeService
 
         var type = _mapper.Map<MaterialTypeDict>(request);
         type.Id = Guid.NewGuid();
+        type.CreatedBy = _auditContext.CurrentUserDisplayName;
         type.CreatedAt = DateTime.Now;
+        type.UpdatedBy = _auditContext.CurrentUserDisplayName;
         type.UpdatedAt = DateTime.Now;
 
         // 插入数据
@@ -157,6 +162,7 @@ public class MaterialTypeService : IMaterialTypeService
 
         _mapper.Map(request, type);
         type.Id = id;
+        type.UpdatedBy = _auditContext.CurrentUserDisplayName;
         type.UpdatedAt = DateTime.Now;
 
         await _fsql.Update<MaterialTypeDict>()
@@ -185,7 +191,13 @@ public class MaterialTypeService : IMaterialTypeService
             return ApiResponse.Fail(400, "该类型下已有物资，无法删除");
         }
 
-        await _fsql.Delete<MaterialTypeDict>(id).ExecuteAffrowsAsync();
+        // 软删除
+        await _fsql.Update<MaterialTypeDict>()
+            .Set(t => t.IsDeleted, true)
+            .Set(t => t.DeletedBy, _auditContext.CurrentUserDisplayName)
+            .Set(t => t.DeletedAt, DateTime.Now)
+            .Where(t => t.Id == id)
+            .ExecuteAffrowsAsync();
 
         return ApiResponse.Ok("删除成功");
     }
@@ -202,7 +214,11 @@ public class MaterialTypeService : IMaterialTypeService
             return ApiResponse.Fail(400, "部分类型下已有物资，无法删除");
         }
 
-        await _fsql.Delete<MaterialTypeDict>()
+        // 软删除
+        await _fsql.Update<MaterialTypeDict>()
+            .Set(t => t.IsDeleted, true)
+            .Set(t => t.DeletedBy, _auditContext.CurrentUserDisplayName)
+            .Set(t => t.DeletedAt, DateTime.Now)
             .Where(t => ids.Contains(t.Id))
             .ExecuteAffrowsAsync();
 

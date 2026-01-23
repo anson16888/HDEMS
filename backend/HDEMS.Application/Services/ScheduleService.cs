@@ -4,6 +4,7 @@ using HDEMS.Application.Interfaces;
 using HDEMS.Domain.Entities;
 using HDEMS.Domain.Enums;
 using HDEMS.Infrastructure.Services;
+using HDEMS.Infrastructure.Contexts;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
 using OfficeOpenXml;
@@ -18,12 +19,14 @@ public class ScheduleService : IScheduleService
     private readonly IFreeSql _fsql;
     private readonly IMapper _mapper;
     private readonly ILogger<ScheduleService> _logger;
+    private readonly AuditContext _auditContext;
 
-    public ScheduleService(IFreeSql fsql, IMapper mapper, ILogger<ScheduleService> logger)
+    public ScheduleService(IFreeSql fsql, IMapper mapper, ILogger<ScheduleService> logger, AuditContext auditContext)
     {
         _fsql = fsql;
         _mapper = mapper;
         _logger = logger;
+        _auditContext = auditContext;
     }
 
     public async Task<ApiResponse<PagedResult<ScheduleDto>>> GetPagedAsync(ScheduleQueryRequest request)
@@ -121,7 +124,9 @@ public class ScheduleService : IScheduleService
 
         var schedule = _mapper.Map<Schedule>(request);
         schedule.Id = Guid.NewGuid();
+        schedule.CreatedBy = _auditContext.CurrentUserDisplayName;
         schedule.CreatedAt = DateTime.Now;
+        schedule.UpdatedBy = _auditContext.CurrentUserDisplayName;
         schedule.UpdatedAt = DateTime.Now;
 
         await _fsql.Insert(schedule).ExecuteAffrowsAsync();
@@ -155,6 +160,7 @@ public class ScheduleService : IScheduleService
         }
 
         _mapper.Map(request, schedule);
+        schedule.UpdatedBy = _auditContext.CurrentUserDisplayName;
         schedule.UpdatedAt = DateTime.Now;
 
         await _fsql.Update<Schedule>()
@@ -173,13 +179,25 @@ public class ScheduleService : IScheduleService
             return ApiResponse.Fail(404, "排班记录不存在");
         }
 
-        await _fsql.Delete<Schedule>(id).ExecuteAffrowsAsync();
+        // 软删除
+        await _fsql.Update<Schedule>()
+            .Set(s => s.IsDeleted, true)
+            .Set(s => s.DeletedBy, _auditContext.CurrentUserDisplayName)
+            .Set(s => s.DeletedAt, DateTime.Now)
+            .Where(s => s.Id == id)
+            .ExecuteAffrowsAsync();
         return ApiResponse.Ok("删除成功");
     }
 
     public async Task<ApiResponse> BatchDeleteAsync(List<Guid> ids)
     {
-        await _fsql.Delete<Schedule>().Where(s => ids.Contains(s.Id)).ExecuteAffrowsAsync();
+        // 软删除
+        await _fsql.Update<Schedule>()
+            .Set(s => s.IsDeleted, true)
+            .Set(s => s.DeletedBy, _auditContext.CurrentUserDisplayName)
+            .Set(s => s.DeletedAt, DateTime.Now)
+            .Where(s => ids.Contains(s.Id))
+            .ExecuteAffrowsAsync();
         return ApiResponse.Ok($"成功删除 {ids.Count} 条记录");
     }
 

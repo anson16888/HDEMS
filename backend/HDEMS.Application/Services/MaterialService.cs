@@ -3,6 +3,7 @@ using HDEMS.Application.DTOs;
 using HDEMS.Application.Interfaces;
 using HDEMS.Domain.Entities;
 using HDEMS.Infrastructure.Services;
+using HDEMS.Infrastructure.Contexts;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
 using OfficeOpenXml;
@@ -17,12 +18,14 @@ public class MaterialService : IMaterialService
     private readonly IFreeSql _fsql;
     private readonly IMapper _mapper;
     private readonly ILogger<MaterialService> _logger;
+    private readonly AuditContext _auditContext;
 
-    public MaterialService(IFreeSql fsql, IMapper mapper, ILogger<MaterialService> logger)
+    public MaterialService(IFreeSql fsql, IMapper mapper, ILogger<MaterialService> logger, AuditContext auditContext)
     {
         _fsql = fsql;
         _mapper = mapper;
         _logger = logger;
+        _auditContext = auditContext;
     }
 
     public async Task<ApiResponse<PagedResult<MaterialDto>>> GetPagedAsync(MaterialQueryRequest request)
@@ -125,7 +128,9 @@ public class MaterialService : IMaterialService
         material.Status = await GetMaterialStatus(material.MaterialTypeId, material.Quantity, material.ExpiryDate);
 
         material.Id = Guid.NewGuid();
+        material.CreatedBy = _auditContext.CurrentUserDisplayName;
         material.CreatedAt = DateTime.Now;
+        material.UpdatedBy = _auditContext.CurrentUserDisplayName;
         material.UpdatedAt = DateTime.Now;
 
         await _fsql.Insert(material).ExecuteAffrowsAsync();
@@ -207,6 +212,7 @@ public class MaterialService : IMaterialService
 
         // 更新库存状态（优先检查过期，再检查库存）
         material.Status = await GetMaterialStatus(material.MaterialTypeId, material.Quantity, material.ExpiryDate);
+        material.UpdatedBy = _auditContext.CurrentUserDisplayName;
         material.UpdatedAt = DateTime.Now;
 
         await _fsql.Update<Material>()
@@ -226,9 +232,11 @@ public class MaterialService : IMaterialService
         }
 
         // 软删除
-        material.DeletedAt = DateTime.Now;
         await _fsql.Update<Material>()
-            .SetSource(material)
+            .Set(m => m.IsDeleted, true)
+            .Set(m => m.DeletedBy, _auditContext.CurrentUserDisplayName)
+            .Set(m => m.DeletedAt, DateTime.Now)
+            .Where(m => m.Id == id)
             .ExecuteAffrowsAsync();
 
         return ApiResponse.Ok("删除成功");
@@ -236,7 +244,10 @@ public class MaterialService : IMaterialService
 
     public async Task<ApiResponse> BatchDeleteAsync(List<Guid> ids)
     {
+        // 软删除
         await _fsql.Update<Material>()
+            .Set(m => m.IsDeleted, true)
+            .Set(m => m.DeletedBy, _auditContext.CurrentUserDisplayName)
             .Set(m => m.DeletedAt, DateTime.Now)
             .Where(m => ids.Contains(m.Id))
             .ExecuteAffrowsAsync();

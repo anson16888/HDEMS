@@ -5,6 +5,7 @@ using HDEMS.Application.Interfaces;
 using HDEMS.Domain.Entities;
 using HDEMS.Domain.Enums;
 using HDEMS.Infrastructure.Services;
+using HDEMS.Infrastructure.Contexts;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
 
@@ -18,12 +19,14 @@ public class UserService : IUserService
     private readonly IFreeSql _fsql;
     private readonly IMapper _mapper;
     private readonly PasswordService _passwordService;
+    private readonly AuditContext _auditContext;
 
-    public UserService(IFreeSql fsql, IMapper mapper, PasswordService passwordService)
+    public UserService(IFreeSql fsql, IMapper mapper, PasswordService passwordService, AuditContext auditContext)
     {
         _fsql = fsql;
         _mapper = mapper;
         _passwordService = passwordService;
+        _auditContext = auditContext;
     }
 
     public async Task<ApiResponse<PagedResult<UserDto>>> GetPagedAsync(int page = 1, int pageSize = 20, string? keyword = null)
@@ -93,7 +96,9 @@ public class UserService : IUserService
         user.Id = Guid.NewGuid();
         user.Password = _passwordService.HashPassword(defaultPassword);
         user.Status = UserStatus.Active;
+        user.CreatedBy = _auditContext.CurrentUserDisplayName;
         user.CreatedAt = DateTime.Now;
+        user.UpdatedBy = _auditContext.CurrentUserDisplayName;
         user.UpdatedAt = DateTime.Now;
 
         // 手动设置角色（从字符串转换为枚举）
@@ -118,6 +123,7 @@ public class UserService : IUserService
         user.Phone = request.Phone;
         user.Department = request.Department;
         user.Status = request.Status;
+        user.UpdatedBy = _auditContext.CurrentUserDisplayName;
         user.UpdatedAt = DateTime.Now;
 
         // 手动设置角色（从字符串转换为枚举）
@@ -139,8 +145,13 @@ public class UserService : IUserService
             return ApiResponse.Fail(404, "用户不存在");
         }
 
-        // 硬删除
-        await _fsql.Delete<User>().Where(u => u.Id == id).ExecuteAffrowsAsync();
+        // 软删除
+        await _fsql.Update<User>()
+            .Set(u => u.IsDeleted, true)
+            .Set(u => u.DeletedBy, _auditContext.CurrentUserDisplayName)
+            .Set(u => u.DeletedAt, DateTime.Now)
+            .Where(u => u.Id == id)
+            .ExecuteAffrowsAsync();
 
         return ApiResponse.Ok("删除成功");
     }

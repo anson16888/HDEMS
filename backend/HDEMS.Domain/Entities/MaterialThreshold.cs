@@ -6,14 +6,8 @@ namespace HDEMS.Domain.Entities;
 /// 物资库存阈值配置
 /// </summary>
 [Table(Name = "t_material_threshold")]
-public class MaterialThreshold
+public class MaterialThreshold : BaseEntity
 {
-    /// <summary>
-    /// 主键ID
-    /// </summary>
-    [Column(IsPrimary = true)]
-    public Guid Id { get; set; }
-
     /// <summary>
     /// 物资类型ID
     /// </summary>
@@ -50,13 +44,4 @@ public class MaterialThreshold
     [Column(StringLength = -1)]
     public string? Remark { get; set; }
 
-    /// <summary>
-    /// 创建时间
-    /// </summary>
-    public DateTime CreatedAt { get; set; }
-
-    /// <summary>
-    /// 更新时间
-    /// </summary>
-    public DateTime UpdatedAt { get; set; }
 }

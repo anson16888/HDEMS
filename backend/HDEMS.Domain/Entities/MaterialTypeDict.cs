@@ -7,14 +7,8 @@ namespace HDEMS.Domain.Entities;
 /// </summary>
 [Table(Name = "t_material_type_dict")]
 [Index("idx_type_code", "TypeCode", true)]
-public class MaterialTypeDict
+public class MaterialTypeDict : BaseEntity
 {
-    /// <summary>
-    /// 主键ID
-    /// </summary>
-    [Column(IsPrimary = true)]
-    public Guid Id { get; set; }
-
     /// <summary>
     /// 类型编码
     /// </summary>
@@ -51,13 +45,4 @@ public class MaterialTypeDict
     [Column(StringLength = -1)]
     public string? Remark { get; set; }
 
-    /// <summary>
-    /// 创建时间
-    /// </summary>
-    public DateTime CreatedAt { get; set; }
-
-    /// <summary>
-    /// 更新时间
-    /// </summary>
-    public DateTime UpdatedAt { get; set; }
 }

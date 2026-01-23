@@ -3,6 +3,7 @@ using HDEMS.Application.DTOs;
 using HDEMS.Application.Interfaces;
 using HDEMS.Domain.Entities;
 using HDEMS.Infrastructure.Services;
+using HDEMS.Infrastructure.Contexts;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
 
@@ -15,11 +16,13 @@ public class BasicDataService : IBasicDataService
 {
     private readonly IFreeSql _fsql;
     private readonly IMapper _mapper;
+    private readonly AuditContext _auditContext;
 
-    public BasicDataService(IFreeSql fsql, IMapper mapper)
+    public BasicDataService(IFreeSql fsql, IMapper mapper, AuditContext auditContext)
     {
         _fsql = fsql;
         _mapper = mapper;
+        _auditContext = auditContext;
     }
 
     #region Hospital
@@ -49,7 +52,9 @@ public class BasicDataService : IBasicDataService
     {
         var hospital = _mapper.Map<Hospital>(dto);
         hospital.Id = Guid.NewGuid();
+        hospital.CreatedBy = _auditContext.CurrentUserDisplayName;
         hospital.CreatedAt = DateTime.Now;
+        hospital.UpdatedBy = _auditContext.CurrentUserDisplayName;
         hospital.UpdatedAt = DateTime.Now;
 
         await _fsql.Insert(hospital).ExecuteAffrowsAsync();
@@ -66,6 +71,7 @@ public class BasicDataService : IBasicDataService
 
         _mapper.Map(dto, hospital);
         hospital.Id = id; // 确保Id不被覆盖
+        hospital.UpdatedBy = _auditContext.CurrentUserDisplayName;
         hospital.UpdatedAt = DateTime.Now;
 
         await _fsql.Update<Hospital>().SetSource(hospital).ExecuteAffrowsAsync();
@@ -80,7 +86,13 @@ public class BasicDataService : IBasicDataService
             return ApiResponse.Fail(404, "医院不存在");
         }
 
-        await _fsql.Delete<Hospital>(id).ExecuteAffrowsAsync();
+        // 软删除
+        await _fsql.Update<Hospital>()
+            .Set(h => h.IsDeleted, true)
+            .Set(h => h.DeletedBy, _auditContext.CurrentUserDisplayName)
+            .Set(h => h.DeletedAt, DateTime.Now)
+            .Where(h => h.Id == id)
+            .ExecuteAffrowsAsync();
         return ApiResponse.Ok("删除成功");
     }
 
@@ -113,7 +125,9 @@ public class BasicDataService : IBasicDataService
     {
         var department = _mapper.Map<Department>(dto);
         department.Id = Guid.NewGuid();
+        department.CreatedBy = _auditContext.CurrentUserDisplayName;
         department.CreatedAt = DateTime.Now;
+        department.UpdatedBy = _auditContext.CurrentUserDisplayName;
         department.UpdatedAt = DateTime.Now;
 
         await _fsql.Insert(department).ExecuteAffrowsAsync();
@@ -130,6 +144,7 @@ public class BasicDataService : IBasicDataService
 
         _mapper.Map(dto, department);
         department.Id = id; // 确保Id不被覆盖
+        department.UpdatedBy = _auditContext.CurrentUserDisplayName;
         department.UpdatedAt = DateTime.Now;
 
         await _fsql.Update<Department>().SetSource(department).ExecuteAffrowsAsync();
@@ -144,7 +159,13 @@ public class BasicDataService : IBasicDataService
             return ApiResponse.Fail(404, "科室不存在");
         }
 
-        await _fsql.Delete<Department>(id).ExecuteAffrowsAsync();
+        // 软删除
+        await _fsql.Update<Department>()
+            .Set(d => d.IsDeleted, true)
+            .Set(d => d.DeletedBy, _auditContext.CurrentUserDisplayName)
+            .Set(d => d.DeletedAt, DateTime.Now)
+            .Where(d => d.Id == id)
+            .ExecuteAffrowsAsync();
         return ApiResponse.Ok("删除成功");
     }
 
@@ -177,7 +198,9 @@ public class BasicDataService : IBasicDataService
     {
         var shift = _mapper.Map<Shift>(dto);
         shift.Id = Guid.NewGuid();
+        shift.CreatedBy = _auditContext.CurrentUserDisplayName;
         shift.CreatedAt = DateTime.Now;
+        shift.UpdatedBy = _auditContext.CurrentUserDisplayName;
         shift.UpdatedAt = DateTime.Now;
 
         await _fsql.Insert(shift).ExecuteAffrowsAsync();
@@ -194,6 +217,7 @@ public class BasicDataService : IBasicDataService
 
         _mapper.Map(dto, shift);
         shift.Id = id; // 确保Id不被覆盖
+        shift.UpdatedBy = _auditContext.CurrentUserDisplayName;
         shift.UpdatedAt = DateTime.Now;
 
         await _fsql.Update<Shift>().SetSource(shift).ExecuteAffrowsAsync();
@@ -208,7 +232,13 @@ public class BasicDataService : IBasicDataService
             return ApiResponse.Fail(404, "班次不存在");
         }
 
-        await _fsql.Delete<Shift>(id).ExecuteAffrowsAsync();
+        // 软删除
+        await _fsql.Update<Shift>()
+            .Set(s => s.IsDeleted, true)
+            .Set(s => s.DeletedBy, _auditContext.CurrentUserDisplayName)
+            .Set(s => s.DeletedAt, DateTime.Now)
+            .Where(s => s.Id == id)
+            .ExecuteAffrowsAsync();
         return ApiResponse.Ok("删除成功");
     }
 
@@ -328,7 +358,13 @@ public class BasicDataService : IBasicDataService
             return ApiResponse.Fail(404, "人员不存在");
         }
 
-        await _fsql.Delete<Person>(id).ExecuteAffrowsAsync();
+        // 软删除
+        await _fsql.Update<Person>()
+            .Set(p => p.IsDeleted, true)
+            .Set(p => p.DeletedBy, _auditContext.CurrentUserDisplayName)
+            .Set(p => p.DeletedAt, DateTime.Now)
+            .Where(p => p.Id == id)
+            .ExecuteAffrowsAsync();
         return ApiResponse.Ok("删除成功");
     }
 

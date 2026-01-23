@@ -36,8 +36,20 @@ public abstract class BaseEntity
     public DateTime UpdatedAt { get; set; }
 
     /// <summary>
-    /// 软删除时间
+    /// 是否删除
     /// </summary>
     [Column(Position = -6)]
+    public bool IsDeleted { get; set; }
+
+    /// <summary>
+    /// 删除人
+    /// </summary>
+    [Column(Position = -5)]
+    public string? DeletedBy { get; set; }
+
+    /// <summary>
+    /// 删除时间
+    /// </summary>
+    [Column(Position = -4)]
     public DateTime? DeletedAt { get; set; }
 }

@@ -2,6 +2,7 @@ using FreeSql;
 using HDEMS.Application.DTOs;
 using HDEMS.Application.Interfaces;
 using HDEMS.Domain.Entities;
+using HDEMS.Infrastructure.Contexts;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
 
@@ -15,12 +16,14 @@ public class MaterialThresholdService : IMaterialThresholdService
     private readonly IFreeSql _fsql;
     private readonly IMapper _mapper;
     private readonly ILogger<MaterialThresholdService> _logger;
+    private readonly AuditContext _auditContext;
 
-    public MaterialThresholdService(IFreeSql fsql, IMapper mapper, ILogger<MaterialThresholdService> logger)
+    public MaterialThresholdService(IFreeSql fsql, IMapper mapper, ILogger<MaterialThresholdService> logger, AuditContext auditContext)
     {
         _fsql = fsql;
         _mapper = mapper;
         _logger = logger;
+        _auditContext = auditContext;
     }
 
     public async Task<ApiResponse<PagedResult<MaterialThresholdDto>>> GetPagedAsync(MaterialThresholdQueryRequest request)
@@ -104,7 +107,9 @@ public class MaterialThresholdService : IMaterialThresholdService
 
         var threshold = _mapper.Map<MaterialThreshold>(request);
         threshold.Id = Guid.NewGuid();
+        threshold.CreatedBy = _auditContext.CurrentUserDisplayName;
         threshold.CreatedAt = DateTime.Now;
+        threshold.UpdatedBy = _auditContext.CurrentUserDisplayName;
         threshold.UpdatedAt = DateTime.Now;
 
         await _fsql.Insert(threshold).ExecuteAffrowsAsync();
@@ -157,6 +162,7 @@ public class MaterialThresholdService : IMaterialThresholdService
 
         _mapper.Map(request, threshold);
         threshold.Id = id;
+        threshold.UpdatedBy = _auditContext.CurrentUserDisplayName;
         threshold.UpdatedAt = DateTime.Now;
 
         await _fsql.Update<MaterialThreshold>()
@@ -175,14 +181,24 @@ public class MaterialThresholdService : IMaterialThresholdService
             return ApiResponse.Fail(404, "阈值配置不存在");
         }
 
-        await _fsql.Delete<MaterialThreshold>(id).ExecuteAffrowsAsync();
+        // 软删除
+        await _fsql.Update<MaterialThreshold>()
+            .Set(t => t.IsDeleted, true)
+            .Set(t => t.DeletedBy, _auditContext.CurrentUserDisplayName)
+            .Set(t => t.DeletedAt, DateTime.Now)
+            .Where(t => t.Id == id)
+            .ExecuteAffrowsAsync();
 
         return ApiResponse.Ok("删除成功");
     }
 
     public async Task<ApiResponse> BatchDeleteAsync(List<Guid> ids)
     {
-        await _fsql.Delete<MaterialThreshold>()
+        // 软删除
+        await _fsql.Update<MaterialThreshold>()
+            .Set(t => t.IsDeleted, true)
+            .Set(t => t.DeletedBy, _auditContext.CurrentUserDisplayName)
+            .Set(t => t.DeletedAt, DateTime.Now)
             .Where(t => ids.Contains(t.Id))
             .ExecuteAffrowsAsync();
 
