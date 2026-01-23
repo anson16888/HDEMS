@@ -344,8 +344,8 @@ const resetFilters = () => {
   userStore.fetchUsers()
 }
 
-const handlePageChange = () => {
-  userStore.setPagination({ page: currentPage.value, pageSize: pageSize.value })
+const handlePageChange = (page, size) => {
+  userStore.setPagination({ page: page, pageSize: size })
   userStore.fetchUsers()
 }
 

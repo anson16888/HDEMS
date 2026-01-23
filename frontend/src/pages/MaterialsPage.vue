@@ -31,11 +31,13 @@
                 @change="handleSearch"
               >
                 <a-select-option value="">全部</a-select-option>
-                <a-select-option value="MEDICAL">医疗设备</a-select-option>
-                <a-select-option value="MEDICINE">药品</a-select-option>
-                <a-select-option value="EMERGENCY">急救物资</a-select-option>
-                <a-select-option value="CONSUMABLE">耗材</a-select-option>
-                <a-select-option value="EQUIPMENT">设备</a-select-option>
+                <a-select-option
+                  v-for="option in materialTypeOptions"
+                  :key="option.typeCode"
+                  :value="option.typeCode"
+                >
+                  {{ option.typeName }}
+                </a-select-option>
               </a-select>
             </a-form-item>
           </a-col>
@@ -217,6 +219,7 @@ import { useMaterialStore } from '../stores/material.store'
 import MaterialFormModal from '../components/modals/MaterialFormModal.vue'
 import MaterialDetailModal from '../components/modals/MaterialDetailModal.vue'
 import MaterialImportModal from '../components/modals/MaterialImportModal.vue'
+import { getEnabledMaterialTypes } from '../api/materialType.api.js'
 import dayjs from 'dayjs'
 
 // Store
@@ -228,6 +231,12 @@ const detailModalVisible = ref(false)
 const importModalVisible = ref(false)
 const formMode = ref('create') // 'create' | 'edit'
 const currentMaterial = ref(null)
+
+// 物资类型选项（从服务器获取）
+const materialTypeOptions = ref([])
+
+// 物资类型映射（用于快速查找类型信息）
+const materialTypeMap = ref(new Map())
 
 // 表格列配置
 const columns = [
@@ -287,6 +296,13 @@ const columns = [
  * 获取物资类型颜色
  */
 function getTypeColor(type) {
+  // 优先使用从服务器获取的颜色
+  const typeInfo = materialTypeMap.value.get(type)
+  if (typeInfo && typeInfo.color) {
+    return typeInfo.color
+  }
+
+  // 后备方案：使用预定义的颜色
   const colors = {
     MEDICAL: 'green',
     MEDICINE: 'blue',
@@ -489,23 +505,39 @@ async function handleExport() {
 /**
  * 表格变化（分页、排序、筛选）
  */
-async function handleTableChange(pagination, filters, sorter) {
+async function handleTableChange(page, pageSize) {
   materialStore.setPagination({
-    current: pagination.current,
-    pageSize: pagination.pageSize
+    current: page,
+    pageSize: pageSize
   })
 
   // 重新获取数据
   await materialStore.fetchMaterials()
+}
 
-  // TODO: 处理排序
-  if (sorter.field) {
-    console.log('排序:', sorter.field, sorter.order)
+/**
+ * 加载物资类型选项
+ */
+async function loadMaterialTypeOptions() {
+  try {
+    const response = await getEnabledMaterialTypes()
+    if (response.success) {
+      materialTypeOptions.value = response.data || []
+
+      // 创建类型映射，用于快速查找颜色等信息
+      materialTypeMap.value = new Map(
+        response.data.map(item => [item.typeCode, item])
+      )
+    }
+  } catch (error) {
+    console.error('加载物资类型失败:', error)
+    message.error('加载物资类型失败：' + (error.message || '未知错误'))
   }
 }
 
 // 生命周期
 onMounted(() => {
+  loadMaterialTypeOptions()
   materialStore.fetchMaterials()
 })
 </script>

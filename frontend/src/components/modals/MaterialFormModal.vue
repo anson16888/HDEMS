@@ -164,7 +164,7 @@
 </template>
 
 <script setup>
-import { ref, watch, computed } from 'vue'
+import { ref, watch, computed, onMounted } from 'vue'
 import { message } from 'ant-design-vue'
 import { useMaterialForm } from '../../composables/useMaterialForm'
 
@@ -198,7 +198,8 @@ const {
   resetForm,
   loadMaterial,
   validateForm,
-  prepareSubmitData
+  prepareSubmitData,
+  loadMaterialTypeOptions
 } = useMaterialForm()
 
 // 提交中状态
@@ -257,6 +258,11 @@ function handleCancel() {
   emit('update:visible', false)
   resetForm()
 }
+
+// 组件挂载时加载物资类型选项
+onMounted(() => {
+  loadMaterialTypeOptions()
+})
 </script>
 
 <style scoped>

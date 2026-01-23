@@ -19,8 +19,8 @@
         :columns="columns"
         :data-source="departments"
         :loading="loading"
-        :pagination="pagination"
-        :scroll="{ y: 'calc(100vh - 450px)' }"
+        :pagination="false"
+        :scroll="{ y: 'calc(100vh - 390px)' }"
         row-key="id"
       >
         <template #bodyCell="{ column, record }">
@@ -82,13 +82,6 @@ const modalVisible = ref(false)
 const loading = ref(false)
 const departments = ref([])
 const editingDepartment = ref(null)
-
-const pagination = reactive({
-  current: 1,
-  pageSize: 20,
-  showSizeChanger: true,
-  showTotal: (total) => `共 ${total} 条记录`
-})
 
 // 科室类型枚举
 const DEPARTMENT_TYPES = {

@@ -230,12 +230,15 @@ async function handleImport() {
   try {
     const response = await materialService.import(selectedFile.value.originFileObj)
 
-    // 解析响应
+    // 解析响应 - 兼容后端返回的数据结构
     const result = {
-      total: response.total || 0,
-      success: response.success || 0,
-      failed: response.failed || 0,
-      errors: response.errors || []
+      total: response.data?.totalCount || response.total || 0,
+      success: response.data?.successCount || response.success || 0,
+      failed: response.data?.failedCount || response.failed || 0,
+      errors: (response.data?.errors || response.errors || []).map(err => ({
+        row: err.rowNumber || err.row || 0,
+        message: err.errorMessage || err.message || '未知错误'
+      }))
     }
 
     importResult.value = result

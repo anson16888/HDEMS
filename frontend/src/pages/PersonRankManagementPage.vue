@@ -11,8 +11,8 @@
             :columns="columns"
             :data-source="currentRanks"
             :loading="loading"
-            :pagination="pagination"
-            :scroll="{ y: 'calc(100vh - 430px)' }"
+            :pagination="false"
+            :scroll="{ y: 'calc(100vh - 370px)' }"
             row-key="id"
           >
             <template #bodyCell="{ column, record }">
@@ -29,8 +29,8 @@
             :columns="columns"
             :data-source="currentRanks"
             :loading="loading"
-            :pagination="pagination"
-            :scroll="{ y: 'calc(100vh - 430px)' }"
+            :pagination="false"
+            :scroll="{ y: 'calc(100vh - 370px)' }"
             row-key="id"
           >
             <template #bodyCell="{ column, record }">
@@ -47,8 +47,8 @@
             :columns="columns"
             :data-source="currentRanks"
             :loading="loading"
-            :pagination="pagination"
-            :scroll="{ y: 'calc(100vh - 430px)' }"
+            :pagination="false"
+            :scroll="{ y: 'calc(100vh - 370px)' }"
             row-key="id"
           >
             <template #bodyCell="{ column, record }">
@@ -65,8 +65,8 @@
             :columns="columns"
             :data-source="currentRanks"
             :loading="loading"
-            :pagination="pagination"
-            :scroll="{ y: 'calc(100vh - 430px)' }"
+            :pagination="false"
+            :scroll="{ y: 'calc(100vh - 370px)' }"
             row-key="id"
           >
             <template #bodyCell="{ column, record }">
@@ -92,12 +92,6 @@ import { getPersonRanks } from '../api/basicData.api.js'
 const activeCategory = ref('all')
 const loading = ref(false)
 const allRanks = ref([])
-
-const pagination = reactive({
-  pageSize: 20,
-  showSizeChanger: true,
-  showTotal: (total) => `共 ${total} 条记录`
-})
 
 const columns = [
   {

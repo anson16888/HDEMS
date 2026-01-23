@@ -9,8 +9,8 @@
         :columns="columns"
         :data-source="titles"
         :loading="loading"
-        :pagination="pagination"
-        :scroll="{ y: 'calc(100vh - 365px)' }"
+        :pagination="false"
+        :scroll="{ y: 'calc(100vh - 305px)' }"
         row-key="id"
       >
         <template #bodyCell="{ column, record }">
@@ -33,13 +33,6 @@ import { getPersonTitles } from '../api/basicData.api.js'
 
 const loading = ref(false)
 const titles = ref([])
-
-const pagination = reactive({
-  current: 1,
-  pageSize: 20,
-  showSizeChanger: true,
-  showTotal: (total) => `共 ${total} 条记录`
-})
 
 const columns = [
   {

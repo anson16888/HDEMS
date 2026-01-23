@@ -1,6 +1,7 @@
 import { ref, reactive, watch, computed } from 'vue'
 import { message } from 'ant-design-vue'
 import dayjs from 'dayjs'
+import { getEnabledMaterialTypes } from '../api/materialType.api.js'
 
 /**
  * 物资表单 Composable
@@ -63,14 +64,8 @@ export function useMaterialForm() {
     ]
   }
 
-  // 物资类型选项（匹配后端 MaterialType 枚举）
-  const materialTypeOptions = [
-    { label: '医疗设备', value: 'MEDICAL' },
-    { label: '药品', value: 'MEDICINE' },
-    { label: '急救物资', value: 'EMERGENCY' },
-    { label: '耗材', value: 'CONSUMABLE' },
-    { label: '设备', value: 'EQUIPMENT' }
-  ]
+  // 物资类型选项（从服务器获取）
+  const materialTypeOptions = ref([])
 
   /**
    * 重置表单为初始值
@@ -91,6 +86,25 @@ export function useMaterialForm() {
     // 重置表单验证状态
     if (formRef.value) {
       formRef.value.clearValidate()
+    }
+  }
+
+  /**
+   * 加载物资类型选项
+   */
+  async function loadMaterialTypeOptions() {
+    try {
+      const response = await getEnabledMaterialTypes()
+      if (response.success) {
+        // 转换格式为 { label, value }
+        materialTypeOptions.value = (response.data || []).map(item => ({
+          label: item.typeName,
+          value: item.typeCode
+        }))
+      }
+    } catch (error) {
+      console.error('加载物资类型失败:', error)
+      message.error('加载物资类型失败：' + (error.message || '未知错误'))
     }
   }
 
@@ -191,6 +205,7 @@ export function useMaterialForm() {
     loadMaterial,
     validateForm,
     prepareSubmitData,
-    generateSnowflakeId
+    generateSnowflakeId,
+    loadMaterialTypeOptions
   }
 }

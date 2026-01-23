@@ -19,8 +19,8 @@
         :columns="columns"
         :data-source="shifts"
         :loading="loading"
-        :pagination="pagination"
-        :scroll="{ y: 'calc(100vh - 460px)' }"
+        :pagination="false"
+        :scroll="{ y: 'calc(100vh - 400px)' }"
         row-key="id"
       >
         <template #bodyCell="{ column, record }">
@@ -80,13 +80,6 @@ const modalVisible = ref(false)
 const loading = ref(false)
 const shifts = ref([])
 const editingShift = ref(null)
-
-const pagination = reactive({
-  current: 1,
-  pageSize: 20,
-  showSizeChanger: true,
-  showTotal: (total) => `共 ${total} 条记录`
-})
 
 const columns = [
   {
