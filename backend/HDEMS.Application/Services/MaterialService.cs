@@ -168,15 +168,15 @@ public class MaterialService : IMaterialService
             return ApiResponse<MaterialDto>.Fail(404, "物资不存在");
         }
 
-        // 验证物资类型是否存在
-        var materialType = await _fsql.Select<MaterialTypeDict>()
-            .Where(t => t.Id == request.MaterialTypeId && t.IsEnabled)
-            .FirstAsync();
+        //// 验证物资类型是否存在
+        //var materialType = await _fsql.Select<MaterialTypeDict>()
+        //    .Where(t => t.Id == request.MaterialTypeId && t.IsEnabled)
+        //    .FirstAsync();
 
-        if (materialType == null)
-        {
-            return ApiResponse<MaterialDto>.Fail(400, "物资类型不存在或已禁用");
-        }
+        //if (materialType == null)
+        //{
+        //    return ApiResponse<MaterialDto>.Fail(400, "物资类型不存在或已禁用");
+        //}
 
         // 如果传入了新的物资编码，检查是否冲突
         if (!string.IsNullOrWhiteSpace(request.MaterialCode))
@@ -295,11 +295,31 @@ public class MaterialService : IMaterialService
                     continue;
                 }
 
-                // 查找物资类型（按名称匹配）
+                // 查找物资类型（按名称匹配），不存在则自动创建
                 var materialType = materialTypes.FirstOrDefault(t => t.TypeName == materialTypeName);
+                if (materialType == null && !string.IsNullOrWhiteSpace(materialTypeName))
+                {
+                    // 自动创建新的物资类型
+                    materialType = new MaterialTypeDict
+                    {
+                        Id = Guid.NewGuid(),
+                        TypeCode = "WZ-" + Guid.NewGuid().ToString("N").Substring(0, 8).ToUpper(),
+                        TypeName = materialTypeName,
+                        IsEnabled = true,
+                        SortOrder = materialTypes.Count + 1,
+                        CreatedAt = DateTime.Now,
+                        UpdatedAt = DateTime.Now
+                    };
+
+                    await _fsql.Insert(materialType).ExecuteAffrowsAsync();
+
+                    // 添加到内存列表，供后续行使用
+                    materialTypes.Add(materialType);
+                }
+
                 if (materialType == null)
                 {
-                    result.Errors.Add(new MaterialImportError { RowNumber = row, ErrorMessage = $"物资类型 '{materialTypeName}' 不存在或已禁用" });
+                    result.Errors.Add(new MaterialImportError { RowNumber = row, ErrorMessage = "物资类型不能为空" });
                     result.FailedCount++;
                     continue;
                 }

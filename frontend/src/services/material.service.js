@@ -203,10 +203,6 @@ export class MaterialService {
     if (!data.material_type) {
       throw { code: 'VALIDATION_ERROR', message: '请选择物资类型' }
     }
-    const validTypes = ['MEDICAL', 'MEDICINE', 'EMERGENCY', 'CONSUMABLE', 'EQUIPMENT']
-    if (!validTypes.includes(data.material_type)) {
-      throw { code: 'VALIDATION_ERROR', message: '无效的物资类型' }
-    }
 
     // 单位
     if (!data.unit) {

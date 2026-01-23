@@ -46,7 +46,7 @@ public class ImportExportService : IImportExportService
         titleText.Bold = true;
         titleText.Size = 12;
 
-        var descText = worksheet.Cells[1, 1].RichText.Add("说明：物资编码不填则自动生成（格式为EM-YYMMDDHHMMSS-XXXXX）；带*号为必填项；物资类型请从下拉列表中选择。");
+        var descText = worksheet.Cells[1, 1].RichText.Add("说明：物资编码不填则自动生成（格式为EM-YYMMDDHHMMSS-XXXXX）；带*号为必填项；物资类型可输入任意值，不存在时会自动创建。");
         descText.Color = System.Drawing.Color.Red;
         descText.Size = 10;
 
@@ -63,7 +63,7 @@ public class ImportExportService : IImportExportService
         worksheet.Cells[2, 10].Value = "备注";
 
         // 第3行：示例数据
-        worksheet.Cells[3, 1].Value = "留空自动生成";
+        worksheet.Cells[3, 1].Value = "";
         worksheet.Cells[3, 2].Value = "急救包（标准型）";
         worksheet.Cells[3, 3].Value = materialTypeNames.FirstOrDefault() ?? "医疗";
         worksheet.Cells[3, 4].Value = "100";

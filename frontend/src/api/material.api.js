@@ -58,7 +58,7 @@ function transformMaterialFromBackend(material) {
     id: material.id,
     material_code: material.materialCode,
     material_name: material.materialName,
-    material_type: MATERIAL_TYPE_MAP[material.materialType] || material.materialType,
+    material_type: material.materialTypeId,
     materialTypeName: material.materialTypeName,
     specification: material.specification,
     quantity: material.quantity,
@@ -84,7 +84,7 @@ function transformMaterialToFrontend(data) {
   const result = {
     materialCode: data.material_code,
     materialName: data.material_name,
-    materialType: data.material_type ? MATERIAL_TYPE_REVERSE_MAP[data.material_type] : undefined,
+    materialTypeId: data.material_type,
     specification: data.specification,
     quantity: data.quantity,
     unit: data.unit,

@@ -1,7 +1,7 @@
 import { ref, reactive, watch, computed } from 'vue'
 import { message } from 'ant-design-vue'
 import dayjs from 'dayjs'
-import { getEnabledMaterialTypes } from '../api/materialType.api.js'
+import { getMaterialTypes } from '../api/materialType.api.js'
 
 /**
  * 物资表单 Composable
@@ -94,12 +94,12 @@ export function useMaterialForm() {
    */
   async function loadMaterialTypeOptions() {
     try {
-      const response = await getEnabledMaterialTypes()
-      if (response.success) {
+      const response = await getMaterialTypes({ page: 1, pageSize: 1000 })
+      if (response.success && response.data) {
         // 转换格式为 { label, value }
-        materialTypeOptions.value = (response.data || []).map(item => ({
+        materialTypeOptions.value = (response.data.items || []).map(item => ({
           label: item.typeName,
-          value: item.typeCode
+          value: item.id
         }))
       }
     } catch (error) {
