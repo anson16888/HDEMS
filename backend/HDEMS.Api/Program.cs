@@ -174,6 +174,34 @@ app.UseDefaultFiles();
 // 启用静态文件服务
 app.UseStaticFiles();
 
+// SPA fallback 中间件：对于非 API 请求且不存在的文件，返回 index.html
+app.Use(async (context, next) =>
+{
+    await next();
+
+    // 如果响应状态码是 404 且路径不是 API 请求
+    if (context.Response.StatusCode == 404 &&
+        !context.Request.Path.StartsWithSegments("/api") &&
+        !context.Request.Path.StartsWithSegments("/swagger") &&
+        !context.Request.Path.Value!.EndsWith(".json") &&
+        !context.Request.Path.Value.EndsWith(".js") &&
+        !context.Request.Path.Value.EndsWith(".css") &&
+        !context.Request.Path.Value.EndsWith(".png") &&
+        !context.Request.Path.Value.EndsWith(".jpg") &&
+        !context.Request.Path.Value.EndsWith(".svg") &&
+        !context.Request.Path.Value.EndsWith(".ico"))
+    {
+        context.Response.ContentType = "text/html";
+        context.Response.StatusCode = 200;
+        var indexPath = Path.Combine(context.Request.PathBase, "wwwroot", "index.html");
+
+        if (File.Exists(indexPath))
+        {
+            await context.Response.SendFileAsync(indexPath);
+        }
+    }
+});
+
 app.UseAuthentication();
 app.UseAuthorization();
 
