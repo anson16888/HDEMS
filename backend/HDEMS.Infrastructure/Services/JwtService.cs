@@ -22,12 +22,13 @@ public class JwtService
     /// <summary>
     /// 生成 JWT Token
     /// </summary>
-    public string GenerateToken(Guid userId, string username, List<string> roles, Guid? hospitalId, bool isCommissionUser)
+    public string GenerateToken(Guid userId, string username, string realName, List<string> roles, Guid? hospitalId, bool isCommissionUser)
     {
         var claims = new List<Claim>
         {
             new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
             new Claim(ClaimTypes.Name, username),
+            new Claim("RealName", realName),
             new Claim("HospitalId", hospitalId?.ToString() ?? ""),
             new Claim("IsCommissionUser", isCommissionUser.ToString())
         };
@@ -93,12 +94,13 @@ public class JwtService
             var userIdStr = principal.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? Guid.Empty.ToString();
             var userId = Guid.Parse(userIdStr);
             var username = principal.FindFirst(ClaimTypes.Name)?.Value ?? string.Empty;
+            var realName = principal.FindFirst("RealName")?.Value ?? string.Empty;
             var roles = principal.FindAll(ClaimTypes.Role).Select(c => c.Value).ToList();
             var hospitalIdStr = principal.FindFirst("HospitalId")?.Value;
             Guid? hospitalId = Guid.TryParse(hospitalIdStr, out var hid) ? hid : null;
             var isCommissionUser = bool.Parse(principal.FindFirst("IsCommissionUser")?.Value ?? "false");
 
-            return GenerateToken(userId, username, roles, hospitalId, isCommissionUser);
+            return GenerateToken(userId, username, realName, roles, hospitalId, isCommissionUser);
         }
         catch
         {

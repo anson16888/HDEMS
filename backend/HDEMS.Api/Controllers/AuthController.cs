@@ -72,6 +72,7 @@ public class AuthController : ControllerBase
         {
             Id = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? Guid.Empty.ToString()),
             Username = User.FindFirst(ClaimTypes.Name)?.Value ?? "",
+            RealName = User.FindFirst("RealName")?.Value ?? "",
             Roles = roles,
             RoleDescriptions = roleDescriptions,
             HospitalId = Guid.TryParse(User.FindFirst("HospitalId")?.Value, out var hid) ? hid : null,
@@ -112,6 +113,7 @@ public class AuthController : ControllerBase
     {
         public Guid Id { get; set; }
         public string Username { get; set; } = string.Empty;
+        public string RealName { get; set; } = string.Empty;
         public List<string> Roles { get; set; } = new List<string>();
         public List<string> RoleDescriptions { get; set; } = new List<string>();
         public Guid? HospitalId { get; set; }
