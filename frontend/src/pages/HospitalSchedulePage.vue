@@ -7,7 +7,7 @@
     <a-card class="search-card" :bordered="false">
       <a-form layout="inline">
         <a-row :gutter="16" style="width: 100%">
-          <a-col :span="6">
+          <a-col :span="8">
             <a-form-item label="日期">
               <a-range-picker
                 v-model:value="dateRange"

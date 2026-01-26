@@ -66,7 +66,7 @@
     <a-card class="search-card" :bordered="false">
       <a-form layout="inline">
         <a-row :gutter="16" style="width: 100%">
-          <a-col :span="6">
+          <a-col :span="8">
             <a-form-item label="日期范围">
               <a-range-picker
                 v-model:value="dateRange"
@@ -96,7 +96,7 @@
               </a-select>
             </a-form-item>
           </a-col>
-          <a-col :span="6">
+          <a-col :span="4">
             <a-form-item label="科室">
               <a-select
                 v-model:value="filters.departmentId"
@@ -115,7 +115,7 @@
               </a-select>
             </a-form-item>
           </a-col>
-          <a-col :span="6">
+          <a-col :span="8">
             <a-form-item :wrapper-col="{ span: 24 }">
               <a-space>
                 <a-button type="primary" @click="handleSearch">

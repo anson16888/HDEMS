@@ -22,6 +22,10 @@ export function useAuth() {
   const isMaterialAdmin = computed(() => authStore.isMaterialAdmin)
   const hasAnyRole = computed(() => authStore.hasAnyRole)
 
+  // Organization type checks
+  const isHospitalSystem = computed(() => authStore.isHospitalSystem)
+  const isBureauSystem = computed(() => authStore.isBureauSystem)
+
   // Token info
   const tokenExpiresIn = computed(() => authStore.tokenExpiresIn)
   const isTokenExpiringSoon = computed(() => {
@@ -77,6 +81,10 @@ export function useAuth() {
     isDutyAdmin,
     isMaterialAdmin,
     hasAnyRole,
+
+    // Organization
+    isHospitalSystem,
+    isBureauSystem,
 
     // Token
     tokenExpiresIn,

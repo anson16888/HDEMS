@@ -79,7 +79,7 @@ import * as Icons from '@ant-design/icons-vue'
 
 const router = useRouter()
 const route = useRoute()
-const { logout, user, isAuthenticated, isSystemAdmin } = useAuth()
+const { logout, user, isAuthenticated, isSystemAdmin, isDutyAdmin, isMaterialAdmin, isHospitalSystem, isBureauSystem } = useAuth()
 const isCollapsed = ref(false)
 const selectedKeys = ref([])
 const openKeys = ref([])
@@ -138,40 +138,87 @@ function getItem(label, key, icon, children) {
 const menuItems = computed(() => {
   const items = []
 
-  // 物资管理
-  items.push(
-    getItem('物资管理', '/materials', getIcon('fa-solid fa-boxes-stacked'))
-  )
+  // ========== 根据SRS权限矩阵（表2-2和表2-3）配置菜单 ==========
 
-  // 值班管理子菜单
-  items.push(
-    getItem('值班管理', '/schedules', getIcon('fa-solid fa-building-columns'), [
-      getItem('局级行政排班', '/schedules/bureau', getIcon('fa-solid fa-building-columns')),
+  // 【物资管理】仅医院系统的物资管理员可见
+  if (isHospitalSystem.value && isMaterialAdmin.value) {
+    items.push(
+      getItem('物资管理', '/materials', getIcon('fa-solid fa-boxes-stacked'))
+    )
+  }
+
+  // 【值班管理】根据系统类型和角色显示不同菜单
+  const scheduleItems = []
+
+  if (isSystemAdmin.value || (isBureauSystem.value && isDutyAdmin.value)) {
+    // 卫健委系统值班管理员：仅可见局级行政排班
+    scheduleItems.push(
+      getItem('局级行政排班', '/schedules/bureau', getIcon('fa-solid fa-building-columns'))
+    )
+  }
+  if (isSystemAdmin.value || (isHospitalSystem.value && isDutyAdmin.value)) {
+    // 医院系统值班管理员：可见院级行政排班和院内专家排班
+    scheduleItems.push(
       getItem('院级行政排班', '/schedules/hospital', getIcon('fa-solid fa-hospital')),
-      getItem('院内主任排班', '/schedules/director', getIcon('fa-solid fa-user-doctor')),
-      getItem('排班一览表', '/schedules/overview', getIcon('fa-solid fa-table-list'))
-    ])
-  )
+      getItem('院内专家排班', '/schedules/director', getIcon('fa-solid fa-user-doctor'))
+    )
+  }
 
-  // 仅系统管理员可见用户管理
+  // 【排班一览表】医院系统和卫健委系统都可见（根据角色权限）
+  if (isSystemAdmin.value || (isHospitalSystem.value || isBureauSystem.value) && isDutyAdmin.value) {
+    scheduleItems.push(
+      getItem('排班一览表', '/schedules/overview', getIcon('fa-solid fa-table-list'))
+    )
+  }
+
+  // 如果有排班菜单项，添加值班管理主菜单
+  if (scheduleItems.length > 0) {
+    items.push(
+      getItem('值班管理', '/schedules', getIcon('fa-solid fa-building-columns'), scheduleItems)
+    )
+  }
+
+  // 【用户管理】仅系统管理员可见
   if (isSystemAdmin.value) {
     items.push(
       getItem('用户管理', '/users', getIcon('fa-solid fa-users'))
     )
   }
 
-  // 系统管理子菜单
-  items.push(
-    getItem('系统管理', '/system', getIcon('fa-solid fa-gear'), [
-      getItem('医院信息', '/system/hospitals', getIcon('fa-solid fa-hospital')),
+  // 【系统管理】根据系统类型和角色显示不同菜单
+  const systemItems = []
+
+  // 医院信息管理：仅系统管理员可见
+  if (isSystemAdmin.value) {
+    systemItems.push(
+      getItem('医院信息', '/system/hospitals', getIcon('fa-solid fa-hospital'))
+    )
+  }
+
+  // 基础数据管理：系统管理员和值班管理员可见
+  if (isSystemAdmin.value || isDutyAdmin.value) {
+    systemItems.push(
       getItem('科室信息', '/system/departments', getIcon('fa-solid fa-sitemap')),
       getItem('班次信息', '/system/shifts', getIcon('fa-solid fa-clock')),
       getItem('人员职级', '/system/person-ranks', getIcon('fa-solid fa-ranking-star')),
-      getItem('人员职称', '/system/person-titles', getIcon('fa-solid fa-award')),
+      getItem('人员职称', '/system/person-titles', getIcon('fa-solid fa-award'))
+    )
+  }
+
+  // 物资类型：仅物资管理员可见
+  if (isSystemAdmin.value || isMaterialAdmin.value) {
+    systemItems.push(
       getItem('物资类型', '/system/material-types', getIcon('fa-solid fa-tags')),
       getItem('库存阈值', '/system/material-thresholds', getIcon('fa-solid fa-bell'))
-    ])
-  )
+    )
+  }
+
+  // 如果有系统管理菜单项，添加系统管理主菜单
+  if (systemItems.length > 0) {
+    items.push(
+      getItem('系统管理', '/system', getIcon('fa-solid fa-gear'), systemItems)
+    )
+  }
 
   return items
 })
