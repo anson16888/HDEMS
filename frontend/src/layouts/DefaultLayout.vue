@@ -10,7 +10,7 @@
             <i class="fa-solid fa-shield"></i>
           </div>
           <div>
-            <p class="brand-title">应急物资及值班管理系统</p>
+            <p class="brand-title">应急物资及排班管理系统</p>
             <p class="brand-subtitle">HDEMS 管理中心</p>
           </div>
         </div>
@@ -66,7 +66,7 @@
     </div>
 
     <footer class="app-footer">
-      <p>© 2026 宝安区域急救应急物资及值班管理系统 | 服务邮箱：service@example.com</p>
+      <p>© 2026 宝安区域急救应急物资及排班管理系统 | 服务邮箱：service@example.com</p>
     </footer>
   </div>
 </template>
@@ -147,17 +147,17 @@ const menuItems = computed(() => {
     )
   }
 
-  // 【值班管理】根据系统类型和角色显示不同菜单
+  // 【排班管理】根据系统类型和角色显示不同菜单
   const scheduleItems = []
 
   if (isSystemAdmin.value || (isBureauSystem.value && isDutyAdmin.value)) {
-    // 卫健委系统值班管理员：仅可见局级行政排班
+    // 卫健委系统排班管理员：仅可见局级行政排班
     scheduleItems.push(
       getItem('局级行政排班', '/schedules/bureau', getIcon('fa-solid fa-building-columns'))
     )
   }
   if (isSystemAdmin.value || (isHospitalSystem.value && isDutyAdmin.value)) {
-    // 医院系统值班管理员：可见院级行政排班和院内专家排班
+    // 医院系统排班管理员：可见院级行政排班和院内专家排班
     scheduleItems.push(
       getItem('院级行政排班', '/schedules/hospital', getIcon('fa-solid fa-hospital')),
       getItem('院内专家排班', '/schedules/director', getIcon('fa-solid fa-user-doctor'))
@@ -171,10 +171,10 @@ const menuItems = computed(() => {
     )
   }
 
-  // 如果有排班菜单项，添加值班管理主菜单
+  // 如果有排班菜单项，添加排班管理主菜单
   if (scheduleItems.length > 0) {
     items.push(
-      getItem('值班管理', '/schedules', getIcon('fa-solid fa-building-columns'), scheduleItems)
+      getItem('排班管理', '/schedules', getIcon('fa-solid fa-building-columns'), scheduleItems)
     )
   }
 
@@ -195,7 +195,7 @@ const menuItems = computed(() => {
     )
   }
 
-  // 基础数据管理：系统管理员和值班管理员可见
+  // 基础数据管理：系统管理员和排班管理员可见
   if (isSystemAdmin.value || isDutyAdmin.value) {
     systemItems.push(
       getItem('科室信息', '/system/departments', getIcon('fa-solid fa-sitemap')),
@@ -230,11 +230,14 @@ function handleMenuClick({ key }) {
 
 // 自动展开当前路由所在的子菜单并设置选中项
 watch(
-  () => route.path,
-  (newPath) => {
+  [() => route.path, menuItems],
+  () => {
+    const newPath = route.path
     selectedKeys.value = [newPath]
 
     // 查找父级菜单并展开
+    const newOpenKeys = []
+
     menuItems.value.forEach(group => {
       if (group.children) {
         // 检查是否有子菜单项匹配当前路由
@@ -243,11 +246,14 @@ watch(
           return child.key === newPath || newPath.startsWith(child.key + '/')
         })
 
-        if (hasActiveChild && !openKeys.value.includes(group.key)) {
-          openKeys.value.push(group.key)
+        if (hasActiveChild) {
+          newOpenKeys.push(group.key)
         }
       }
     })
+
+    // 更新展开的菜单项
+    openKeys.value = newOpenKeys
   },
   { immediate: true }
 )
