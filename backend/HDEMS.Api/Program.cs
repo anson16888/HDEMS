@@ -169,6 +169,8 @@ if (app.Environment.IsDevelopment())
 //app.UseHttpsRedirection();
 app.UseCors("AllowAll");
 
+// 启用默认文件（支持访问根路径时返回 index.html）
+app.UseDefaultFiles();
 // 启用静态文件服务
 app.UseStaticFiles();
 
@@ -189,9 +191,14 @@ app.Run();
 /// </summary>
 static async Task InitializeDatabaseAsync(IFreeSql fsql)
 {
-    // 检查 HospitalConfig 表是否存在
-    var tableExists = await fsql.Ado.ExecuteScalarAsync(
-        "SELECT name FROM sqlite_master WHERE type='table' AND name='t_hospital_config'");
+    // 根据数据库类型检查表是否存在
+    var checkTableSql = fsql.Ado.DataType switch
+    {
+        DataType.SqlServer => "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 't_hospital_config'",
+        _ => "SELECT name FROM sqlite_master WHERE type='table' AND name='t_hospital_config'"
+    };
+
+    var tableExists = await fsql.Ado.ExecuteScalarAsync(checkTableSql);
 
     if (tableExists == null)
     {
