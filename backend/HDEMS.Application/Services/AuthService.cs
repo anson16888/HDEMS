@@ -60,7 +60,7 @@ public class AuthService : IAuthService
         var roleList = user.GetRoleList();
         var roles = roleList.Select(r => r.ToString()).ToList();
         var roleDescriptions = roleList.Select(r => r.GetDescription()).ToList();
-        var token = _jwtService.GenerateToken(user.Id, user.Username, roles, null, false);
+        var token = _jwtService.GenerateToken(user.Id, user.Username, user.RealName, roles, null, false);
 
         // 更新最后登录时间
         user.LastLoginAt = DateTime.Now;
