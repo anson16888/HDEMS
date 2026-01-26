@@ -13,7 +13,7 @@
             :loading="statisticsLoading"
           >
             <template #suffix>
-              <span class="stat-meta">本周统计</span>
+              <span class="stat-meta">总排班人数</span>
             </template>
           </a-statistic>
         </a-card>
@@ -21,13 +21,13 @@
       <a-col :span="6">
         <a-card class="stat-card">
           <a-statistic
-            title="局级排班"
+            title="局级行政排班"
             :value="statistics.bureauCount || 0"
             :value-style="{ color: '#1890ff' }"
             :loading="statisticsLoading"
           >
             <template #suffix>
-              <span class="stat-meta">局级录入</span>
+              <span class="stat-meta">排班人数</span>
             </template>
           </a-statistic>
         </a-card>
@@ -41,7 +41,7 @@
             :loading="statisticsLoading"
           >
             <template #suffix>
-              <span class="stat-meta">医院级别值班</span>
+              <span class="stat-meta">排班人数</span>
             </template>
           </a-statistic>
         </a-card>
@@ -49,13 +49,13 @@
       <a-col :span="6">
         <a-card class="stat-card">
           <a-statistic
-            title="院内主任排班"
+            title="院内专家排班"
             :value="statistics.directorCount || 0"
             :value-style="{ color: '#faad14' }"
             :loading="statisticsLoading"
           >
             <template #suffix>
-              <span class="stat-meta">院内专家值班</span>
+              <span class="stat-meta">排班人数</span>
             </template>
           </a-statistic>
         </a-card>
