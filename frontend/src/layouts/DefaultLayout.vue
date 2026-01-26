@@ -141,7 +141,7 @@ const menuItems = computed(() => {
   // ========== 根据SRS权限矩阵（表2-2和表2-3）配置菜单 ==========
 
   // 【物资管理】仅医院系统的物资管理员可见
-  if (isHospitalSystem.value && isMaterialAdmin.value) {
+  if (isSystemAdmin.value || (isHospitalSystem.value && isMaterialAdmin.value)) {
     items.push(
       getItem('物资管理', '/materials', getIcon('fa-solid fa-boxes-stacked'))
     )
