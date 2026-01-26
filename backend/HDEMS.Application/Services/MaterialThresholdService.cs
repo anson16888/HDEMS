@@ -109,8 +109,6 @@ public class MaterialThresholdService : IMaterialThresholdService
         threshold.Id = Guid.NewGuid();
         threshold.CreatedBy = _auditContext.CurrentUserDisplayName;
         threshold.CreatedAt = DateTime.Now;
-        threshold.UpdatedBy = _auditContext.CurrentUserDisplayName;
-        threshold.UpdatedAt = DateTime.Now;
 
         await _fsql.Insert(threshold).ExecuteAffrowsAsync();
 

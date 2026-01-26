@@ -54,8 +54,6 @@ public class BasicDataService : IBasicDataService
         hospital.Id = Guid.NewGuid();
         hospital.CreatedBy = _auditContext.CurrentUserDisplayName;
         hospital.CreatedAt = DateTime.Now;
-        hospital.UpdatedBy = _auditContext.CurrentUserDisplayName;
-        hospital.UpdatedAt = DateTime.Now;
 
         await _fsql.Insert(hospital).ExecuteAffrowsAsync();
         return await GetHospitalByIdAsync(hospital.Id);

@@ -126,8 +126,6 @@ public class ScheduleService : IScheduleService
         schedule.Id = Guid.NewGuid();
         schedule.CreatedBy = _auditContext.CurrentUserDisplayName;
         schedule.CreatedAt = DateTime.Now;
-        schedule.UpdatedBy = _auditContext.CurrentUserDisplayName;
-        schedule.UpdatedAt = DateTime.Now;
 
         await _fsql.Insert(schedule).ExecuteAffrowsAsync();
 
@@ -276,23 +274,25 @@ public class ScheduleService : IScheduleService
 
     public async Task<ApiResponse<ScheduleStatistics>> GetStatisticsAsync(DateTime? startDate = null, DateTime? endDate = null)
     {
-        var query = _fsql.Select<Schedule>();
-
-        // 时间范围过滤
-        if (startDate.HasValue)
+        // 辅助函数：创建带有日期过滤条件的查询
+        ISelect<Schedule> CreateQuery()
         {
-            query = query.Where(s => s.ScheduleDate >= startDate.Value);
+            var query = _fsql.Select<Schedule>();
+            if (startDate.HasValue)
+            {
+                query = query.Where(s => s.ScheduleDate >= startDate.Value);
+            }
+            if (endDate.HasValue)
+            {
+                query = query.Where(s => s.ScheduleDate <= endDate.Value);
+            }
+            return query;
         }
 
-        if (endDate.HasValue)
-        {
-            query = query.Where(s => s.ScheduleDate <= endDate.Value);
-        }
-
-        var total = await query.CountAsync();
-        var bureauCount = await query.Where(s => s.ScheduleType == ScheduleType.Bureau).CountAsync();
-        var hospitalCount = await query.Where(s => s.ScheduleType == ScheduleType.Hospital).CountAsync();
-        var directorCount = await query.Where(s => s.ScheduleType == ScheduleType.Director).CountAsync();
+        var total = await CreateQuery().CountAsync();
+        var bureauCount = await CreateQuery().Where(s => s.ScheduleType == ScheduleType.Bureau).CountAsync();
+        var hospitalCount = await CreateQuery().Where(s => s.ScheduleType == ScheduleType.Hospital).CountAsync();
+        var directorCount = await CreateQuery().Where(s => s.ScheduleType == ScheduleType.Director).CountAsync();
 
         var stats = new ScheduleStatistics
         {
@@ -454,7 +454,7 @@ public class ScheduleService : IScheduleService
                     TitleId = titleDict.GetValueOrDefault(titleName),
                     Remark = remark,
                     CreatedAt = DateTime.Now,
-                    UpdatedAt = DateTime.Now
+                    CreatedBy = _auditContext.CurrentUserDisplayName
                 };
 
                 await _fsql.Insert(schedule).ExecuteAffrowsAsync();

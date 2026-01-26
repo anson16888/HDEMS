@@ -9,7 +9,7 @@
         <a-card class="stat-card">
           <a-statistic
             title="总排班人数"
-            :value="statistics.totalPersonnel || 0"
+            :value="statistics.totalCount || 0"
             :loading="statisticsLoading"
           >
             <template #suffix>
@@ -27,7 +27,7 @@
             :loading="statisticsLoading"
           >
             <template #suffix>
-              <span class="stat-meta">卫健委端录入</span>
+              <span class="stat-meta">局级录入</span>
             </template>
           </a-statistic>
         </a-card>
@@ -159,7 +159,7 @@
             <!-- 排班类型 -->
             <template v-else-if="column.key === 'scheduleTypeName'">
               <a-tag :color="getScheduleTypeColor(record.scheduleType)">
-                {{ record.scheduleTypeName }}
+                {{ getScheduleTypeLabel(record.scheduleType) }}
               </a-tag>
             </template>
 
@@ -237,7 +237,7 @@ const loading = ref(false)
 const statisticsLoading = ref(false)
 const overviewData = ref([])
 const statistics = ref({
-  totalPersonnel: 0,
+  totalCount: 0,
   bureauCount: 0,
   hospitalCount: 0,
   directorCount: 0

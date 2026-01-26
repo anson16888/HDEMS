@@ -119,8 +119,6 @@ public class MaterialTypeService : IMaterialTypeService
         type.Id = Guid.NewGuid();
         type.CreatedBy = _auditContext.CurrentUserDisplayName;
         type.CreatedAt = DateTime.Now;
-        type.UpdatedBy = _auditContext.CurrentUserDisplayName;
-        type.UpdatedAt = DateTime.Now;
 
         // 插入数据
         await _fsql.Insert(type).ExecuteAffrowsAsync();

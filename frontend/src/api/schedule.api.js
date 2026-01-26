@@ -83,7 +83,7 @@ export function batchDeleteSchedules(ids) {
  * @returns {Promise<object>} Paginated schedule overview
  */
 export function getScheduleOverview(params = {}) {
-  return request.get(API_ENDPOINTS.SCHEDULE.OVERVIEW, params)
+  return request.get(API_ENDPOINTS.SCHEDULE.LIST, params)
 }
 
 // ==================== Statistics ====================

@@ -130,8 +130,6 @@ public class MaterialService : IMaterialService
         material.Id = Guid.NewGuid();
         material.CreatedBy = _auditContext.CurrentUserDisplayName;
         material.CreatedAt = DateTime.Now;
-        material.UpdatedBy = _auditContext.CurrentUserDisplayName;
-        material.UpdatedAt = DateTime.Now;
 
         await _fsql.Insert(material).ExecuteAffrowsAsync();
 
@@ -366,7 +364,7 @@ public class MaterialService : IMaterialService
                     Remark = remark,
                     Status = 0,  // 先设置默认值，后面会重新计算
                     CreatedAt = DateTime.Now,
-                    UpdatedAt = DateTime.Now
+                    CreatedBy = _auditContext.CurrentUserDisplayName
                 };
 
                 // 解析生产日期和质保期
