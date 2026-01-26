@@ -46,7 +46,7 @@ public class ImportExportService : IImportExportService
         titleText.Bold = true;
         titleText.Size = 12;
 
-        var descText = worksheet.Cells[1, 1].RichText.Add("说明：物资编码不填则自动生成（格式为EM-YYMMDDHHMMSS-XXXXX）；带*号为必填项；物资类型可输入任意值，不存在时会自动创建。");
+        var descText = worksheet.Cells[1, 1].RichText.Add("说明：物资编码不填则自动生成；带*号为必填项；物资类型可下拉选择或输入。");
         descText.Color = System.Drawing.Color.Red;
         descText.Size = 10;
 
@@ -105,12 +105,12 @@ public class ImportExportService : IImportExportService
             range.Style.Border.Right.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
         }
 
-        // 添加物资类型下拉列表验证（从第3行开始，最多允许1000行数据）
+        //添加物资类型下拉列表验证（从第3行开始，最多允许1000行数据）
         var materialTypeValidation = worksheet.DataValidations.AddListValidation("C3:C1002");
         materialTypeValidation.Formula.ExcelFormula = $"\"{string.Join(",", materialTypeNames)}\"";
-        materialTypeValidation.ShowErrorMessage = true;
-        materialTypeValidation.ErrorTitle = "物资类型错误";
-        materialTypeValidation.Error = "请从下拉列表中选择有效的物资类型";
+        materialTypeValidation.ShowErrorMessage = false;
+        //materialTypeValidation.ErrorTitle = "物资类型错误";
+        //materialTypeValidation.Error = "请从下拉列表中选择有效的物资类型";
 
         return await Task.FromResult(package.GetAsByteArray());
     }
@@ -157,7 +157,7 @@ public class ImportExportService : IImportExportService
         richText.Bold = true;
         richText.Size = 12;
 
-        var descText = worksheet.Cells[1, 1].RichText.Add("说明：带*号为必填项；班次、职级、科室、职称请从下拉列表中选择。");
+        var descText = worksheet.Cells[1, 1].RichText.Add("说明：带*号为必填项；班次、职级、科室、职称从下拉选择或自定义输入。");
         descText.Color = System.Drawing.Color.Red;
         descText.Size = 10;
 
@@ -213,9 +213,7 @@ public class ImportExportService : IImportExportService
         // 添加班次下拉列表验证（B列-第2列，从第3行开始）
         var shiftValidation = worksheet.DataValidations.AddListValidation("B3:B1002");
         shiftValidation.Formula.ExcelFormula = $"\"{string.Join(",", shiftNames)}\"";
-        shiftValidation.ShowErrorMessage = true;
-        shiftValidation.ErrorTitle = "输入错误";
-        shiftValidation.Error = "请从下拉列表中选择有效的班次";
+        shiftValidation.ShowErrorMessage = false; // 允许自定义输入，不显示错误提示
 
         // 添加职级下拉列表验证（E列-第5列，从第3行开始）
         var rankValidation = worksheet.DataValidations.AddListValidation("E3:E1002");
@@ -223,9 +221,7 @@ public class ImportExportService : IImportExportService
         {
             rankValidation.Formula.ExcelFormula = $"\"{string.Join(",", rankNames)}\"";
         }
-        rankValidation.ShowErrorMessage = true;
-        rankValidation.ErrorTitle = "输入错误";
-        rankValidation.Error = "请从下拉列表中选择有效的职级";
+        rankValidation.ShowErrorMessage = false; // 允许自定义输入，不显示错误提示
 
         // 添加科室下拉列表验证（F列-第6列，从第3行开始）
         var departmentValidation = worksheet.DataValidations.AddListValidation("F3:F1002");
@@ -233,9 +229,7 @@ public class ImportExportService : IImportExportService
         {
             departmentValidation.Formula.ExcelFormula = $"\"{string.Join(",", departmentNames)}\"";
         }
-        departmentValidation.ShowErrorMessage = true;
-        departmentValidation.ErrorTitle = "输入错误";
-        departmentValidation.Error = "请从下拉列表中选择有效的科室";
+        departmentValidation.ShowErrorMessage = false; // 允许自定义输入，不显示错误提示
 
         // 添加职称下拉列表验证（G列-第7列，从第3行开始）
         var titleValidation = worksheet.DataValidations.AddListValidation("G3:G1002");
@@ -243,9 +237,7 @@ public class ImportExportService : IImportExportService
         {
             titleValidation.Formula.ExcelFormula = $"\"{string.Join(",", titleNames)}\"";
         }
-        titleValidation.ShowErrorMessage = true;
-        titleValidation.ErrorTitle = "输入错误";
-        titleValidation.Error = "请从下拉列表中选择有效的职称";
+        titleValidation.ShowErrorMessage = false; // 允许自定义输入，不显示错误提示
 
         return await Task.FromResult(package.GetAsByteArray());
     }

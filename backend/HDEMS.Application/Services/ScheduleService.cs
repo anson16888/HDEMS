@@ -413,6 +413,111 @@ public class ScheduleService : IScheduleService
         var titles = await _fsql.Select<PersonTitle>().ToListAsync();
         var titleDict = titles.ToDictionary(t => t.TitleName, t => t.Id);
 
+        // 辅助方法：获取或创建班次
+        async Task<Guid> GetOrCreateShift(string name)
+        {
+            if (shiftDict.TryGetValue(name, out var id))
+                return id;
+
+            // 自动创建新班次
+            var newShift = new Shift
+            {
+                Id = Guid.NewGuid(),
+                ShiftCode = name, // 使用名称作为编码
+                ShiftName = name,
+                SortOrder = shifts.Count + 1,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now,
+                CreatedBy = _auditContext.CurrentUserDisplayName,
+                UpdatedBy = _auditContext.CurrentUserDisplayName
+            };
+            await _fsql.Insert(newShift).ExecuteAffrowsAsync();
+            shiftDict[name] = newShift.Id;
+            shifts.Add(newShift);
+            return newShift.Id;
+        }
+
+        // 辅助方法：获取或创建职级
+        async Task<Guid?> GetOrCreateRank(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                return null;
+
+            if (rankDict.TryGetValue(name, out var id))
+                return id;
+
+            // 自动创建新职级
+            var newRank = new PersonRank
+            {
+                Id = Guid.NewGuid(),
+                RankCode = name, // 使用名称作为编码
+                RankName = name,
+                SortOrder = ranks.Count + 1,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now,
+                CreatedBy = _auditContext.CurrentUserDisplayName,
+                UpdatedBy = _auditContext.CurrentUserDisplayName
+            };
+            await _fsql.Insert(newRank).ExecuteAffrowsAsync();
+            rankDict[name] = newRank.Id;
+            ranks.Add(newRank);
+            return newRank.Id;
+        }
+
+        // 辅助方法：获取或创建科室
+        async Task<Guid?> GetOrCreateDepartment(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                return null;
+
+            if (departmentDict.TryGetValue(name, out var id))
+                return id;
+
+            // 自动创建新科室
+            var newDept = new Department
+            {
+                Id = Guid.NewGuid(),
+                DepartmentCode = name, // 使用名称作为编码
+                DepartmentName = name,
+                SortOrder = departments.Count + 1,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now,
+                CreatedBy = _auditContext.CurrentUserDisplayName,
+                UpdatedBy = _auditContext.CurrentUserDisplayName
+            };
+            await _fsql.Insert(newDept).ExecuteAffrowsAsync();
+            departmentDict[name] = newDept.Id;
+            departments.Add(newDept);
+            return newDept.Id;
+        }
+
+        // 辅助方法：获取或创建职称
+        async Task<Guid?> GetOrCreateTitle(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                return null;
+
+            if (titleDict.TryGetValue(name, out var id))
+                return id;
+
+            // 自动创建新职称
+            var newTitle = new PersonTitle
+            {
+                Id = Guid.NewGuid(),
+                TitleCode = name, // 使用名称作为编码
+                TitleName = name,
+                SortOrder = titles.Count + 1,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now,
+                CreatedBy = _auditContext.CurrentUserDisplayName,
+                UpdatedBy = _auditContext.CurrentUserDisplayName
+            };
+            await _fsql.Insert(newTitle).ExecuteAffrowsAsync();
+            titleDict[name] = newTitle.Id;
+            titles.Add(newTitle);
+            return newTitle.Id;
+        }
+
         for (int row = 3; row <= rowCount; row++)
         {
             try
@@ -434,24 +539,25 @@ public class ScheduleService : IScheduleService
                     continue;
                 }
 
-                if (!shiftDict.ContainsKey(shiftName))
-                {
-                    result.Errors.Add(new MaterialImportError { RowNumber = row, ErrorMessage = $"班次 '{shiftName}' 不存在" });
-                    result.FailedCount++;
-                    continue;
-                }
+                // 原来的班次验证代码已注释，改为自动创建
+                //if (!shiftDict.ContainsKey(shiftName))
+                //{
+                //    result.Errors.Add(new MaterialImportError { RowNumber = row, ErrorMessage = $"班次 '{shiftName}' 不存在" });
+                //    result.FailedCount++;
+                //    continue;
+                //}
 
                 var schedule = new Schedule
                 {
                     Id = Guid.NewGuid(),
                     ScheduleDate = scheduleDate,
                     ScheduleType = scheduleType,
-                    ShiftId = shiftDict[shiftName],
+                    ShiftId = await GetOrCreateShift(shiftName),
                     PersonName = personName,
                     Phone = phone,
-                    RankId = rankDict.GetValueOrDefault(rankName),
-                    DepartmentId = departmentDict.GetValueOrDefault(departmentName),
-                    TitleId = titleDict.GetValueOrDefault(titleName),
+                    RankId = await GetOrCreateRank(rankName),
+                    DepartmentId = await GetOrCreateDepartment(departmentName),
+                    TitleId = await GetOrCreateTitle(titleName),
                     Remark = remark,
                     CreatedAt = DateTime.Now,
                     CreatedBy = _auditContext.CurrentUserDisplayName
