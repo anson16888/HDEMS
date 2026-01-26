@@ -94,7 +94,7 @@ public class UserService : IUserService
 
         var user = _mapper.Map<User>(request);
         user.Id = Guid.NewGuid();
-        user.Password = _passwordService.HashPassword(defaultPassword);
+        user.Password = _passwordService.HashPassword(request.Password ?? defaultPassword);
         user.Status = UserStatus.Active;
         user.CreatedBy = _auditContext.CurrentUserDisplayName;
         user.CreatedAt = DateTime.Now;
