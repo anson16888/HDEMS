@@ -219,11 +219,11 @@ app.Run();
 /// </summary>
 static async Task InitializeDatabaseAsync(IFreeSql fsql)
 {
-    // 根据数据库类型检查表是否存在
+    // 根据数据库类型检查主表是否存在
     var checkTableSql = fsql.Ado.DataType switch
     {
-        DataType.SqlServer => "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 't_hospital_config'",
-        _ => "SELECT name FROM sqlite_master WHERE type='table' AND name='t_hospital_config'"
+        DataType.SqlServer => "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 't_user'",
+        _ => "SELECT name FROM sqlite_master WHERE type='table' AND name='t_user'"
     };
 
     var tableExists = await fsql.Ado.ExecuteScalarAsync(checkTableSql);
@@ -234,6 +234,7 @@ static async Task InitializeDatabaseAsync(IFreeSql fsql)
         try
         {
             fsql.CodeFirst.SyncStructure(typeof(HDEMS.Domain.Entities.HospitalConfig));
+            fsql.CodeFirst.SyncStructure(typeof(HDEMS.Domain.Entities.Hospital));
             fsql.CodeFirst.SyncStructure(typeof(HDEMS.Domain.Entities.Department));
             fsql.CodeFirst.SyncStructure(typeof(HDEMS.Domain.Entities.Shift));
             fsql.CodeFirst.SyncStructure(typeof(HDEMS.Domain.Entities.PersonRank));
@@ -254,6 +255,7 @@ static async Task InitializeDatabaseAsync(IFreeSql fsql)
     }
     else
     {
-        Console.WriteLine("数据库表已存在，跳过初始化");
+        Console.WriteLine("数据库表已存在...");
+       
     }
 }
