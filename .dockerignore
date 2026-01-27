@@ -1,0 +1,15 @@
+.git
+.vscode
+.claude
+.gemini
+node_modules
+**/bin
+**/obj
+**/dist
+**/wwwroot
+logs
+*.db
+*.local
+.gitignore
+Dockerfile
+README.md

@@ -1,0 +1,20 @@
+services:
+  hdems:
+    image: hdems-app
+    container_name: hdems-app
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__DefaultConnection=Data Source=/app/data/hdems.db
+      - DatabaseConfig__DbType=Sqlite
+      - DatabaseConfig__AutoSeedData=true
+      - JwtConfig__SecretKey=YourSuperSecretKeyForJWTTokenGenerationMustBe32CharsOrMore!
+    restart: always
+    security_opt:
+      - seccomp=unconfined
+
+# Note: Ensure the ./data and ./logs directories exist on the host or they will be created by Docker with root permissions.
