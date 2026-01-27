@@ -88,9 +88,12 @@ export const API_ENDPOINTS = {
   },
 
   // Hospital config endpoints
-  HOSPITAL_CONFIG: {
-    DETAIL: '/HospitalConfig',
-    UPDATE: '/HospitalConfig'
+  HOSPITAL: {
+    LIST: '/BasicData/hospitals',
+    DETAIL: (id) => `/BasicData/hospitals/${id}`,
+    CREATE: '/BasicData/hospitals',
+    UPDATE: (id) => `/BasicData/hospitals/${id}`,
+    DELETE: (id) => `/BasicData/hospitals/${id}`
   },
 
   // Import/Export endpoints

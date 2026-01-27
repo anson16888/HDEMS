@@ -66,7 +66,7 @@
     <a-card class="search-card" :bordered="false">
       <a-form layout="inline">
         <a-row :gutter="16" style="width: 100%">
-          <a-col :span="8">
+          <a-col :span="7">
             <a-form-item label="日期范围">
               <a-range-picker
                 v-model:value="dateRange"
@@ -96,6 +96,26 @@
               </a-select>
             </a-form-item>
           </a-col>
+          <a-col :span="4" v-if="isSystemAdmin">
+            <a-form-item label="医院">
+              <a-select
+                v-model:value="filters.hospitalId"
+                placeholder="选择医院"
+                allow-clear
+                style="width: 100%"
+                @change="handleSearch"
+              >
+                <a-select-option value="">全部</a-select-option>
+                <a-select-option
+                  v-for="hospital in hospitals"
+                  :key="hospital.id"
+                  :value="hospital.id"
+                >
+                  {{ hospital.hospitalName }}
+                </a-select-option>
+              </a-select>
+            </a-form-item>
+          </a-col>
           <a-col :span="4">
             <a-form-item label="科室">
               <a-select
@@ -115,7 +135,7 @@
               </a-select>
             </a-form-item>
           </a-col>
-          <a-col :span="8">
+          <a-col :span="5">
             <a-form-item :wrapper-col="{ span: 24 }">
               <a-space>
                 <a-button type="primary" @click="handleSearch">
@@ -228,8 +248,9 @@ import {
   getScheduleStatistics,
   exportSchedules
 } from '../api/schedule.api.js'
-import { getDepartments } from '../api/basicData.api.js'
+import { getDepartments, getHospitals } from '../api/basicData.api.js'
 import { SCHEDULE_TYPE } from '../config/api.config.js'
+import { useAuth } from '@/composables/useAuth'
 import dayjs from 'dayjs'
 
 // 数据状态
@@ -243,6 +264,9 @@ const statistics = ref({
   directorCount: 0
 })
 
+// Auth
+const { isSystemAdmin, user } = useAuth()
+
 // 筛选条件
 const dateRange = ref([
   dayjs().startOf('week'),
@@ -252,7 +276,8 @@ const filters = ref({
   startDate: undefined,
   endDate: undefined,
   scheduleType: undefined,
-  departmentId: undefined
+  departmentId: undefined,
+  hospitalId: undefined
 })
 
 // 分页
@@ -264,6 +289,7 @@ const pagination = ref({
 
 // 基础数据
 const departments = ref([])
+const hospitals = ref([])
 
 // 排班类型选项
 const scheduleTypeOptions = ref([
@@ -273,7 +299,7 @@ const scheduleTypeOptions = ref([
 ])
 
 // 表格列配置
-const columns = [
+const baseColumns = [
   {
     title: '排班日期',
     dataIndex: 'scheduleDate',
@@ -317,12 +343,28 @@ const columns = [
   }
 ]
 
+const columns = computed(() => {
+  const hospitalColumn = {
+    title: '医院',
+    dataIndex: 'hospitalName',
+    key: 'hospitalName',
+    width: 150
+  }
+  // 插入到排班类型之后
+  return [
+    ...baseColumns.slice(0, 2),
+    hospitalColumn,
+    ...baseColumns.slice(2)
+  ]
+})
+
 /**
  * 判断是否有激活的筛选条件
  */
 const hasActiveFilters = computed(() => {
   return filters.value.scheduleType !== undefined ||
-         filters.value.departmentId !== undefined
+         filters.value.departmentId !== undefined ||
+         filters.value.hospitalId !== undefined
 })
 
 /**
@@ -406,10 +448,20 @@ async function loadStatistics() {
 async function loadOverviewData() {
   loading.value = true
   try {
+    // 非管理员用户：使用用户的 hospitalId
+    let queryHospitalId = filters.value.hospitalId
+    if (!queryHospitalId && !isSystemAdmin && user.value?.hospitalId) {
+      queryHospitalId = user.value.hospitalId
+    }
+
     const params = {
       ...filters.value,
       page: pagination.value.current,
       pageSize: pagination.value.pageSize
+    }
+    // 只有当 hospitalId 有值时才添加
+    if (queryHospitalId) {
+      params.hospitalId = queryHospitalId
     }
 
     const response = await getScheduleOverview(params)
@@ -455,7 +507,8 @@ async function handleResetFilters() {
     startDate: defaultDateRange[0].format('YYYY-MM-DD'),
     endDate: defaultDateRange[1].format('YYYY-MM-DD'),
     scheduleType: undefined,
-    departmentId: undefined
+    departmentId: undefined,
+    hospitalId: undefined
   }
 
   pagination.value.current = 1
@@ -477,7 +530,10 @@ async function handleExport() {
       startDate: filters.value.startDate,
       endDate: filters.value.endDate,
       scheduleType: filters.value.scheduleType,
-      departmentId: filters.value.departmentId
+      departmentId: filters.value.departmentId,
+      hospitalId: filters.value.hospitalId,
+      shiftId: filters.value.shiftId,
+      keyword: ''
     }
 
     const blob = await exportSchedules(params)
@@ -519,6 +575,20 @@ async function loadDepartments() {
   }
 }
 
+/**
+ * 加载医院列表
+ */
+async function loadHospitals() {
+  try {
+    const response = await getHospitals()
+    if (response.success) {
+      hospitals.value = response.data || []
+    }
+  } catch (error) {
+    console.error('加载医院列表失败:', error)
+  }
+}
+
 // 生命周期
 onMounted(async () => {
   // 初始化日期范围（将dayjs对象转换为字符串）
@@ -528,11 +598,18 @@ onMounted(async () => {
   }
 
   // 并行加载数据
-  await Promise.all([
+  const loadTasks = [
     loadDepartments(),
     loadOverviewData(),
     loadStatistics()
-  ])
+  ]
+
+  // 仅管理员加载医院列表
+  if (isSystemAdmin.value) {
+    loadTasks.push(loadHospitals())
+  }
+
+  await Promise.all(loadTasks)
 })
 </script>
 

@@ -5,8 +5,10 @@ using HDEMS.Domain.Entities;
 using HDEMS.Domain.Enums;
 using HDEMS.Infrastructure.Services;
 using HDEMS.Infrastructure.Contexts;
+using HDEMS.Infrastructure.Configuration;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using OfficeOpenXml;
 
 namespace HDEMS.Application.Services;
@@ -20,13 +22,15 @@ public class ScheduleService : IScheduleService
     private readonly IMapper _mapper;
     private readonly ILogger<ScheduleService> _logger;
     private readonly AuditContext _auditContext;
+    private readonly SystemConfig _systemConfig;
 
-    public ScheduleService(IFreeSql fsql, IMapper mapper, ILogger<ScheduleService> logger, AuditContext auditContext)
+    public ScheduleService(IFreeSql fsql, IMapper mapper, ILogger<ScheduleService> logger, AuditContext auditContext, IOptions<SystemConfig> systemConfig)
     {
         _fsql = fsql;
         _mapper = mapper;
         _logger = logger;
         _auditContext = auditContext;
+        _systemConfig = systemConfig.Value;
     }
 
     public async Task<ApiResponse<PagedResult<ScheduleDto>>> GetPagedAsync(ScheduleQueryRequest request)
@@ -86,7 +90,15 @@ public class ScheduleService : IScheduleService
         // 填充医院名称
         for (int i = 0; i < dtos.Count; i++)
         {
-            dtos[i].HospitalName = items[i].Hospital?.HospitalName;
+            // 如果 hospitalId 是 Guid.Empty，则使用配置中的系统组织名称
+            if (items[i].HospitalId == Guid.Empty || items[i].HospitalId == null)
+            {
+                dtos[i].HospitalName = _systemConfig.SystemOrgName ?? "宝安卫健局";
+            }
+            else
+            {
+                dtos[i].HospitalName = items[i].Hospital?.HospitalName;
+            }
         }
 
         var result = new PagedResult<ScheduleDto>
@@ -117,7 +129,15 @@ public class ScheduleService : IScheduleService
         }
 
         var dto = _mapper.Map<ScheduleDto>(schedule);
-        dto.HospitalName = schedule.Hospital?.HospitalName;
+        // 如果 hospitalId 是 Guid.Empty，则使用配置中的系统组织名称
+        if (schedule.HospitalId == Guid.Empty || schedule.HospitalId == null)
+        {
+            dto.HospitalName = _systemConfig.SystemOrgName ?? "宝安卫健局";
+        }
+        else
+        {
+            dto.HospitalName = schedule.Hospital?.HospitalName;
+        }
         return ApiResponse<ScheduleDto>.Ok(dto);
     }
 
@@ -138,7 +158,8 @@ public class ScheduleService : IScheduleService
 
         var schedule = _mapper.Map<Schedule>(request);
         schedule.Id = Guid.NewGuid();
-        schedule.HospitalId = _auditContext.CurrentHospitalId;
+        // 如果传了医院ID则使用传参的医院，否则使用当前用户所属医院
+        schedule.HospitalId = request.HospitalId ?? _auditContext.CurrentHospitalId;
         schedule.CreatedBy = _auditContext.CurrentUserDisplayName;
         schedule.CreatedAt = DateTime.Now;
 
@@ -173,6 +194,8 @@ public class ScheduleService : IScheduleService
         }
 
         _mapper.Map(request, schedule);
+        // 如果传了医院ID则使用传参的医院，否则使用当前用户所属医院
+        schedule.HospitalId = request.HospitalId ?? _auditContext.CurrentHospitalId;
         schedule.UpdatedBy = _auditContext.CurrentUserDisplayName;
         schedule.UpdatedAt = DateTime.Now;
 
@@ -372,6 +395,11 @@ public class ScheduleService : IScheduleService
             query = query.Where(s => s.ScheduleType == request.ScheduleType.Value);
         }
 
+        if (request.HospitalId.HasValue)
+        {
+            query = query.Where(s => s.HospitalId == request.HospitalId.Value);
+        }
+
         var schedules = await query
             .OrderByDescending(s => s.ScheduleDate)
             .Take(10000)
@@ -392,7 +420,10 @@ public class ScheduleService : IScheduleService
 
             worksheet.Cells[row, 1].Value = schedule.ScheduleDate.ToString("yyyy-MM-dd");
             worksheet.Cells[row, 2].Value = scheduleTypeName;
-            worksheet.Cells[row, 3].Value = schedule.Hospital?.HospitalName ?? "";
+            // 如果 hospitalId 是 Guid.Empty，则使用配置中的系统组织名称
+            worksheet.Cells[row, 3].Value = (schedule.HospitalId == Guid.Empty || schedule.HospitalId == null)
+                ? (_systemConfig.SystemOrgName ?? "宝安卫健局")
+                : (schedule.Hospital?.HospitalName ?? "");
             worksheet.Cells[row, 4].Value = schedule.Shift?.ShiftName;
             worksheet.Cells[row, 5].Value = schedule.PersonName;
             worksheet.Cells[row, 6].Value = schedule.Phone;

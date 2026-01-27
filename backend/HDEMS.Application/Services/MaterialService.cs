@@ -4,8 +4,10 @@ using HDEMS.Application.Interfaces;
 using HDEMS.Domain.Entities;
 using HDEMS.Infrastructure.Services;
 using HDEMS.Infrastructure.Contexts;
+using HDEMS.Infrastructure.Configuration;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using OfficeOpenXml;
 
 namespace HDEMS.Application.Services;
@@ -19,13 +21,15 @@ public class MaterialService : IMaterialService
     private readonly IMapper _mapper;
     private readonly ILogger<MaterialService> _logger;
     private readonly AuditContext _auditContext;
+    private readonly SystemConfig _systemConfig;
 
-    public MaterialService(IFreeSql fsql, IMapper mapper, ILogger<MaterialService> logger, AuditContext auditContext)
+    public MaterialService(IFreeSql fsql, IMapper mapper, ILogger<MaterialService> logger, AuditContext auditContext, IOptions<SystemConfig> systemConfig)
     {
         _fsql = fsql;
         _mapper = mapper;
         _logger = logger;
         _auditContext = auditContext;
+        _systemConfig = systemConfig.Value;
     }
 
     public async Task<ApiResponse<PagedResult<MaterialDto>>> GetPagedAsync(MaterialQueryRequest request)
@@ -67,7 +71,15 @@ public class MaterialService : IMaterialService
         // 填充医院名称
         for (int i = 0; i < dtos.Count; i++)
         {
-            dtos[i].HospitalName = items[i].Hospital?.HospitalName;
+            // 如果 hospitalId 是 Guid.Empty，则使用配置中的系统组织名称
+            if (items[i].HospitalId == Guid.Empty || items[i].HospitalId == null)
+            {
+                dtos[i].HospitalName = _systemConfig.SystemOrgName ?? "宝安卫健局";
+            }
+            else
+            {
+                dtos[i].HospitalName = items[i].Hospital?.HospitalName;
+            }
         }
 
         var result = new PagedResult<MaterialDto>
@@ -95,7 +107,15 @@ public class MaterialService : IMaterialService
         }
 
         var dto = _mapper.Map<MaterialDto>(material);
-        dto.HospitalName = material.Hospital?.HospitalName;
+        // 如果 hospitalId 是 Guid.Empty，则使用配置中的系统组织名称
+        if (material.HospitalId == Guid.Empty || material.HospitalId == null)
+        {
+            dto.HospitalName = _systemConfig.SystemOrgName ?? "宝安卫健局";
+        }
+        else
+        {
+            dto.HospitalName = material.Hospital?.HospitalName;
+        }
         return ApiResponse<MaterialDto>.Ok(dto);
     }
 
@@ -143,7 +163,8 @@ public class MaterialService : IMaterialService
         material.Status = await GetMaterialStatus(material.MaterialTypeId, material.Quantity, material.ExpiryDate);
 
         material.Id = Guid.NewGuid();
-        material.HospitalId = _auditContext.CurrentHospitalId;
+        // 如果传了医院ID则使用传参的医院，否则使用当前用户所属医院
+        material.HospitalId = request.HospitalId ?? _auditContext.CurrentHospitalId;
         material.CreatedBy = _auditContext.CurrentUserDisplayName;
         material.CreatedAt = DateTime.Now;
 
@@ -217,6 +238,9 @@ public class MaterialService : IMaterialService
         {
             material.MaterialCode = originalCode;
         }
+
+        // 如果传了医院ID则使用传参的医院，否则使用当前用户所属医院
+        material.HospitalId = request.HospitalId ?? _auditContext.CurrentHospitalId;
 
         // 计算过期日期
         if (request.ProductionDate.HasValue && request.ShelfLife.HasValue)
@@ -452,7 +476,10 @@ public class MaterialService : IMaterialService
         {
             query = query.Where(m => m.MaterialTypeId == request.MaterialTypeId.Value);
         }
-
+        if (request.HospitalId.HasValue)
+        {
+            query = query.Where(s => s.HospitalId == request.HospitalId.Value);
+        }
         var materials = await query.OrderByDescending(m => m.UpdatedAt).Take(10000).ToListAsync();
 
         // 填充数据
@@ -462,7 +489,10 @@ public class MaterialService : IMaterialService
             worksheet.Cells[row, 1].Value = material.MaterialCode;
             worksheet.Cells[row, 2].Value = material.MaterialName;
             worksheet.Cells[row, 3].Value = material.MaterialType?.TypeName ?? "";
-            worksheet.Cells[row, 4].Value = material.Hospital?.HospitalName ?? "";
+            // 如果 hospitalId 是 Guid.Empty，则使用配置中的系统组织名称
+            worksheet.Cells[row, 4].Value = (material.HospitalId == Guid.Empty || material.HospitalId == null)
+                ? (_systemConfig.SystemOrgName ?? "宝安卫健局")
+                : (material.Hospital?.HospitalName ?? "");
             worksheet.Cells[row, 5].Value = material.Specification;
             worksheet.Cells[row, 6].Value = material.Quantity.ToString();
             worksheet.Cells[row, 7].Value = material.Unit;

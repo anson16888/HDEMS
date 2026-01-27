@@ -7,7 +7,7 @@
     <a-card class="search-card" :bordered="false">
       <a-form layout="inline">
         <a-row :gutter="16" style="width: 100%">
-          <a-col :span="8">
+          <a-col :span="7">
             <a-form-item label="日期">
               <a-range-picker
                 v-model:value="dateRange"
@@ -36,7 +36,27 @@
               </a-select>
             </a-form-item>
           </a-col>
-          <a-col :span="10">
+          <a-col :span="4" v-if="isSystemAdmin">
+            <a-form-item label="医院">
+              <a-select
+                v-model:value="filters.hospitalId"
+                placeholder="选择医院"
+                allow-clear
+                style="width: 100%"
+                @change="handleSearch"
+              >
+                <a-select-option value="">全部</a-select-option>
+                <a-select-option
+                  v-for="hospital in hospitals"
+                  :key="hospital.id"
+                  :value="hospital.id"
+                >
+                  {{ hospital.hospitalName }}
+                </a-select-option>
+              </a-select>
+            </a-form-item>
+          </a-col>
+          <a-col :span="7">
             <a-form-item :wrapper-col="{ span: 24 }">
               <a-space>
                 <a-button type="primary" @click="handleSearch">
@@ -223,6 +243,20 @@
         </a-row>
 
         <a-row :gutter="16">
+          <a-col :span="12" v-if="isSystemAdmin">
+            <a-form-item label="医院" name="hospitalId">
+              <a-select v-model:value="formData.hospitalId" placeholder="请选择医院" allow-clear>
+                <a-select-option value="">全部</a-select-option>
+                <a-select-option
+                  v-for="hospital in hospitals"
+                  :key="hospital.id"
+                  :value="hospital.id"
+                >
+                  {{ hospital.hospitalName }}
+                </a-select-option>
+              </a-select>
+            </a-form-item>
+          </a-col>
           <a-col :span="12">
             <a-form-item label="职级" name="rankId">
               <a-select v-model:value="formData.rankId" placeholder="请选择职级">
@@ -276,6 +310,7 @@ import dayjs from 'dayjs'
 import * as scheduleApi from '../api/schedule.api.js'
 import * as basicDataApi from '../api/basicData.api.js'
 import { SCHEDULE_TYPE } from '../config/api.config.js'
+import { useAuth } from '@/composables/useAuth'
 import ScheduleImportModal from '../components/modals/ScheduleImportModal.vue'
 
 // ==================== Data ====================
@@ -284,10 +319,15 @@ const loading = ref(false)
 const schedules = ref([])
 const shifts = ref([])
 const personRanks = ref([])
+const hospitals = ref([])
 const dateRange = ref([])
+
+// Auth
+const { isSystemAdmin, user } = useAuth()
 
 const filters = reactive({
   shiftId: undefined,
+  hospitalId: undefined,
   startDate: undefined,
   endDate: undefined
 })
@@ -306,6 +346,7 @@ const formRef = ref()
 const formData = reactive({
   scheduleDate: undefined,
   shiftId: undefined,
+  hospitalId: undefined,
   rankId: undefined,
   personName: '',
   phone: '',
@@ -326,6 +367,7 @@ const importModalVisible = ref(false)
 
 const hasActiveFilters = computed(() => {
   return filters.shiftId ||
+         filters.hospitalId ||
          filters.startDate ||
          filters.endDate
 })
@@ -338,7 +380,7 @@ const bureauRanks = computed(() => {
   )
 })
 
-const columns = [
+const baseColumns = [
   { title: '日期', dataIndex: 'scheduleDate', key: 'scheduleDate', width: 120, fixed: 'left' },
   { title: '班次', dataIndex: 'shiftName', key: 'shiftName', width: 100 },
   { title: '人员', dataIndex: 'personName', key: 'personName', width: 120 },
@@ -347,6 +389,15 @@ const columns = [
   { title: '备注', dataIndex: 'remark', key: 'remark', width: 200 },
   { title: '操作', key: 'action', width: 120, fixed: 'right' }
 ]
+
+const columns = computed(() => {
+  const hospitalColumn = { title: '医院', dataIndex: 'hospitalName', key: 'hospitalName', width: 150 }
+  return [
+    ...baseColumns.slice(0, 1),
+    hospitalColumn,
+    ...baseColumns.slice(1)
+  ]
+})
 
 // ==================== Methods ====================
 
@@ -357,12 +408,23 @@ const formatDate = (date) => {
 const loadSchedules = async () => {
   try {
     loading.value = true
+    // 非管理员用户：使用用户的 hospitalId
+    let queryHospitalId = filters.hospitalId
+    if (!queryHospitalId && !isSystemAdmin && user?.hospitalId) {
+      queryHospitalId = user.hospitalId
+    }
+
     const params = {
       scheduleType: SCHEDULE_TYPE.BUREAU,
       page: pagination.current,
       pageSize: pagination.pageSize,
       ...filters
     }
+    // 只有当 hospitalId 有值时才添加
+    if (queryHospitalId) {
+      params.hospitalId = queryHospitalId
+    }
+
     const response = await scheduleApi.getSchedules(params)
     if (response.success && response.data) {
       schedules.value = response.data.items || []
@@ -378,10 +440,14 @@ const loadSchedules = async () => {
 
 const loadBasicData = async () => {
   try {
-    const [shiftRes, rankRes] = await Promise.all([
-      basicDataApi.getShifts(),
-      basicDataApi.getPersonRanks()
-    ])
+    const requests = [basicDataApi.getShifts(), basicDataApi.getPersonRanks()]
+
+    if (isSystemAdmin.value) {
+      requests.push(basicDataApi.getHospitals())
+    }
+
+    const responses = await Promise.all(requests)
+    const [shiftRes, rankRes, hospitalRes] = responses
 
     console.log('API Response - Shifts:', shiftRes)
     console.log('API Response - PersonRanks:', rankRes)
@@ -394,6 +460,9 @@ const loadBasicData = async () => {
       personRanks.value = rankRes.data || []
       console.log('Loaded personRanks:', personRanks.value.length)
       console.log('Bureau ranks:', bureauRanks.value)
+    }
+    if (isSystemAdmin.value && hospitalRes && hospitalRes.success) {
+      hospitals.value = hospitalRes.data || []
     }
   } catch (error) {
     message.error('加载基础数据失败')
@@ -419,6 +488,7 @@ const handleDateRangeChange = (dates) => {
 
 const handleResetFilters = () => {
   filters.shiftId = undefined
+  filters.hospitalId = undefined
   filters.startDate = undefined
   filters.endDate = undefined
   dateRange.value = []
@@ -443,6 +513,7 @@ const handleEdit = (record) => {
     id: record.id,
     scheduleDate: record.scheduleDate ? dayjs(record.scheduleDate) : undefined,
     shiftId: record.shiftId,
+    hospitalId: record.hospitalId,
     rankId: record.rankId,
     personName: record.personName || '',
     phone: record.phone || '',
@@ -475,6 +546,7 @@ const handleFormSubmit = async () => {
       scheduleDate: formData.scheduleDate ? formData.scheduleDate.toISOString() : undefined,
       scheduleType: SCHEDULE_TYPE.BUREAU,
       shiftId: formData.shiftId,
+      hospitalId: formData.hospitalId,
       rankId: formData.rankId,
       personName: formData.personName,
       phone: formData.phone,
@@ -517,6 +589,7 @@ const resetForm = () => {
   Object.assign(formData, {
     scheduleDate: undefined,
     shiftId: undefined,
+    hospitalId: undefined,
     rankId: undefined,
     personName: '',
     phone: '',
@@ -544,7 +617,10 @@ const handleExport = async () => {
     const data = {
       scheduleType: SCHEDULE_TYPE.BUREAU,
       startDate: filters.startDate,
-      endDate: filters.endDate
+      endDate: filters.endDate,
+      shiftId: filters.shiftId,
+      hospitalId: filters.hospitalId,
+      keyword: ''
     }
 
     const blob = await scheduleApi.exportSchedules(data)

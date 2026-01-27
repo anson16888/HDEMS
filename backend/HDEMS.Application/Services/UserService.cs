@@ -29,7 +29,7 @@ public class UserService : IUserService
         _auditContext = auditContext;
     }
 
-    public async Task<ApiResponse<PagedResult<UserDto>>> GetPagedAsync(int page = 1, int pageSize = 20, string? keyword = null)
+    public async Task<ApiResponse<PagedResult<UserDto>>> GetPagedAsync(int page = 1, int pageSize = 20, string? keyword = null, int? role = null, int? status = null, Guid? hospitalId = null)
     {
         var query = _fsql.Select<User>()
             .Include(u => u.Hospital);
@@ -37,6 +37,26 @@ public class UserService : IUserService
         if (!string.IsNullOrWhiteSpace(keyword))
         {
             query = query.Where(u => u.RealName.Contains(keyword) || u.Username.Contains(keyword));
+        }
+
+        // 角色筛选
+        if (role.HasValue)
+        {
+            var roleEnum = (UserRole)role.Value;
+            query = query.Where(u => u.Roles.Contains(roleEnum.ToString()));
+        }
+
+        // 状态筛选
+        if (status.HasValue)
+        {
+            var statusEnum = (UserStatus)status.Value;
+            query = query.Where(u => u.Status == statusEnum);
+        }
+
+        // 医院筛选
+        if (hospitalId.HasValue && hospitalId.Value != Guid.Empty)
+        {
+            query = query.Where(u => u.HospitalId == hospitalId.Value);
         }
 
         var total = await query.CountAsync();

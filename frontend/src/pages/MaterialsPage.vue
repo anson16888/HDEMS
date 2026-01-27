@@ -7,7 +7,7 @@
     <a-card class="search-card" :bordered="false">
       <a-form layout="inline">
         <a-row :gutter="16" style="width: 100%">
-          <a-col :span="6">
+          <a-col :span="5">
             <a-form-item label="关键字">
               <a-input
                 v-model:value="materialStore.filters.keyword"
@@ -59,7 +59,27 @@
               </a-select>
             </a-form-item>
           </a-col>
-          <a-col :span="8">
+          <a-col :span="4" v-if="isSystemAdmin">
+            <a-form-item label="医院">
+              <a-select
+                v-model:value="materialStore.filters.hospitalId"
+                placeholder="选择医院"
+                allow-clear
+                style="width: 100%"
+                @change="handleSearch"
+              >
+                <a-select-option value="">全部</a-select-option>
+                <a-select-option
+                  v-for="hospital in hospitalOptions"
+                  :key="hospital.id"
+                  :value="hospital.id"
+                >
+                  {{ hospital.hospitalName }}
+                </a-select-option>
+              </a-select>
+            </a-form-item>
+          </a-col>
+          <a-col :span="7">
             <a-form-item :wrapper-col="{ span: 24 }">
               <a-space>
                 <a-button type="primary" @click="handleSearch">
@@ -168,6 +188,11 @@
                 </a-popconfirm>
               </a-space>
             </template>
+
+            <!-- 其他列：默认显示 -->
+            <template v-else>
+              <span>{{ record[column.dataIndex] || '-' }}</span>
+            </template>
           </template>
         </a-table>
 
@@ -222,14 +247,19 @@ import {
   DownloadOutlined
 } from '@ant-design/icons-vue'
 import { useMaterialStore } from '../stores/material.store'
+import { useAuth } from '@/composables/useAuth'
 import MaterialFormModal from '../components/modals/MaterialFormModal.vue'
 import MaterialDetailModal from '../components/modals/MaterialDetailModal.vue'
 import MaterialImportModal from '../components/modals/MaterialImportModal.vue'
 import { getMaterialTypes } from '../api/materialType.api.js'
+import { getHospitals } from '../api/basicData.api.js'
 import dayjs from 'dayjs'
 
 // Store
 const materialStore = useMaterialStore()
+
+// Auth
+const { isSystemAdmin } = useAuth()
 
 // 弹窗状态
 const formModalVisible = ref(false)
@@ -241,11 +271,14 @@ const currentMaterial = ref(null)
 // 物资类型选项（从服务器获取）
 const materialTypeOptions = ref([])
 
+// 医院选项（从服务器获取）
+const hospitalOptions = ref([])
+
 // 物资类型映射（用于快速查找类型信息）
 const materialTypeMap = ref(new Map())
 
 // 表格列配置
-const columns = [
+const baseColumns = [
   {
     title: '物资编号',
     dataIndex: 'material_code',
@@ -322,6 +355,18 @@ const columns = [
     align: 'center'
   }
 ]
+
+// 添加医院列（所有用户都显示）
+const columns = computed(() => {
+  const hospitalColumn = {
+    title: '医院',
+    dataIndex: 'hospitalName',
+    key: 'hospitalName',
+    width: 150
+  }
+  // 插入到第一列
+  return [hospitalColumn, ...baseColumns]
+})
 
 /**
  * 获取物资类型颜色
@@ -402,7 +447,8 @@ function getStatusBadgeStatus(status) {
 const hasActiveFilters = computed(() => {
   return materialStore.filters.keyword ||
          materialStore.filters.type ||
-         materialStore.filters.status
+         materialStore.filters.status ||
+         materialStore.filters.hospitalId
 })
 
 /**
@@ -566,9 +612,26 @@ async function loadMaterialTypeOptions() {
   }
 }
 
+/**
+ * 加载医院列表选项
+ */
+async function loadHospitalOptions() {
+  try {
+    const response = await getHospitals()
+    if (response.success) {
+      hospitalOptions.value = response.data || []
+    }
+  } catch (error) {
+    console.error('加载医院列表失败:', error)
+  }
+}
+
 // 生命周期
 onMounted(() => {
   loadMaterialTypeOptions()
+  if (isSystemAdmin.value) {
+    loadHospitalOptions()
+  }
   materialStore.fetchMaterials()
 })
 </script>

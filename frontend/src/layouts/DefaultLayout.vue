@@ -188,8 +188,8 @@ const menuItems = computed(() => {
   // 【系统管理】根据系统类型和角色显示不同菜单
   const systemItems = []
 
-  // 医院信息管理：仅系统管理员可见
-  if (isSystemAdmin.value) {
+  // 医院信息管理：所有用户可见（管理员管理所有医院，非管理员编辑自己医院）
+  if (isAuthenticated.value) {
     systemItems.push(
       getItem('医院信息', '/system/hospitals', getIcon('fa-solid fa-hospital'))
     )

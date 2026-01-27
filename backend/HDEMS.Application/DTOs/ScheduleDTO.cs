@@ -43,6 +43,10 @@ public class ScheduleCreateRequest
     public Guid? DepartmentId { get; set; }
     public Guid? TitleId { get; set; }
     public string? Remark { get; set; }
+    /// <summary>
+    /// 医院ID（可选，为空时使用当前用户所属医院）
+    /// </summary>
+    public Guid? HospitalId { get; set; }
 }
 
 /// <summary>

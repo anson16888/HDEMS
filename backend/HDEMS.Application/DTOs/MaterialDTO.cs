@@ -45,6 +45,10 @@ public class MaterialCreateRequest
     public int? ShelfLife { get; set; }
     public string Location { get; set; } = string.Empty;
     public string? Remark { get; set; }
+    /// <summary>
+    /// 医院ID（可选，为空时使用当前用户所属医院）
+    /// </summary>
+    public Guid? HospitalId { get; set; }
 }
 
 /// <summary>

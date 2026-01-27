@@ -7,7 +7,7 @@
     <a-card class="search-card" :bordered="false">
       <a-form layout="inline">
         <a-row :gutter="16" style="width: 100%">
-          <a-col :span="6">
+          <a-col :span="5">
             <a-form-item label="关键字">
               <a-input
                 v-model:value="searchKeyword"
@@ -21,7 +21,7 @@
               </a-input>
             </a-form-item>
           </a-col>
-          <a-col :span="5">
+          <a-col :span="4">
             <a-form-item label="角色">
               <a-select
                 v-model:value="roleFilter"
@@ -37,7 +37,7 @@
               </a-select>
             </a-form-item>
           </a-col>
-          <a-col :span="5">
+          <a-col :span="4">
             <a-form-item label="状态">
               <a-select
                 v-model:value="statusFilter"
@@ -53,7 +53,27 @@
               </a-select>
             </a-form-item>
           </a-col>
-          <a-col :span="8">
+          <a-col :span="5">
+            <a-form-item label="医院">
+              <a-select
+                v-model:value="hospitalFilter"
+                placeholder="选择医院"
+                allow-clear
+                style="width: 100%"
+                @change="handleHospitalFilter"
+              >
+                <a-select-option :value="undefined">全部</a-select-option>
+                <a-select-option
+                  v-for="hospital in hospitals"
+                  :key="hospital.id"
+                  :value="hospital.id"
+                >
+                  {{ hospital.hospitalName }}
+                </a-select-option>
+              </a-select>
+            </a-form-item>
+          </a-col>
+          <a-col :span="6">
             <a-form-item :wrapper-col="{ span: 24 }">
               <a-space>
                 <a-button type="primary" @click="handleSearch">
@@ -216,6 +236,7 @@ import { ref, computed, onMounted, reactive } from 'vue'
 import { message } from 'ant-design-vue'
 import { useUserStore } from '@/stores/user.store'
 import { storeToRefs } from 'pinia'
+import { getHospitals } from '@/api/basicData.api.js'
 import {
   PlusOutlined,
   SearchOutlined,
@@ -239,8 +260,10 @@ const { users, loading, error, pagination } = storeToRefs(userStore)
 const searchKeyword = ref('')
 const roleFilter = ref(undefined)
 const statusFilter = ref(undefined)
+const hospitalFilter = ref(undefined)
 const currentPage = ref(1)
 const pageSize = ref(20)
+const hospitals = ref([])
 
 const modalState = reactive({
   showUserForm: false,
@@ -264,6 +287,13 @@ const columns = [
     dataIndex: 'username',
     key: 'username',
     width: 150
+  },
+  {
+    title: '医院',
+    dataIndex: 'hospitalName',
+    key: 'hospitalName',
+    width: 180,
+    customRender: ({ text }) => text || '-'
   },
   {
     title: '科室',
@@ -297,7 +327,7 @@ const paginatedUsers = computed(() => {
 })
 
 const hasActiveFilters = computed(() => {
-  return searchKeyword.value || roleFilter.value !== undefined || statusFilter.value !== undefined
+  return searchKeyword.value || roleFilter.value !== undefined || statusFilter.value !== undefined || hospitalFilter.value !== undefined
 })
 
 // Methods
@@ -306,7 +336,8 @@ const handleSearch = () => {
   userStore.setFilters({
     keyword: searchKeyword.value,
     role: roleFilter.value,
-    status: statusFilter.value
+    status: statusFilter.value,
+    hospitalId: hospitalFilter.value
   })
   userStore.setPagination({ page: currentPage.value, pageSize: pageSize.value })
   userStore.fetchUsers()
@@ -317,7 +348,8 @@ const handleRoleFilter = () => {
   userStore.setFilters({
     keyword: searchKeyword.value,
     role: roleFilter.value,
-    status: statusFilter.value
+    status: statusFilter.value,
+    hospitalId: hospitalFilter.value
   })
   userStore.setPagination({ page: currentPage.value, pageSize: pageSize.value })
   userStore.fetchUsers()
@@ -328,7 +360,20 @@ const handleStatusFilter = () => {
   userStore.setFilters({
     keyword: searchKeyword.value,
     role: roleFilter.value,
-    status: statusFilter.value
+    status: statusFilter.value,
+    hospitalId: hospitalFilter.value
+  })
+  userStore.setPagination({ page: currentPage.value, pageSize: pageSize.value })
+  userStore.fetchUsers()
+}
+
+const handleHospitalFilter = () => {
+  currentPage.value = 1
+  userStore.setFilters({
+    keyword: searchKeyword.value,
+    role: roleFilter.value,
+    status: statusFilter.value,
+    hospitalId: hospitalFilter.value
   })
   userStore.setPagination({ page: currentPage.value, pageSize: pageSize.value })
   userStore.fetchUsers()
@@ -338,6 +383,7 @@ const resetFilters = () => {
   searchKeyword.value = ''
   roleFilter.value = undefined
   statusFilter.value = undefined
+  hospitalFilter.value = undefined
   currentPage.value = 1
   userStore.clearFilters()
   userStore.setPagination({ page: 1, pageSize: pageSize.value })
@@ -456,7 +502,17 @@ if (error.value) {
 }
 
 // Lifecycle
-onMounted(() => {
+onMounted(async () => {
+  // Load hospitals
+  try {
+    const response = await getHospitals()
+    if (response.success) {
+      hospitals.value = response.data || []
+    }
+  } catch (error) {
+    console.error('Failed to load hospitals:', error)
+  }
+
   // Initialize pagination from store
   currentPage.value = pagination.value.page
   pageSize.value = pagination.value.pageSize

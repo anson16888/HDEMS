@@ -234,7 +234,6 @@ static async Task InitializeDatabaseAsync(IFreeSql fsql)
         // 表不存在，创建所有表
         try
         {
-            fsql.CodeFirst.SyncStructure(typeof(HDEMS.Domain.Entities.HospitalConfig));
             fsql.CodeFirst.SyncStructure(typeof(HDEMS.Domain.Entities.Hospital));
             fsql.CodeFirst.SyncStructure(typeof(HDEMS.Domain.Entities.Department));
             fsql.CodeFirst.SyncStructure(typeof(HDEMS.Domain.Entities.Shift));

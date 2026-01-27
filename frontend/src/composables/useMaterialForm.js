@@ -2,6 +2,7 @@ import { ref, reactive, watch, computed } from 'vue'
 import { message } from 'ant-design-vue'
 import dayjs from 'dayjs'
 import { getMaterialTypes } from '../api/materialType.api.js'
+import { getHospitals } from '../api/basicData.api.js'
 
 /**
  * 物资表单 Composable
@@ -23,6 +24,7 @@ export function useMaterialForm() {
     production_date: undefined,
     shelf_life: undefined,
     location: '',
+    hospitalId: undefined,
     remark: ''
   })
 
@@ -66,6 +68,9 @@ export function useMaterialForm() {
   // 物资类型选项（从服务器获取）
   const materialTypeOptions = ref([])
 
+  // 医院选项（从服务器获取）
+  const hospitalOptions = ref([])
+
   /**
    * 重置表单为初始值
    */
@@ -80,6 +85,7 @@ export function useMaterialForm() {
     formData.production_date = undefined
     formData.shelf_life = undefined
     formData.location = ''
+    formData.hospitalId = undefined
     formData.remark = ''
 
     // 重置表单验证状态
@@ -108,6 +114,20 @@ export function useMaterialForm() {
   }
 
   /**
+   * 加载医院选项
+   */
+  async function loadHospitalOptions() {
+    try {
+      const response = await getHospitals()
+      // 响应格式: { code, success, data: { items: [...] } } 或 { code, success, data: [...] }
+      const hospitals = response.data?.items || response.data || []
+      hospitalOptions.value = Array.isArray(hospitals) ? hospitals : []
+    } catch (error) {
+      console.error('加载医院列表失败:', error)
+    }
+  }
+
+  /**
    * 加载物资数据到表单
    * @param {Object} material - 物资对象
    */
@@ -120,6 +140,7 @@ export function useMaterialForm() {
     formData.quantity = material.quantity || 0
     formData.unit = material.unit || ''
     formData.location = material.location || ''
+    formData.hospitalId = material.hospitalId
     formData.remark = material.remark || ''
 
     // 处理日期字段
@@ -198,6 +219,7 @@ export function useMaterialForm() {
     // 验证规则
     rules,
     materialTypeOptions,
+    hospitalOptions,
 
     // 方法
     resetForm,
@@ -205,6 +227,7 @@ export function useMaterialForm() {
     validateForm,
     prepareSubmitData,
     generateSnowflakeId,
-    loadMaterialTypeOptions
+    loadMaterialTypeOptions,
+    loadHospitalOptions
   }
 }

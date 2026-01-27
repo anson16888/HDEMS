@@ -4,7 +4,7 @@
 
 import { defineStore } from 'pinia'
 import { authService } from '../services/auth.service.js'
-import { getHospitalConfig } from '../api/hospitalConfig.api.js'
+import { getHospitals, getHospitalById } from '../api/basicData.api.js'
 import { ref, computed } from 'vue'
 
 export const useAuthStore = defineStore('auth', () => {
@@ -148,9 +148,19 @@ export const useAuthStore = defineStore('auth', () => {
   // 获取医院配置
   async function fetchHospitalConfig() {
     try {
-      const response = await getHospitalConfig()
-      if (response.code === 200) {
-        hospitalConfig.value = response.data
+      let hospitalData
+      if (user.value?.hospitalId) {
+        // 通过用户的 hospitalId 获取医院信息
+        const response = await getHospitalById(user.value.hospitalId)
+        hospitalData = response.data
+      } else if (isSystemAdmin.value) {
+        // 管理员且没有 hospitalId，获取第一个医院作为默认
+        const response = await getHospitals()
+        hospitalData = response.data?.[0] || null
+      }
+      // 非管理员没有 hospitalId 时，不设置 hospitalConfig（保持为 null）
+      if (hospitalData) {
+        hospitalConfig.value = hospitalData
         console.log('医院配置已加载:', hospitalConfig.value?.hospitalName)
       }
     } catch (error) {

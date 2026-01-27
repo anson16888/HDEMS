@@ -44,14 +44,6 @@ public class MappingProfile : Profile
             .ForMember(d => d.Id, opt => opt.Ignore())
             .ForMember(d => d.CreatedAt, opt => opt.Ignore());
 
-        // HospitalConfig 映射
-        CreateMap<HospitalConfig, HospitalConfigDto>()
-            .ReverseMap();
-
-        CreateMap<HospitalConfigUpdateRequest, HospitalConfig>()
-            .ForMember(d => d.Id, opt => opt.Ignore())
-            .ForMember(d => d.CreatedAt, opt => opt.Ignore());
-
         // Hospital 映射
         CreateMap<Hospital, HospitalDto>()
             .ReverseMap();

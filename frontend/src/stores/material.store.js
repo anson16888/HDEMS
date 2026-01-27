@@ -81,15 +81,27 @@ export const useMaterialStore = defineStore('material', () => {
   async function fetchMaterials(params = {}) {
     loading.value = true
     try {
-      const response = await materialService.list({
+      const authStore = useAuthStore()
+      // 非管理员用户：使用用户的 hospitalId
+      let queryHospitalId = filters.hospitalId
+      if (!queryHospitalId && !authStore.isSystemAdmin && authStore.user?.hospitalId) {
+        queryHospitalId = authStore.user.hospitalId
+      }
+
+      const requestParams = {
         page: pagination.current,
         pageSize: pagination.pageSize,
         keyword: filters.keyword,
         type: filters.type,
         status: filters.status,
-        hospitalId: filters.hospitalId,
         ...params
-      })
+      }
+      // 只有当 hospitalId 有值时才添加
+      if (queryHospitalId) {
+        requestParams.hospitalId = queryHospitalId
+      }
+
+      const response = await materialService.list(requestParams)
 
       materials.value = response.list || []
       pagination.total = response.total || 0

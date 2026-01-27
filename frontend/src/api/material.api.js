@@ -67,8 +67,8 @@ function transformMaterialFromBackend(material) {
     shelf_life: material.shelfLife,
     expiry_date: material.expiryDate,
     location: material.location,
-    hospital_id: material.hospitalId,
-    hospital_name: material.hospitalName,
+    hospitalId: material.hospitalId,
+    hospitalName: material.hospitalName,
     remark: material.remark,
     status: MATERIAL_STATUS_MAP[material.status] || material.status,
     statusName: material.statusName,
@@ -91,7 +91,7 @@ function transformMaterialToFrontend(data) {
     productionDate: data.production_date,
     shelfLife: data.shelf_life,
     location: data.location,
-    hospitalId: data.hospital_id,
+    hospitalId: data.hospitalId,  // 支持驼峰和下划线两种命名
     remark: data.remark
   }
 
@@ -111,11 +111,29 @@ function transformMaterialToFrontend(data) {
 function transformPagedDataFromBackend(response) {
   if (!response) return { list: [], total: 0, page: 1, pageSize: 20 }
 
+  // 处理多种可能的响应格式
+  let items = []
+  let total = 0
+  let page = 1
+  let pageSize = 20
+
+  // 如果是数组，直接使用
+  if (Array.isArray(response)) {
+    items = response
+    total = response.length
+  } else {
+    // 尝试不同的字段名
+    items = response.items || response.data || response.list || []
+    total = response.total || response.count || items.length
+    page = response.page || response.currentPage || 1
+    pageSize = response.pageSize || response.size || 20
+  }
+
   return {
-    list: (response.items || []).map(transformMaterialFromBackend),
-    total: response.total || 0,
-    page: response.page || 1,
-    pageSize: response.pageSize || 20,
+    list: items.map(transformMaterialFromBackend),
+    total,
+    page,
+    pageSize,
     totalPages: response.totalPages,
     hasPrevious: response.hasPrevious,
     hasNext: response.hasNext

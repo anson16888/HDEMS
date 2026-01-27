@@ -135,7 +135,24 @@
               </template>
             </a-input>
           </a-form-item>
-        </a-col>        
+        </a-col>
+
+        <a-col :span="12">
+          <!-- 医院（仅系统管理员可见） -->
+          <a-form-item v-if="isSystemAdmin" label="医院" name="hospitalId">
+            <a-select
+              v-model:value="formData.hospitalId"
+              placeholder="请选择医院（可选）"
+              allow-clear
+              :options="hospitalOptions.map(h => ({ label: h.hospitalName, value: h.id }))"
+              show-search
+              :filter-option="(input, option) => {
+                return option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0
+              }"
+            />
+          </a-form-item>
+        </a-col>
+
         <a-col :span="12">
           <!-- 存放位置 -->
           <a-form-item label="存放位置" name="location">
@@ -167,6 +184,7 @@
 import { ref, watch, computed, onMounted } from 'vue'
 import { message } from 'ant-design-vue'
 import { useMaterialForm } from '../../composables/useMaterialForm'
+import { useAuth } from '@/composables/useAuth'
 
 // Props
 const props = defineProps({
@@ -193,14 +211,26 @@ const {
   formRef,
   formData,
   expiryDate,
-  rules,
+  rules: baseRules,
   materialTypeOptions,
+  hospitalOptions,
   resetForm,
   loadMaterial,
   validateForm,
   prepareSubmitData,
-  loadMaterialTypeOptions
+  loadMaterialTypeOptions,
+  loadHospitalOptions
 } = useMaterialForm()
+
+// Auth
+const { isSystemAdmin } = useAuth()
+
+// 动态验证规则
+const rules = computed(() => {
+  const dynamicRules = { ...baseRules }
+  // 管理员的医院不是必填的，可以不选择
+  return dynamicRules
+})
 
 // 提交中状态
 const isSubmitting = ref(false)
@@ -262,6 +292,9 @@ function handleCancel() {
 // 组件挂载时加载物资类型选项
 onMounted(() => {
   loadMaterialTypeOptions()
+  if (isSystemAdmin.value) {
+    loadHospitalOptions()
+  }
 })
 </script>
 

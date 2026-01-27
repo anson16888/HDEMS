@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { setActivePinia, createPinia } from 'pinia'
 import { useAuthStore } from '../auth.store'
 import { authService } from '../../services/auth.service'
-import { getHospitalConfig } from '../../api/hospitalConfig.api'
+import { getHospitals, getHospitalById } from '../../api/basicData.api'
 
 // Mock dependencies
 vi.mock('../../services/auth.service', () => ({
@@ -20,8 +20,9 @@ vi.mock('../../services/auth.service', () => ({
   }
 }))
 
-vi.mock('../../api/hospitalConfig.api', () => ({
-  getHospitalConfig: vi.fn()
+vi.mock('../../api/basicData.api', () => ({
+  getHospitals: vi.fn(),
+  getHospitalById: vi.fn()
 }))
 
 describe('Auth Store', () => {
@@ -75,14 +76,14 @@ describe('Auth Store', () => {
 
     it('should handle successful login', async () => {
       authService.login.mockResolvedValue(mockResponse)
-      getHospitalConfig.mockResolvedValue({ code: 200, data: { hospitalName: 'Test' } })
+      getHospitals.mockResolvedValue({ data: [{ hospitalName: 'Test' }] })
 
       await store.login(credentials)
 
       expect(store.token).toBe('mock-token')
       expect(store.user).toEqual(mockUser)
       expect(store.isAuthenticated).toBe(true)
-      expect(getHospitalConfig).toHaveBeenCalled()
+      expect(getHospitals).toHaveBeenCalled()
     })
   })
 
@@ -124,13 +125,13 @@ describe('Auth Store', () => {
       authService.initializeSession.mockResolvedValue(true)
       authService.getToken.mockReturnValue('t')
       authService.getCurrentUser.mockReturnValue({ roles: [] })
-      getHospitalConfig.mockResolvedValue({ code: 200, data: { hospitalName: 'H' } })
+      getHospitals.mockResolvedValue({ data: [{ hospitalName: 'H' }] })
 
       await store.initialize()
 
       expect(authService.initializeSession).toHaveBeenCalled()
       expect(store.isInitialized).toBe(true)
-      expect(getHospitalConfig).toHaveBeenCalled()
+      expect(getHospitals).toHaveBeenCalled()
     })
 
     it('should only run initialize logic once', async () => {

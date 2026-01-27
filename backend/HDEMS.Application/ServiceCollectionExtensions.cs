@@ -21,7 +21,6 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IMaterialService, MaterialService>();
         services.AddScoped<IMaterialTypeService, MaterialTypeService>();
         services.AddScoped<IMaterialThresholdService, MaterialThresholdService>();
-        services.AddScoped<IHospitalConfigService, HospitalConfigService>();
         services.AddScoped<IScheduleService, ScheduleService>();
         services.AddScoped<IBasicDataService, BasicDataService>();
         services.AddScoped<IImportExportService, ImportExportService>();

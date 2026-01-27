@@ -28,6 +28,10 @@
         {{ user.department || '-' }}
       </a-descriptions-item>
 
+      <a-descriptions-item label="医院">
+        {{ user.hospitalName || '-' }}
+      </a-descriptions-item>
+
       <!-- 权限信息 -->
       <a-descriptions-item label="角色" :span="2">
         <a-space>

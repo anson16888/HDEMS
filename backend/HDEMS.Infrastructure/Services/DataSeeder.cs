@@ -34,9 +34,6 @@ public class DataSeeder
             // 初始化医院数据
             await SeedHospitalsAsync();
 
-            // 初始化医院配置数据
-            await SeedHospitalConfigAsync();
-
             // 初始化物资类型数据
             await SeedMaterialTypesAsync();
 
@@ -95,24 +92,6 @@ public class DataSeeder
 
         await _fsql.Insert(hospitals).ExecuteAffrowsAsync();
         _logger.LogInformation("初始化医院数据: {Count} 条", hospitals.Count);
-    }
-
-    private async Task SeedHospitalConfigAsync()
-    {
-        if (await _fsql.Select<HospitalConfig>().AnyAsync())
-            return;
-
-        var hospitalConfig = new HospitalConfig
-        {
-            Id = Guid.NewGuid(),
-            HospitalName = "宝安区域急救应急物资及值班管理系统",
-            HospitalPhone = "0755-12345678",
-            CreatedAt = DateTime.Now,
-            UpdatedAt = DateTime.Now
-        };
-
-        await _fsql.Insert(hospitalConfig).ExecuteAffrowsAsync();
-        _logger.LogInformation("初始化医院配置数据: 1 条");
     }
 
     private async Task SeedDepartmentsAsync()
@@ -281,11 +260,11 @@ public class DataSeeder
     {
         // 生成系统初始化密钥并保存到配置
         var initKey = GenerateInitKey();
-        _logger.LogInformation("系统初始化密钥已生成: {Key} (请妥善保管)", initKey);
-        Console.WriteLine($"========================================");
-        Console.WriteLine($"系统初始化密钥: {initKey}");
-        Console.WriteLine($"========================================");
-        Console.WriteLine($"请妥善保管此密钥，用于管理员密码重置验证");
+        //_logger.LogInformation("系统初始化密钥已生成: {Key} (请妥善保管)", initKey);
+        //Console.WriteLine($"========================================");
+        //Console.WriteLine($"系统初始化密钥: {initKey}");
+        //Console.WriteLine($"========================================");
+        //Console.WriteLine($"请妥善保管此密钥，用于管理员密码重置验证");
     }
 
     private string GenerateInitKey()
@@ -299,9 +278,6 @@ public class DataSeeder
         if (await _fsql.Select<User>().AnyAsync())
             return;
 
-        // 获取第一个医院ID
-        var hospital = await _fsql.Select<Hospital>().FirstAsync();
-
         // 创建管理员账户：admin / 123456
         var adminUser = new User
         {
@@ -310,8 +286,6 @@ public class DataSeeder
             Password = _passwordService.HashPassword("123456"),
             RealName = "系统管理员",
             Phone = "13800138000",
-            Department = "信息科",
-            HospitalId = hospital?.Id,
             Roles = JsonSerializer.Serialize(new List<string> { UserRole.SYSTEM_ADMIN.ToString() }),
             Status = UserStatus.Active,
             CreatedAt = DateTime.Now,

@@ -62,6 +62,22 @@
         />
       </a-form-item>
 
+      <!-- Hospital -->
+      <a-form-item label="医院" name="hospitalId">
+        <a-select
+          v-model:value="formData.hospitalId"
+          placeholder="请选择医院（可选）"
+          allow-clear
+          :loading="hospitalsLoading"
+          :options="hospitalOptions"
+          :field-names="{ label: 'hospitalName', value: 'id' }"
+          show-search
+          :filter-option="(input, option) => {
+            return option.hospitalName.toLowerCase().indexOf(input.toLowerCase()) >= 0
+          }"
+        />
+      </a-form-item>
+
       <!-- Roles -->
       <a-form-item label="角色" name="roles">
         <a-checkbox-group
@@ -86,6 +102,7 @@ import { ref, reactive, onMounted, computed } from 'vue'
 import { message } from 'ant-design-vue'
 import { useUserStore } from '@/stores/user.store'
 import { useAuth } from '@/composables/useAuth'
+import { getHospitals } from '@/api/basicData.api.js'
 
 const props = defineProps({
   mode: {
@@ -111,10 +128,13 @@ const formData = reactive({
   realName: '',
   phone: '',
   department: '',
+  hospitalId: undefined,
   roles: [],
   status: 1  // Default to ACTIVE (1)
 })
 
+const hospitals = ref([])
+const hospitalsLoading = ref(false)
 const isSubmitting = ref(false)
 
 // 角色选项
@@ -130,6 +150,11 @@ const statusOptions = [
   { label: '停用', value: 2 },
   { label: '锁定', value: 3 }
 ]
+
+// 医院选项
+const hospitalOptions = computed(() => {
+  return hospitals.value || []
+})
 
 // Validation rules
 const rules = computed(() => ({
@@ -211,13 +236,28 @@ const rules = computed(() => ({
   ]
 }))
 
-onMounted(() => {
+onMounted(async () => {
+  // Load hospitals
+  try {
+    hospitalsLoading.value = true
+    const response = await getHospitals()
+    if (response.success) {
+      hospitals.value = response.data || []
+    }
+  } catch (error) {
+    console.error('Failed to load hospitals:', error)
+    message.error('加载医院列表失败')
+  } finally {
+    hospitalsLoading.value = false
+  }
+
   if (props.mode === 'edit' && props.user) {
     Object.assign(formData, {
       username: props.user.username,
       realName: props.user.realName,
       phone: props.user.phone,
       department: props.user.department || '',
+      hospitalId: props.user.hospitalId,
       roles: [...props.user.roles],  // Roles are already numbers from backend
       status: props.user.status      // Status is already a number from backend
     })

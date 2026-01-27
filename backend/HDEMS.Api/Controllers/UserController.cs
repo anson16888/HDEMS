@@ -28,14 +28,20 @@ public class UserController : ControllerBase
     /// <param name="page">页码</param>
     /// <param name="pageSize">每页条数</param>
     /// <param name="keyword">搜索关键词</param>
+    /// <param name="role">角色筛选</param>
+    /// <param name="status">状态筛选</param>
+    /// <param name="hospitalId">医院ID筛选</param>
     /// <returns>用户列表</returns>
     [HttpGet]
     public async Task<ApiResponse<PagedResult<UserDto>>> GetPaged(
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 20,
-        [FromQuery] string? keyword = null)
+        [FromQuery] string? keyword = null,
+        [FromQuery] int? role = null,
+        [FromQuery] int? status = null,
+        [FromQuery] Guid? hospitalId = null)
     {
-        return await _userService.GetPagedAsync(page, pageSize, keyword);
+        return await _userService.GetPagedAsync(page, pageSize, keyword, role, status, hospitalId);
     }
 
     /// <summary>

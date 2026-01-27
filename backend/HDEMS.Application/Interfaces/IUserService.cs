@@ -10,7 +10,7 @@ public interface IUserService
     /// <summary>
     /// 获取用户列表（分页）
     /// </summary>
-    Task<ApiResponse<PagedResult<UserDto>>> GetPagedAsync(int page = 1, int pageSize = 20, string? keyword = null);
+    Task<ApiResponse<PagedResult<UserDto>>> GetPagedAsync(int page = 1, int pageSize = 20, string? keyword = null, int? role = null, int? status = null, Guid? hospitalId = null);
 
     /// <summary>
     /// 根据ID获取用户详情

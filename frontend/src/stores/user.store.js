@@ -14,7 +14,8 @@ export const useUserStore = defineStore('users', () => {
   const filters = ref({
     role: '',
     status: '',
-    keyword: ''
+    keyword: '',
+    hospitalId: undefined
   })
   const pagination = ref({
     page: 1,
@@ -188,7 +189,8 @@ export const useUserStore = defineStore('users', () => {
     filters.value = {
       role: '',
       status: '',
-      keyword: ''
+      keyword: '',
+      hospitalId: undefined
     }
     pagination.value.page = 1
   }
