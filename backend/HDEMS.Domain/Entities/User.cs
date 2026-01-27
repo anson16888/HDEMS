@@ -53,9 +53,21 @@ public class User : BaseEntity
     public UserStatus Status { get; set; } = UserStatus.Active;
 
     /// <summary>
-    /// 最后登录时间
+    /// 所属医院ID
     /// </summary>
     [Column(Position = 8)]
+    public Guid? HospitalId { get; set; }
+
+    /// <summary>
+    /// 所属医院
+    /// </summary>
+    [Navigate(nameof(HospitalId))]
+    public Hospital? Hospital { get; set; }
+
+    /// <summary>
+    /// 最后登录时间
+    /// </summary>
+    [Column(Position = 9)]
     public DateTime? LastLoginAt { get; set; }
 
     /// <summary>

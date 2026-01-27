@@ -23,6 +23,8 @@ public class ScheduleDto
     public Guid? TitleId { get; set; }
     public string? TitleName { get; set; }
     public string? Remark { get; set; }
+    public Guid? HospitalId { get; set; }
+    public string? HospitalName { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
 }

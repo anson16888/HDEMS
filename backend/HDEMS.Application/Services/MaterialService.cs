@@ -30,7 +30,9 @@ public class MaterialService : IMaterialService
 
     public async Task<ApiResponse<PagedResult<MaterialDto>>> GetPagedAsync(MaterialQueryRequest request)
     {
-        var query = _fsql.Select<Material>().Include(m => m.MaterialType);
+        var query = _fsql.Select<Material>()
+            .Include(m => m.MaterialType)
+            .Include(m => m.Hospital);
 
         // 条件过滤
         if (!string.IsNullOrWhiteSpace(request.Keyword))
@@ -57,6 +59,12 @@ public class MaterialService : IMaterialService
 
         var dtos = _mapper.Map<List<MaterialDto>>(items);
 
+        // 填充医院名称
+        for (int i = 0; i < dtos.Count; i++)
+        {
+            dtos[i].HospitalName = items[i].Hospital?.HospitalName;
+        }
+
         var result = new PagedResult<MaterialDto>
         {
             Total = (int)total,
@@ -72,6 +80,7 @@ public class MaterialService : IMaterialService
     {
         var material = await _fsql.Select<Material>()
             .Include(m => m.MaterialType)
+            .Include(m => m.Hospital)
             .Where(m => m.Id == id)
             .FirstAsync();
 
@@ -81,6 +90,7 @@ public class MaterialService : IMaterialService
         }
 
         var dto = _mapper.Map<MaterialDto>(material);
+        dto.HospitalName = material.Hospital?.HospitalName;
         return ApiResponse<MaterialDto>.Ok(dto);
     }
 
@@ -362,6 +372,7 @@ public class MaterialService : IMaterialService
                     Location = location,
                     Specification = specification,
                     Remark = remark,
+                    HospitalId = _auditContext.CurrentHospitalId,
                     Status = 0,  // 先设置默认值，后面会重新计算
                     CreatedAt = DateTime.Now,
                     CreatedBy = _auditContext.CurrentUserDisplayName

@@ -31,7 +31,8 @@ public class UserService : IUserService
 
     public async Task<ApiResponse<PagedResult<UserDto>>> GetPagedAsync(int page = 1, int pageSize = 20, string? keyword = null)
     {
-        var query = _fsql.Select<User>();
+        var query = _fsql.Select<User>()
+            .Include(u => u.Hospital);
 
         if (!string.IsNullOrWhiteSpace(keyword))
         {
@@ -47,10 +48,11 @@ public class UserService : IUserService
 
         var dtos = _mapper.Map<List<UserDto>>(items);
 
-        // 填充角色相关字段
+        // 填充角色相关字段和医院名称
         for (int i = 0; i < dtos.Count; i++)
         {
             PopulateRoleFields(dtos[i], items[i]);
+            dtos[i].HospitalName = items[i].Hospital?.HospitalName;
         }
 
         var result = new PagedResult<UserDto>
@@ -67,6 +69,7 @@ public class UserService : IUserService
     public async Task<ApiResponse<UserDto>> GetByIdAsync(Guid id)
     {
         var user = await _fsql.Select<User>()
+            .Include(u => u.Hospital)
             .Where(u => u.Id == id)
             .FirstAsync();
 
@@ -77,6 +80,7 @@ public class UserService : IUserService
 
         var dto = _mapper.Map<UserDto>(user);
         PopulateRoleFields(dto, user);
+        dto.HospitalName = user.Hospital?.HospitalName;
         return ApiResponse<UserDto>.Ok(dto);
     }
 
@@ -100,6 +104,7 @@ public class UserService : IUserService
         user.CreatedAt = DateTime.Now;
         user.UpdatedBy = _auditContext.CurrentUserDisplayName;
         user.UpdatedAt = DateTime.Now;
+        user.HospitalId = request.HospitalId;
 
         // 手动设置角色（从字符串转换为枚举）
         user.SetRoleList(request.Roles);
@@ -123,6 +128,7 @@ public class UserService : IUserService
         user.Phone = request.Phone;
         user.Department = request.Department;
         user.Status = request.Status;
+        user.HospitalId = request.HospitalId;
         user.UpdatedBy = _auditContext.CurrentUserDisplayName;
         user.UpdatedAt = DateTime.Now;
 

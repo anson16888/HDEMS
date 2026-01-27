@@ -57,6 +57,12 @@ public class UserInfo
 
     [JsonPropertyName("roleDescriptions")]
     public List<string> RoleDescriptions { get; set; } = new List<string>();
+
+    [JsonPropertyName("hospitalId")]
+    public Guid? HospitalId { get; set; }
+
+    [JsonPropertyName("hospitalName")]
+    public string? HospitalName { get; set; }
 }
 
 /// <summary>
@@ -89,6 +95,8 @@ public class UserDto
     public List<string> RoleDescriptions { get; set; } = new List<string>();
     public UserStatus Status { get; set; }
     public DateTime? LastLoginAt { get; set; }
+    public Guid? HospitalId { get; set; }
+    public string? HospitalName { get; set; }
 }
 
 /// <summary>
@@ -101,6 +109,7 @@ public class UserCreateRequest
     public string Password { get; set; } = string.Empty;
     public string Phone { get; set; } = string.Empty;
     public string? Department { get; set; }
+    public Guid? HospitalId { get; set; }
 
     [JsonPropertyName("roles")]
     public List<string> RoleStrings { get; set; } = new List<string>();
@@ -121,6 +130,7 @@ public class UserUpdateRequest
     public string RealName { get; set; } = string.Empty;
     public string Phone { get; set; } = string.Empty;
     public string? Department { get; set; }
+    public Guid? HospitalId { get; set; }
 
     [JsonPropertyName("roles")]
     public List<string> RoleStrings { get; set; } = new List<string>();

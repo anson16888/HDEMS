@@ -15,7 +15,8 @@ public class MappingProfile : Profile
         CreateMap<Material, MaterialDto>()
             .ForMember(d => d.MaterialTypeName, opt => opt.MapFrom(s => s.MaterialType != null ? s.MaterialType.TypeName : ""))
             .ForMember(d => d.MaterialTypeColor, opt => opt.MapFrom(s => s.MaterialType != null ? s.MaterialType.Color : null))
-            .ForMember(d => d.StatusName, opt => opt.MapFrom(s => GetStatusName(s.Status)));
+            .ForMember(d => d.StatusName, opt => opt.MapFrom(s => GetStatusName(s.Status)))
+            .ForMember(d => d.HospitalName, opt => opt.MapFrom(s => s.Hospital != null ? s.Hospital.HospitalName : null));
 
         CreateMap<MaterialCreateRequest, Material>();
 
@@ -57,14 +58,16 @@ public class MappingProfile : Profile
             .ForMember(d => d.ShiftName, opt => opt.MapFrom(s => s.Shift != null ? s.Shift.ShiftName : null))
             .ForMember(d => d.RankName, opt => opt.MapFrom(s => s.Rank != null ? s.Rank.RankName : null))
             .ForMember(d => d.DepartmentName, opt => opt.MapFrom(s => s.Department != null ? s.Department.DepartmentName : null))
-            .ForMember(d => d.TitleName, opt => opt.MapFrom(s => s.Title != null ? s.Title.TitleName : null));
+            .ForMember(d => d.TitleName, opt => opt.MapFrom(s => s.Title != null ? s.Title.TitleName : null))
+            .ForMember(d => d.HospitalName, opt => opt.MapFrom(s => s.Hospital != null ? s.Hospital.HospitalName : null));
 
         CreateMap<ScheduleCreateRequest, Schedule>();
 
         // User 映射
         CreateMap<User, UserDto>()
             .ForMember(d => d.Roles, opt => opt.Ignore())           // 手动填充
-            .ForMember(d => d.RoleDescriptions, opt => opt.Ignore()); // 手动填充
+            .ForMember(d => d.RoleDescriptions, opt => opt.Ignore()) // 手动填充
+            .ForMember(d => d.HospitalName, opt => opt.MapFrom(s => s.Hospital != null ? s.Hospital.HospitalName : null));
 
         CreateMap<UserCreateRequest, User>()
             .ForMember(d => d.Roles, opt => opt.Ignore());  // Roles 通过 SetRoleList 设置
@@ -93,7 +96,8 @@ public class MappingProfile : Profile
         CreateMap<Person, PersonDto>()
             .ForMember(d => d.DepartmentName, opt => opt.MapFrom(s => s.Department != null ? s.Department.DepartmentName : null))
             .ForMember(d => d.RankName, opt => opt.MapFrom(s => s.Rank != null ? s.Rank.RankName : null))
-            .ForMember(d => d.TitleName, opt => opt.MapFrom(s => s.Title != null ? s.Title.TitleName : null));
+            .ForMember(d => d.TitleName, opt => opt.MapFrom(s => s.Title != null ? s.Title.TitleName : null))
+            .ForMember(d => d.HospitalName, opt => opt.MapFrom(s => s.Hospital != null ? s.Hospital.HospitalName : null));
     }
 
     private static string GetStatusName(int status)

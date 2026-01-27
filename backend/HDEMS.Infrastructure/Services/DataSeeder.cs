@@ -31,6 +31,9 @@ public class DataSeeder
 
         try
         {
+            // 初始化医院数据
+            await SeedHospitalsAsync();
+
             // 初始化医院配置数据
             await SeedHospitalConfigAsync();
 
@@ -65,6 +68,33 @@ public class DataSeeder
             _logger.LogError(ex, "种子数据初始化失败");
             throw;
         }
+    }
+
+    private async Task SeedHospitalsAsync()
+    {
+        if (await _fsql.Select<Hospital>().AnyAsync())
+            return;
+
+        var hospitals = new List<Hospital>
+        {
+            new()
+            {
+                Id = Guid.NewGuid(),
+                HospitalCode = "BARMH",
+                HospitalName = "宝安区人民医院",
+                ShortName = "宝安人医",
+                Address = "深圳市宝安区龙腾街16号",
+                ContactPhone = "0755-27788311",
+                ContactPerson = "急诊科",
+                SortOrder = 1,
+                Status = 1,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now
+            }
+        };
+
+        await _fsql.Insert(hospitals).ExecuteAffrowsAsync();
+        _logger.LogInformation("初始化医院数据: {Count} 条", hospitals.Count);
     }
 
     private async Task SeedHospitalConfigAsync()
@@ -269,6 +299,9 @@ public class DataSeeder
         if (await _fsql.Select<User>().AnyAsync())
             return;
 
+        // 获取第一个医院ID
+        var hospital = await _fsql.Select<Hospital>().FirstAsync();
+
         // 创建管理员账户：admin / 123456
         var adminUser = new User
         {
@@ -278,6 +311,7 @@ public class DataSeeder
             RealName = "系统管理员",
             Phone = "13800138000",
             Department = "信息科",
+            HospitalId = hospital?.Id,
             Roles = JsonSerializer.Serialize(new List<string> { UserRole.SYSTEM_ADMIN.ToString() }),
             Status = UserStatus.Active,
             CreatedAt = DateTime.Now,

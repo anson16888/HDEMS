@@ -29,8 +29,9 @@ public class AuthService : IAuthService
 
     public async Task<ApiResponse<LoginResponse>> LoginAsync(LoginRequest request)
     {
-        // 查找用户
+        // 查找用户（包含医院信息）
         var user = await _fsql.Select<User>()
+            .Include(u => u.Hospital)
             .Where(u => u.Username == request.Username)
             .FirstAsync();
 
@@ -60,7 +61,7 @@ public class AuthService : IAuthService
         var roleList = user.GetRoleList();
         var roles = roleList.Select(r => r.ToString()).ToList();
         var roleDescriptions = roleList.Select(r => r.GetDescription()).ToList();
-        var token = _jwtService.GenerateToken(user.Id, user.Username, user.RealName, roles, null, false);
+        var token = _jwtService.GenerateToken(user.Id, user.Username, user.RealName, roles, user.HospitalId, false);
 
         // 更新最后登录时间
         user.LastLoginAt = DateTime.Now;
@@ -80,7 +81,9 @@ public class AuthService : IAuthService
                 Phone = user.Phone,
                 Department = user.Department,
                 RoleStrings = roles,
-                RoleDescriptions = roleDescriptions
+                RoleDescriptions = roleDescriptions,
+                HospitalId = user.HospitalId,
+                HospitalName = user.Hospital?.HospitalName
             }
         };
 

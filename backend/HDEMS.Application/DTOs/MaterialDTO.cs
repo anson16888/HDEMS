@@ -21,6 +21,8 @@ public class MaterialDto
     public string? Remark { get; set; }
     public int Status { get; set; }
     public string StatusName { get; set; } = string.Empty;
+    public Guid? HospitalId { get; set; }
+    public string? HospitalName { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
 }

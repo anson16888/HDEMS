@@ -35,7 +35,8 @@ public class ScheduleService : IScheduleService
             .Include(s => s.Shift)
             .Include(s => s.Rank)
             .Include(s => s.Department)
-            .Include(s => s.Title);
+            .Include(s => s.Title)
+            .Include(s => s.Hospital);
 
         // 条件过滤
         if (request.StartDate.HasValue)
@@ -77,6 +78,12 @@ public class ScheduleService : IScheduleService
 
         var dtos = _mapper.Map<List<ScheduleDto>>(items);
 
+        // 填充医院名称
+        for (int i = 0; i < dtos.Count; i++)
+        {
+            dtos[i].HospitalName = items[i].Hospital?.HospitalName;
+        }
+
         var result = new PagedResult<ScheduleDto>
         {
             Total = (int)total,
@@ -95,6 +102,7 @@ public class ScheduleService : IScheduleService
             .Include(s => s.Rank)
             .Include(s => s.Department)
             .Include(s => s.Title)
+            .Include(s => s.Hospital)
             .Where(s => s.Id == id)
             .FirstAsync();
 
@@ -104,6 +112,7 @@ public class ScheduleService : IScheduleService
         }
 
         var dto = _mapper.Map<ScheduleDto>(schedule);
+        dto.HospitalName = schedule.Hospital?.HospitalName;
         return ApiResponse<ScheduleDto>.Ok(dto);
     }
 
@@ -559,6 +568,7 @@ public class ScheduleService : IScheduleService
                     DepartmentId = await GetOrCreateDepartment(departmentName),
                     TitleId = await GetOrCreateTitle(titleName),
                     Remark = remark,
+                    HospitalId = _auditContext.CurrentHospitalId,
                     CreatedAt = DateTime.Now,
                     CreatedBy = _auditContext.CurrentUserDisplayName
                 };

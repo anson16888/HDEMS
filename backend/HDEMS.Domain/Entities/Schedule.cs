@@ -71,6 +71,12 @@ public class Schedule : BaseEntity
     [Column(StringLength = 200)]
     public string? Remark { get; set; }
 
+    /// <summary>
+    /// 所属医院ID
+    /// </summary>
+    [Column(Position = 11)]
+    public Guid? HospitalId { get; set; }
+
     // 导航属性
     [Navigate(nameof(ShiftId))]
     public Shift? Shift { get; set; }
@@ -86,4 +92,7 @@ public class Schedule : BaseEntity
 
     [Navigate(nameof(TitleId))]
     public PersonTitle? Title { get; set; }
+
+    [Navigate(nameof(HospitalId))]
+    public Hospital? Hospital { get; set; }
 }

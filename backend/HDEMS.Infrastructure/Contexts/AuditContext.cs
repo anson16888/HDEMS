@@ -31,4 +31,21 @@ public class AuditContext
     /// 获取当前用户显示名称
     /// </summary>
     public string? CurrentUserDisplayName => CurrentUserName ?? CurrentUserId;
+
+    /// <summary>
+    /// 获取当前用户所属医院ID
+    /// </summary>
+    public Guid? CurrentHospitalId
+    {
+        get
+        {
+            var hospitalIdStr = _httpContextAccessor.HttpContext?.User
+                .FindFirst("HospitalId")?.Value;
+            if (Guid.TryParse(hospitalIdStr, out var hospitalId))
+            {
+                return hospitalId;
+            }
+            return null;
+        }
+    }
 }

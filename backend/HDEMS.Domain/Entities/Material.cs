@@ -87,4 +87,16 @@ public class Material : BaseEntity
     /// </summary>
     [Column(Position = 6, IsNullable = false)]
     public int Status { get; set; }
+
+    /// <summary>
+    /// 所属医院ID
+    /// </summary>
+    [Column(Position = 11)]
+    public Guid? HospitalId { get; set; }
+
+    /// <summary>
+    /// 所属医院
+    /// </summary>
+    [Navigate(nameof(HospitalId))]
+    public Hospital? Hospital { get; set; }
 }
