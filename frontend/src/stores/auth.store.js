@@ -175,6 +175,7 @@ export const useAuthStore = defineStore('auth', () => {
     token,
     user,
     isAuthenticated,
+    hospitalConfig,
     loginAttempts,
     lastLoginError,
     isInitialized,
