@@ -64,6 +64,11 @@ public class ScheduleService : IScheduleService
             query = query.Where(s => s.ShiftId == request.ShiftId.Value);
         }
 
+        if (request.HospitalId.HasValue)
+        {
+            query = query.Where(s => s.HospitalId == request.HospitalId.Value);
+        }
+
         if (!string.IsNullOrWhiteSpace(request.Keyword))
         {
             query = query.Where(s => s.PersonName.Contains(request.Keyword));
@@ -133,6 +138,7 @@ public class ScheduleService : IScheduleService
 
         var schedule = _mapper.Map<Schedule>(request);
         schedule.Id = Guid.NewGuid();
+        schedule.HospitalId = _auditContext.CurrentHospitalId;
         schedule.CreatedBy = _auditContext.CurrentUserDisplayName;
         schedule.CreatedAt = DateTime.Now;
 
@@ -281,9 +287,9 @@ public class ScheduleService : IScheduleService
         return ApiResponse.OkPaged(result);
     }
 
-    public async Task<ApiResponse<ScheduleStatistics>> GetStatisticsAsync(DateTime? startDate = null, DateTime? endDate = null)
+    public async Task<ApiResponse<ScheduleStatistics>> GetStatisticsAsync(DateTime? startDate = null, DateTime? endDate = null, Guid? hospitalId = null)
     {
-        // 辅助函数：创建带有日期过滤条件的查询
+        // 辅助函数：创建带有日期和医院过滤条件的查询
         ISelect<Schedule> CreateQuery()
         {
             var query = _fsql.Select<Schedule>();
@@ -294,6 +300,10 @@ public class ScheduleService : IScheduleService
             if (endDate.HasValue)
             {
                 query = query.Where(s => s.ScheduleDate <= endDate.Value);
+            }
+            if (hospitalId.HasValue)
+            {
+                query = query.Where(s => s.HospitalId == hospitalId.Value);
             }
             return query;
         }
@@ -324,16 +334,17 @@ public class ScheduleService : IScheduleService
         // 表头
         worksheet.Cells[1, 1].Value = "日期";
         worksheet.Cells[1, 2].Value = "排班类型";
-        worksheet.Cells[1, 3].Value = "班次";
-        worksheet.Cells[1, 4].Value = "人员姓名";
-        worksheet.Cells[1, 5].Value = "联系电话";
-        worksheet.Cells[1, 6].Value = "职级";
-        worksheet.Cells[1, 7].Value = "科室";
-        worksheet.Cells[1, 8].Value = "职称";
-        worksheet.Cells[1, 9].Value = "备注";
+        worksheet.Cells[1, 3].Value = "医院";
+        worksheet.Cells[1, 4].Value = "班次";
+        worksheet.Cells[1, 5].Value = "人员姓名";
+        worksheet.Cells[1, 6].Value = "联系电话";
+        worksheet.Cells[1, 7].Value = "职级";
+        worksheet.Cells[1, 8].Value = "科室";
+        worksheet.Cells[1, 9].Value = "职称";
+        worksheet.Cells[1, 10].Value = "备注";
 
         // 设置表头样式
-        using (var range = worksheet.Cells[1, 1, 1, 9])
+        using (var range = worksheet.Cells[1, 1, 1, 10])
         {
             range.Style.Font.Bold = true;
         }
@@ -343,7 +354,8 @@ public class ScheduleService : IScheduleService
             .Include(s => s.Shift)
             .Include(s => s.Rank)
             .Include(s => s.Department)
-            .Include(s => s.Title);
+            .Include(s => s.Title)
+            .Include(s => s.Hospital);
 
         if (request.StartDate.HasValue)
         {
@@ -380,13 +392,14 @@ public class ScheduleService : IScheduleService
 
             worksheet.Cells[row, 1].Value = schedule.ScheduleDate.ToString("yyyy-MM-dd");
             worksheet.Cells[row, 2].Value = scheduleTypeName;
-            worksheet.Cells[row, 3].Value = schedule.Shift?.ShiftName;
-            worksheet.Cells[row, 4].Value = schedule.PersonName;
-            worksheet.Cells[row, 5].Value = schedule.Phone;
-            worksheet.Cells[row, 6].Value = schedule.Rank?.RankName;
-            worksheet.Cells[row, 7].Value = schedule.Department?.DepartmentName;
-            worksheet.Cells[row, 8].Value = schedule.Title?.TitleName;
-            worksheet.Cells[row, 9].Value = schedule.Remark;
+            worksheet.Cells[row, 3].Value = schedule.Hospital?.HospitalName ?? "";
+            worksheet.Cells[row, 4].Value = schedule.Shift?.ShiftName;
+            worksheet.Cells[row, 5].Value = schedule.PersonName;
+            worksheet.Cells[row, 6].Value = schedule.Phone;
+            worksheet.Cells[row, 7].Value = schedule.Rank?.RankName;
+            worksheet.Cells[row, 8].Value = schedule.Department?.DepartmentName;
+            worksheet.Cells[row, 9].Value = schedule.Title?.TitleName;
+            worksheet.Cells[row, 10].Value = schedule.Remark;
             row++;
         }
 

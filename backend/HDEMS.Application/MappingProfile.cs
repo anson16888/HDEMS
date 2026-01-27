@@ -52,6 +52,10 @@ public class MappingProfile : Profile
             .ForMember(d => d.Id, opt => opt.Ignore())
             .ForMember(d => d.CreatedAt, opt => opt.Ignore());
 
+        // Hospital 映射
+        CreateMap<Hospital, HospitalDto>()
+            .ReverseMap();
+
         // Schedule 映射
         CreateMap<Schedule, ScheduleDto>()
             .ForMember(d => d.ScheduleTypeName, opt => opt.MapFrom(s => s.ScheduleType.ToString()))

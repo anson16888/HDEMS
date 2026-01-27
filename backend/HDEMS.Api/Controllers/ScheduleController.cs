@@ -116,11 +116,12 @@ public class ScheduleController : ControllerBase
     /// </summary>
     /// <param name="startDate">开始日期（可选）</param>
     /// <param name="endDate">结束日期（可选）</param>
+    /// <param name="hospitalId">医院ID（可选）</param>
     /// <returns>统计数据</returns>
     [HttpGet("statistics")]
-    public async Task<ApiResponse<ScheduleStatistics>> GetStatistics([FromQuery] DateTime? startDate = null, [FromQuery] DateTime? endDate = null)
+    public async Task<ApiResponse<ScheduleStatistics>> GetStatistics([FromQuery] DateTime? startDate = null, [FromQuery] DateTime? endDate = null, [FromQuery] Guid? hospitalId = null)
     {
-        return await _scheduleService.GetStatisticsAsync(startDate, endDate);
+        return await _scheduleService.GetStatisticsAsync(startDate, endDate, hospitalId);
     }
 
     /// <summary>

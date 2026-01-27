@@ -53,7 +53,8 @@ public interface IScheduleService
     /// </summary>
     /// <param name="startDate">开始日期（可选）</param>
     /// <param name="endDate">结束日期（可选）</param>
-    Task<ApiResponse<ScheduleStatistics>> GetStatisticsAsync(DateTime? startDate = null, DateTime? endDate = null);
+    /// <param name="hospitalId">医院ID（可选）</param>
+    Task<ApiResponse<ScheduleStatistics>> GetStatisticsAsync(DateTime? startDate = null, DateTime? endDate = null, Guid? hospitalId = null);
 
     /// <summary>
     /// 导出排班数据

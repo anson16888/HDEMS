@@ -45,6 +45,11 @@ public class MaterialService : IMaterialService
             query = query.Where(m => m.MaterialTypeId == request.MaterialTypeId.Value);
         }
 
+        if (request.HospitalId.HasValue)
+        {
+            query = query.Where(m => m.HospitalId == request.HospitalId.Value);
+        }
+
         if (request.Status.HasValue)
         {
             query = query.Where(m => m.Status == request.Status.Value);
@@ -138,6 +143,7 @@ public class MaterialService : IMaterialService
         material.Status = await GetMaterialStatus(material.MaterialTypeId, material.Quantity, material.ExpiryDate);
 
         material.Id = Guid.NewGuid();
+        material.HospitalId = _auditContext.CurrentHospitalId;
         material.CreatedBy = _auditContext.CurrentUserDisplayName;
         material.CreatedAt = DateTime.Now;
 
@@ -418,23 +424,26 @@ public class MaterialService : IMaterialService
         worksheet.Cells[1, 1].Value = "物资编码";
         worksheet.Cells[1, 2].Value = "物资名称";
         worksheet.Cells[1, 3].Value = "物资类型";
-        worksheet.Cells[1, 4].Value = "规格";
-        worksheet.Cells[1, 5].Value = "库存数量";
-        worksheet.Cells[1, 6].Value = "单位";
-        worksheet.Cells[1, 7].Value = "生产日期";
-        worksheet.Cells[1, 8].Value = "质保期(月)";
-        worksheet.Cells[1, 9].Value = "存放位置";
-        worksheet.Cells[1, 10].Value = "状态";
-        worksheet.Cells[1, 11].Value = "备注";
+        worksheet.Cells[1, 4].Value = "医院";
+        worksheet.Cells[1, 5].Value = "规格";
+        worksheet.Cells[1, 6].Value = "库存数量";
+        worksheet.Cells[1, 7].Value = "单位";
+        worksheet.Cells[1, 8].Value = "生产日期";
+        worksheet.Cells[1, 9].Value = "质保期(月)";
+        worksheet.Cells[1, 10].Value = "存放位置";
+        worksheet.Cells[1, 11].Value = "状态";
+        worksheet.Cells[1, 12].Value = "备注";
 
         // 设置表头样式
-        using (var range = worksheet.Cells[1, 1, 1, 11])
+        using (var range = worksheet.Cells[1, 1, 1, 12])
         {
             range.Style.Font.Bold = true;
         }
 
         // 获取数据
-        var query = _fsql.Select<Material>().Include(m => m.MaterialType);
+        var query = _fsql.Select<Material>()
+            .Include(m => m.MaterialType)
+            .Include(m => m.Hospital);
         if (!string.IsNullOrWhiteSpace(request.Keyword))
         {
             query = query.Where(m => m.MaterialName.Contains(request.Keyword) || m.MaterialCode.Contains(request.Keyword));
@@ -453,14 +462,15 @@ public class MaterialService : IMaterialService
             worksheet.Cells[row, 1].Value = material.MaterialCode;
             worksheet.Cells[row, 2].Value = material.MaterialName;
             worksheet.Cells[row, 3].Value = material.MaterialType?.TypeName ?? "";
-            worksheet.Cells[row, 4].Value = material.Specification;
-            worksheet.Cells[row, 5].Value = material.Quantity.ToString();
-            worksheet.Cells[row, 6].Value = material.Unit;
-            worksheet.Cells[row, 7].Value = material.ProductionDate?.ToString("yyyy-MM-dd");
-            worksheet.Cells[row, 8].Value = material.ShelfLife?.ToString();
-            worksheet.Cells[row, 9].Value = material.Location;
-            worksheet.Cells[row, 10].Value = GetMaterialStatusName(material.Status);
-            worksheet.Cells[row, 11].Value = material.Remark;
+            worksheet.Cells[row, 4].Value = material.Hospital?.HospitalName ?? "";
+            worksheet.Cells[row, 5].Value = material.Specification;
+            worksheet.Cells[row, 6].Value = material.Quantity.ToString();
+            worksheet.Cells[row, 7].Value = material.Unit;
+            worksheet.Cells[row, 8].Value = material.ProductionDate?.ToString("yyyy-MM-dd");
+            worksheet.Cells[row, 9].Value = material.ShelfLife?.ToString();
+            worksheet.Cells[row, 10].Value = material.Location;
+            worksheet.Cells[row, 11].Value = GetMaterialStatusName(material.Status);
+            worksheet.Cells[row, 12].Value = material.Remark;
             row++;
         }
 

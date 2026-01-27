@@ -54,6 +54,7 @@ public class MaterialQueryRequest
 {
     public string? Keyword { get; set; }
     public Guid? MaterialTypeId { get; set; }
+    public Guid? HospitalId { get; set; }
     public int? Status { get; set; }
     public int Page { get; set; } = 1;
     public int PageSize { get; set; } = 20;

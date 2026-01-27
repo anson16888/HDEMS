@@ -219,6 +219,7 @@ app.Run();
 /// </summary>
 static async Task InitializeDatabaseAsync(IFreeSql fsql)
 {
+
     // 根据数据库类型检查主表是否存在
     var checkTableSql = fsql.Ado.DataType switch
     {
@@ -256,6 +257,5 @@ static async Task InitializeDatabaseAsync(IFreeSql fsql)
     else
     {
         Console.WriteLine("数据库表已存在...");
-       
     }
 }

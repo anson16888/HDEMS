@@ -55,6 +55,7 @@ public class ScheduleQueryRequest
     public ScheduleType? ScheduleType { get; set; }
     public Guid? DepartmentId { get; set; }
     public Guid? ShiftId { get; set; }
+    public Guid? HospitalId { get; set; }
     public string? Keyword { get; set; }
     public int Page { get; set; } = 1;
     public int PageSize { get; set; } = 20;

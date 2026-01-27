@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using HDEMS.Application.DTOs;
 using HDEMS.Application.Extensions;
 using HDEMS.Application.Interfaces;
+using HDEMS.Domain.Entities;
 using HDEMS.Domain.Enums;
+using FreeSql;
 using System.Security.Claims;
 
 namespace HDEMS.Api.Controllers;
@@ -17,11 +19,13 @@ public class AuthController : ControllerBase
 {
     private readonly IAuthService _authService;
     private readonly ILogger<AuthController> _logger;
+    private readonly IFreeSql _fsql;
 
-    public AuthController(IAuthService authService, ILogger<AuthController> logger)
+    public AuthController(IAuthService authService, ILogger<AuthController> logger, IFreeSql fsql)
     {
         _authService = authService;
         _logger = logger;
+        _fsql = fsql;
     }
 
     /// <summary>
@@ -63,10 +67,22 @@ public class AuthController : ControllerBase
     /// <returns>用户信息</returns>
     [HttpGet("current-user")]
     [Authorize]
-    public ApiResponse<CurrentUser> GetCurrentUser()
+    public async Task<ApiResponse<CurrentUser>> GetCurrentUser()
     {
         var roles = User.FindAll(ClaimTypes.Role).Select(c => c.Value).ToList();
         var roleDescriptions = roles.Select(r => Enum.Parse<UserRole>(r).GetDescription()).ToList();
+
+        var hospitalIdStr = User.FindFirst("HospitalId")?.Value;
+        Guid? hospitalId = Guid.TryParse(hospitalIdStr, out var hid) ? hid : null;
+        string? hospitalName = null;
+
+        if (hospitalId.HasValue)
+        {
+            var hospital = await _fsql.Select<Hospital>()
+                .Where(h => h.Id == hospitalId.Value)
+                .FirstAsync();
+            hospitalName = hospital?.HospitalName;
+        }
 
         var user = new CurrentUser
         {
@@ -75,7 +91,8 @@ public class AuthController : ControllerBase
             RealName = User.FindFirst("RealName")?.Value ?? "",
             Roles = roles,
             RoleDescriptions = roleDescriptions,
-            HospitalId = Guid.TryParse(User.FindFirst("HospitalId")?.Value, out var hid) ? hid : null,
+            HospitalId = hospitalId,
+            HospitalName = hospitalName,
             IsCommissionUser = bool.Parse(User.FindFirst("IsCommissionUser")?.Value ?? "false")
         };
 
@@ -117,6 +134,7 @@ public class AuthController : ControllerBase
         public List<string> Roles { get; set; } = new List<string>();
         public List<string> RoleDescriptions { get; set; } = new List<string>();
         public Guid? HospitalId { get; set; }
+        public string? HospitalName { get; set; }
         public bool IsCommissionUser { get; set; }
     }
 }
