@@ -310,7 +310,7 @@ import dayjs from 'dayjs'
 import * as scheduleApi from '../api/schedule.api.js'
 import * as basicDataApi from '../api/basicData.api.js'
 import { SCHEDULE_TYPE } from '../config/api.config.js'
-import { useAuth } from '@/composables/useAuth'
+import { useAuthStore } from '@/stores/auth.store'
 import ScheduleImportModal from '../components/modals/ScheduleImportModal.vue'
 
 // ==================== Data ====================
@@ -323,7 +323,8 @@ const hospitals = ref([])
 const dateRange = ref([])
 
 // Auth
-const { isSystemAdmin, user } = useAuth()
+const authStore = useAuthStore()
+const isSystemAdmin = computed(() => authStore.isSystemAdmin)
 
 const filters = reactive({
   shiftId: undefined,
@@ -410,8 +411,8 @@ const loadSchedules = async () => {
     loading.value = true
     // 非管理员用户：使用用户的 hospitalId
     let queryHospitalId = filters.hospitalId
-    if (!queryHospitalId && !isSystemAdmin && user?.hospitalId) {
-      queryHospitalId = user.hospitalId
+    if (!queryHospitalId && !isSystemAdmin.value && authStore.user?.hospitalId) {
+      queryHospitalId = authStore.user.hospitalId
     }
 
     const params = {

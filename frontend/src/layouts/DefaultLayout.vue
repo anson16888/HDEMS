@@ -195,19 +195,31 @@ const menuItems = computed(() => {
     )
   }
 
-  // 基础数据管理：系统管理员和排班管理员可见
-  if (isSystemAdmin.value || isDutyAdmin.value) {
+  // // 基础数据管理：系统管理员和排班管理员可见
+  // if (isSystemAdmin.value || isDutyAdmin.value) {
+  //   systemItems.push(
+  //     getItem('科室信息', '/system/departments', getIcon('fa-solid fa-sitemap')),
+  //     getItem('班次信息', '/system/shifts', getIcon('fa-solid fa-clock')),
+  //     getItem('人员职级', '/system/person-ranks', getIcon('fa-solid fa-ranking-star')),
+  //     getItem('人员职称', '/system/person-titles', getIcon('fa-solid fa-award'))
+  //   )
+  // }
+
+  // // 物资类型：仅物资管理员可见
+  // if (isSystemAdmin.value || isMaterialAdmin.value) {
+  //   systemItems.push(
+  //     getItem('物资类型', '/system/material-types', getIcon('fa-solid fa-tags')),
+  //     getItem('库存阈值', '/system/material-thresholds', getIcon('fa-solid fa-bell'))
+  //   )
+  // }
+
+  // 基础数据管理：系统管理员
+  if (isSystemAdmin.value) {
     systemItems.push(
       getItem('科室信息', '/system/departments', getIcon('fa-solid fa-sitemap')),
       getItem('班次信息', '/system/shifts', getIcon('fa-solid fa-clock')),
       getItem('人员职级', '/system/person-ranks', getIcon('fa-solid fa-ranking-star')),
-      getItem('人员职称', '/system/person-titles', getIcon('fa-solid fa-award'))
-    )
-  }
-
-  // 物资类型：仅物资管理员可见
-  if (isSystemAdmin.value || isMaterialAdmin.value) {
-    systemItems.push(
+      getItem('人员职称', '/system/person-titles', getIcon('fa-solid fa-award')),
       getItem('物资类型', '/system/material-types', getIcon('fa-solid fa-tags')),
       getItem('库存阈值', '/system/material-thresholds', getIcon('fa-solid fa-bell'))
     )

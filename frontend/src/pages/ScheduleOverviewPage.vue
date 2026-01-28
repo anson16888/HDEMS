@@ -250,7 +250,7 @@ import {
 } from '../api/schedule.api.js'
 import { getDepartments, getHospitals } from '../api/basicData.api.js'
 import { SCHEDULE_TYPE } from '../config/api.config.js'
-import { useAuth } from '@/composables/useAuth'
+import { useAuthStore } from '@/stores/auth.store'
 import dayjs from 'dayjs'
 
 // 数据状态
@@ -265,7 +265,9 @@ const statistics = ref({
 })
 
 // Auth
-const { isSystemAdmin, user } = useAuth()
+const authStore = useAuthStore()
+const isSystemAdmin = computed(() => authStore.isSystemAdmin)
+const user = computed(() => authStore.user)
 
 // 筛选条件
 const dateRange = ref([
@@ -450,8 +452,8 @@ async function loadOverviewData() {
   try {
     // 非管理员用户：使用用户的 hospitalId
     let queryHospitalId = filters.value.hospitalId
-    if (!queryHospitalId && !isSystemAdmin && user.value?.hospitalId) {
-      queryHospitalId = user.value.hospitalId
+    if (!queryHospitalId && !isSystemAdmin.value && authStore.user?.hospitalId) {
+      queryHospitalId = authStore.user.hospitalId
     }
 
     const params = {
