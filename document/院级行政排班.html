@@ -1,0 +1,989 @@
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>人员排班系统</title>
+    <script src="https://res.gemcoder.com/js/reload.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: '#165DFF',
+              secondary: '#4080FF',
+              accent: '#0E42D2',
+              neutral: '#F5F7FA',
+              'neutral-dark': '#E5E6EB',
+              'text-primary': '#1D2129',
+              'text-secondary': '#4E5969',
+              'text-placeholder': '#86909C'
+            },
+            spacing: {
+              '18': '4.5rem',
+              '22': '5.5rem'
+            },
+            boxShadow: {
+              'card': '0 2px 8px 0 rgba(0, 0, 0, 0.08)',
+              'dropdown': '0 4px 16px 0 rgba(0, 0, 0, 0.12)'
+            }
+          }
+        }
+      };
+    </script>
+    <style type="text/tailwindcss">
+      @layer utilities {
+          .content-auto {
+              content-visibility: auto;
+          }
+          .sidebar-item {
+              @apply flex items-center gap-3 px-4 py-3 text-text-secondary hover:bg-primary/5 hover:text-text-primary transition-all duration-200 cursor-pointer;
+          }
+          .sidebar-item.active-menu {
+              @apply bg-primary/10 text-text-primary font-medium;
+          }
+          .sidebar-icon {
+              @apply w-5 h-5 flex-shrink-0;
+          }
+          .nav-shadow {
+              box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+          }
+      }
+      .active-menu {
+          background-color: rgba(22, 93, 255, 0.1) !important;
+          color: #165DFF !important;
+          position: relative;
+      }
+
+      .active-menu::before {
+          content: '';
+          position: absolute;
+          left: 0;
+          top: 0;
+          height: 100%;
+          width: 3px;
+          background-color: #165DFF;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-neutral text-text-primary h-screen flex flex-col overflow-hidden"
+  >
+    <!-- 顶部导航栏 -->
+    <header class="bg-white nav-shadow z-10">
+      <div
+        class="container mx-auto px-4 h-16 flex items-center justify-between"
+      >
+        <div class="flex items-center gap-2">
+          <button
+            id="toggle-sidebar"
+            class="lg:hidden p-2 rounded-md hover:bg-neutral transition-colors"
+          >
+            <i class="fas fa-bars text-text-secondary"> </i>
+          </button>
+          <div class="flex items-center gap-2">
+            <i class="fas fa-calendar-alt text-primary text-2xl"> </i>
+            <h1 class="text-xl font-semibold text-text-primary hidden sm:block">
+              人员排班系统
+            </h1>
+          </div>
+        </div>
+        <div class="flex items-center gap-4">
+          <div class="relative hidden md:block">
+            <input
+              type="text"
+              placeholder="搜索..."
+              class="pl-10 pr-4 py-2 rounded-full border border-neutral-dark focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary w-64 transition-all"
+            />
+            <i
+              class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-text-placeholder"
+            >
+            </i>
+          </div>
+          <div class="relative group">
+            <button
+              class="flex items-center gap-2 p-1 rounded-full hover:bg-neutral transition-colors"
+            >
+              <img
+                src="./api/searchImage?query=user avatar with blue background, professional style, simple design&amp;width=36&amp;height=36"
+                alt="用户头像"
+                class="w-9 h-9 rounded-full object-cover border-2 border-white shadow-sm"
+              />
+              <span class="hidden md:inline-block text-sm font-medium">
+                管理员
+              </span>
+              <i
+                class="fas fa-angle-down text-xs text-text-secondary group-hover:text-primary transition-colors"
+              >
+              </i>
+            </button>
+            <div
+              class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-dropdown py-2 z-20 hidden group-hover:block"
+            >
+              <a
+                href="javascript:void(0);"
+                class="block px-4 py-2 text-sm text-text-secondary hover:bg-neutral hover:text-primary transition-colors"
+              >
+                <i class="fas fa-user-circle mr-2"> </i>
+                个人资料
+              </a>
+              <a
+                href="javascript:void(0);"
+                class="block px-4 py-2 text-sm text-text-secondary hover:bg-neutral hover:text-primary transition-colors"
+              >
+                <i class="fas fa-cog mr-2"> </i>
+                系统设置
+              </a>
+              <div class="border-t border-neutral-dark my-1"></div>
+              <a
+                href="javascript:void(0);"
+                class="block px-4 py-2 text-sm text-red-500 hover:bg-neutral transition-colors"
+              >
+                <i class="fas fa-sign-out-alt mr-2"> </i>
+                退出登录
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+    <div class="flex flex-1 overflow-hidden">
+      <!-- 侧边栏 -->
+      <aside
+        id="sidebar"
+        class="bg-white w-64 shadow-card z-10 transition-all duration-300 transform lg:translate-x-0 -translate-x-full fixed lg:relative h-[calc(100vh-4rem)]"
+      >
+        <div class="p-4 border-b border-neutral-dark">
+          <div class="relative">
+            <input
+              type="text"
+              placeholder="搜索菜单..."
+              class="w-full pl-10 pr-4 py-2 rounded-lg border border-neutral-dark focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary text-sm"
+            />
+            <i
+              class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-text-placeholder text-sm"
+            >
+            </i>
+          </div>
+        </div>
+        <nav class="p-2">
+          <h2
+            class="text-xs font-semibold text-text-placeholder uppercase tracking-wider px-3 py-2"
+          >
+            主要功能
+          </h2>
+          <a
+            href="javascript:void(0);"
+            data-uuid="bureauLevelScheduling"
+            onclick="ytCustomClickRouter(this, event)"
+            class="sidebar-item active-menu"
+          >
+            <i class="fas fa-building sidebar-icon">
+              <span class="sr-only"> 局级行政排班 </span>
+            </i>
+            <span> 局级行政排班 </span>
+          </a>
+          <a
+            href="javascript:void(0);"
+            data-uuid="hospitalLevelScheduling"
+            onclick="ytCustomClickRouter(this, event)"
+            class="sidebar-item"
+          >
+            <i class="fas fa-hospital sidebar-icon">
+              <span class="sr-only"> 院级行政排班 </span>
+            </i>
+            <span> 院级行政排班 </span>
+          </a>
+          <a
+            href="javascript:void(0);"
+            data-uuid="directorScheduling"
+            onclick="ytCustomClickRouter(this, event)"
+            class="sidebar-item"
+          >
+            <i class="fas fa-user-tie sidebar-icon">
+              <span class="sr-only"> 院内主任排班 </span>
+            </i>
+            <span> 院内主任排班 </span>
+          </a>
+          <a
+            href="javascript:void(0);"
+            data-uuid="schedulingOverview"
+            onclick="ytCustomClickRouter(this, event)"
+            class="sidebar-item"
+          >
+            <i class="fas fa-list sidebar-icon">
+              <span class="sr-only"> 排班一览表 </span>
+            </i>
+            <span> 排班一览表 </span>
+          </a>
+        </nav>
+        <div
+          class="absolute bottom-0 left-0 right-0 p-4 border-t border-neutral-dark"
+        >
+          <div class="bg-primary/5 rounded-lg p-3">
+            <div class="flex items-start gap-3">
+              <i class="fas fa-info-circle text-primary mt-0.5"> </i>
+              <div>
+                <h3 class="text-sm font-medium text-text-primary">系统提示</h3>
+                <p class="text-xs text-text-secondary mt-1">
+                  请定期备份排班数据，确保数据安全
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+      <!-- 主内容区域 -->
+      <main class="flex-1 overflow-hidden relative">
+        <iframe
+          id="navigation"
+          src=""
+          class=""
+          width="100%"
+          height="100%"
+          data-iframe-id="navigation-iframe"
+          srcdoc="<html lang='zh-CN'>
+        <head >
+        <meta charset='UTF-8'/>
+<meta name='viewport' content='width=device-width, initial-scale=1.0'/>
+<title >院级行政排班</title>
+<script src='https://res.gemcoder.com/js/reload.js'></script>
+<script src='https://cdn.tailwindcss.com'></script>
+<link href='https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css' rel='stylesheet'/>
+<script >tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        primary: '#165DFF',
+        secondary: '#4080FF',
+        accent: '#0E42D2',
+        neutral: '#F5F7FA',
+        'neutral-dark': '#E5E6EB',
+        'text-primary': '#1D2129',
+        'text-secondary': '#4E5969',
+        'text-placeholder': '#86909C'
+      },
+      spacing: {
+        '18': '4.5rem',
+        '22': '5.5rem'
+      },
+      boxShadow: {
+        'card': '0 2px 8px 0 rgba(0, 0, 0, 0.08)',
+        'dropdown': '0 4px 16px 0 rgba(0, 0, 0, 0.12)'
+      }
+    }
+  }
+};</script>
+<style type='text/tailwindcss'>
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .btn-primary {
+                @apply bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors;
+            }
+            .btn-secondary {
+                @apply bg-white text-text-primary border border-primary px-4 py-2 rounded-lg hover:bg-primary/5 transition-colors;
+            }
+            .btn-danger {
+                @apply bg-white text-red-500 border border-red-500 px-4 py-2 rounded-lg hover:bg-red-50 transition-colors;
+            }
+            .table-header {
+                @apply bg-neutral text-text-secondary text-sm font-medium;
+            }
+            .table-row {
+                @apply hover:bg-neutral/50 transition-colors;
+            }
+            .form-input {
+                @apply border border-neutral-dark rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary;
+            }
+            .modal-mask {
+                @apply fixed inset-0 bg-black/50 z-50 flex items-center justify-center;
+            }
+            .modal-mask.hidden {
+                display: none;
+            }
+            .modal-content {
+                @apply bg-white rounded-lg shadow-lg w-full max-w-3xl max-h-[90vh] overflow-y-auto;
+            }
+        }
+    </style>
+    
+      <style>
+          ::-webkit-scrollbar { width: 0px; }
+      </style>
+  </head>
+<body class='p-4 bg-white rounded-lg shadow-md'>
+        <!-- 页面标题 -->
+<div class='mb-6'>
+        <h2 class='text-[clamp(1.25rem,3vw,1.75rem)] font-semibold text-text-primary flex items-center'>
+        <i class='fas fa-hospital text-primary mr-2'>
+        </i>
+院级行政排班
+    </h2>
+<p class='text-text-secondary text-sm mt-1'>
+        管理医院级别的行政排班信息，支持增删改查及Excel导入导出
+    </p>
+    </div>
+<!-- 搜索和操作区 -->
+<div class='bg-white rounded-lg shadow-card p-4 mb-6'>
+        <div class='flex flex-col md:flex-row md:items-center justify-between gap-4'>
+        <!-- 搜索区域 -->
+<div class='flex flex-wrap gap-3 w-full md:w-auto'>
+        <div class='relative flex-1 min-w-[200px]'>
+        <input type='text' placeholder='请输入医院名称搜索' class='form-input w-full pl-10' id='hospital-search'/>
+<i class='fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-text-placeholder'>
+        </i>
+    </div>
+<div class='relative flex-1 min-w-[200px]'>
+        <input type='date' class='form-input w-full' id='date-search'/>
+    </div>
+<button class='btn-primary flex items-center gap-2 whitespace-nowrap'>
+        <i class='fas fa-search'>
+        </i>
+<span >
+        搜索
+    </span>
+    </button>
+<button class='btn-secondary flex items-center gap-2 whitespace-nowrap' id='reset-search'>
+        <i class='fas fa-sync-alt'>
+        </i>
+<span >
+        重置
+    </span>
+    </button>
+    </div>
+<!-- 操作按钮区域 -->
+<div class='flex flex-wrap gap-3 w-full md:w-auto justify-start md:justify-end'>
+        <label for='import-excel' class='btn-secondary flex items-center gap-2 cursor-pointer whitespace-nowrap'>
+        <i class='fas fa-upload'>
+        </i>
+<span >
+        导入Excel
+    </span>
+<input type='file' id='import-excel' accept='.xlsx,.xls' class='hidden'/>
+    </label>
+<button class='btn-secondary flex items-center gap-2 whitespace-nowrap' id='export-excel'>
+        <i class='fas fa-download'>
+        </i>
+<span >
+        导出Excel
+    </span>
+    </button>
+<button class='btn-primary flex items-center gap-2 whitespace-nowrap' id='add-scheduling'>
+        <i class='fas fa-plus'>
+        </i>
+<span >
+        新增排班
+    </span>
+    </button>
+    </div>
+    </div>
+    </div>
+<!-- 表格区域 -->
+<div class='bg-white rounded-lg shadow-card overflow-hidden mb-6'>
+        <div class='overflow-x-auto'>
+        <table class='w-full min-w-[900px]'>
+        <thead >
+        <tr class='table-header'>
+        <th class='px-4 py-3 text-left'>
+        日期
+    </th>
+<th class='px-4 py-3 text-left'>
+        医院名称
+    </th>
+<th class='px-4 py-3 text-left'>
+        班次
+    </th>
+<th class='px-4 py-3 text-left'>
+        人员
+    </th>
+<th class='px-4 py-3 text-left'>
+        电话
+    </th>
+<th class='px-4 py-3 text-left'>
+        人员职级
+    </th>
+<th class='px-4 py-3 text-left'>
+        科室
+    </th>
+<th class='px-4 py-3 text-left'>
+        职称
+    </th>
+<th class='px-4 py-3 text-left'>
+        备注
+    </th>
+<th class='px-4 py-3 text-center'>
+        操作
+    </th>
+    </tr>
+    </thead>
+<tbody id='scheduling-table-body'>
+        <!-- 表格数据将通过JavaScript动态生成 -->
+<tr class='border-b border-neutral-dark table-row'>
+        <td class='px-4 py-3 text-sm'>
+        2023-11-01
+    </td>
+<td class='px-4 py-3 text-sm'>
+        第一人民医院
+    </td>
+<td class='px-4 py-3 text-sm'>
+        上午
+    </td>
+<td class='px-4 py-3 text-sm'>
+        张三
+    </td>
+<td class='px-4 py-3 text-sm'>
+        13800138000
+    </td>
+<td class='px-4 py-3 text-sm'>
+        主任医师
+    </td>
+<td class='px-4 py-3 text-sm'>
+        内科
+    </td>
+<td class='px-4 py-3 text-sm'>
+        教授
+    </td>
+<td class='px-4 py-3 text-sm'>
+        无
+    </td>
+<td class='px-4 py-3 text-center'>
+        <div class='flex justify-center gap-2'>
+        <button class='text-primary hover:text-accent transition-colors' title='编辑' data-action='edit'>
+        <i class='fas fa-edit'>
+        </i>
+    </button>
+<button class='text-red-500 hover:text-red-600 transition-colors' title='删除' data-action='delete'>
+        <i class='fas fa-trash-alt'>
+        </i>
+    </button>
+    </div>
+    </td>
+    </tr>
+<tr class='border-b border-neutral-dark table-row'>
+        <td class='px-4 py-3 text-sm'>
+        2023-11-01
+    </td>
+<td class='px-4 py-3 text-sm'>
+        第一人民医院
+    </td>
+<td class='px-4 py-3 text-sm'>
+        下午
+    </td>
+<td class='px-4 py-3 text-sm'>
+        李四
+    </td>
+<td class='px-4 py-3 text-sm'>
+        13900139000
+    </td>
+<td class='px-4 py-3 text-sm'>
+        副主任医师
+    </td>
+<td class='px-4 py-3 text-sm'>
+        外科
+    </td>
+<td class='px-4 py-3 text-sm'>
+        副教授
+    </td>
+<td class='px-4 py-3 text-sm'>
+        无
+    </td>
+<td class='px-4 py-3 text-center'>
+        <div class='flex justify-center gap-2'>
+        <button class='text-primary hover能力。
+:text-primary hover:text-accent transition-colors' title='编辑' data-action='edit'>
+        <i class='fas fa-edit'>
+        </i>
+    </button>
+<button class='text-red-500 hover:text-red-600 transition-colors' title='删除' data-action='delete'>
+        <i class='fas fa-trash-alt'>
+        </i>
+    </button>
+    </div>
+    </td>
+    </tr>
+<tr class='border-b border-neutral-dark table-row'>
+        <td class='px-4 py-3 text-sm'>
+        2023-11-02
+    </td>
+<td class='px-4 py-3 text-sm'>
+        第二人民医院
+    </td>
+<td class='px-4 py-3 text-sm'>
+        上午
+    </td>
+<td class='px-4 py-3 text-sm'>
+        王五
+    </td>
+<td class='px-4 py-3 text-sm'>
+        13700137000
+    </td>
+<td class='px-4 py-3 text-sm'>
+        主治医师
+    </td>
+<td class='px-4 py-3 text-sm'>
+        儿科
+    </td>
+<td class='px-4 py-3 text-sm'>
+        讲师
+    </td>
+<td class='px-4 py-3 text-sm'>
+        需提前到岗
+    </td>
+<td class='px-4 py-3 text-center'>
+        <div class='flex justify-center gap-2'>
+        <button class='text-primary hover:text-accent transition-colors' title='编辑' data-action='edit'>
+        <i class='fas fa-edit'>
+        </i>
+    </button>
+<button class='text-red-500 hover:text-red-600 transition-colors' title='删除' data-action='delete'>
+        <i class='fas fa-trash-alt'>
+        </i>
+    </button>
+    </div>
+    </td>
+    </tr>
+<tr class='border-b border-neutral-dark table-row'>
+        <td class='px-4 py-3 text-sm'>
+        2023-11-02
+    </td>
+<td class='px-4 py-3 text-sm'>
+        第二人民医院
+    </td>
+<td class='px-4 py-3 text-sm'>
+        下午
+    </td>
+<td class='px-4 py-3 text-sm'>
+        赵六
+    </td>
+<td class='px-4 py-3 text-sm'>
+        13600136000
+    </td>
+<td class='px-4 py-3 text-sm'>
+        住院医师
+    </td>
+<td class='px-4 py-3 text-sm'>
+        妇产科
+    </td>
+<td class='px-4 py-3 text-sm'>
+        助教
+    </td>
+<td class='px-4 py-3 text-sm'>
+        无
+    </td>
+<td class='px-4 py-3 text-center'>
+        <div class='flex justify-center gap-2'>
+        <button class='text-primary hover:text-accent transition-colors' title='编辑' data-action='edit'>
+        <i class='fas fa-edit'>
+        </i>
+    </button>
+<button class='text-red-500 hover:text-red-600 transition-colors' title='删除' data-action='delete'>
+        <i class='fas fa-trash-alt'>
+        </i>
+    </button>
+    </div>
+    </td>
+    </tr>
+    </tbody>
+    </table>
+    </div>
+<!-- 分页区域 -->
+<div class='px-4 py-3 flex items-center justify-between border-t border-neutral-dark'>
+        <div class='text-sm text-text-secondary'>
+        共
+<span class='font-medium text-primary'>
+        24
+    </span>
+条记录，当前第
+<span class='font-medium text-primary'>
+        1
+    </span>
+页，共
+<span class='font-medium text-primary'>
+        3
+    </span>
+页
+    </div>
+<div class='flex items-center gap-2'>
+        <button class='w-9 h-9 flex items-center justify-center rounded border border-neutral-dark text-text-secondary hover:border-primary hover:text-primary transition-colors' disabled>
+        <i class='fas fa-angle-left'>
+        </i>
+    </button>
+<button class='w-9 h-9 flex items-center justify-center rounded bg-primary text-white'>
+        1
+    </button>
+<button class='w-9 h-9 flex items-center justify-center rounded border border-neutral-dark text-text-secondary hover:border-primary hover:text-primary transition-colors'>
+        2
+    </button>
+<button class='w-9 h-9 flex items-center justify-center rounded border border-neutral-dark text-text-secondary hover:border-primary hover:text-primary transition-colors'>
+        3
+    </button>
+<button class='w-9 h-9 flex items-center justify-center rounded border border-neutral-dark text-text-secondary hover:border-primary hover:text-primary transition-colors'>
+        <i class='fas fa-angle-right'>
+        </i>
+    </button>
+<div class='flex items-center gap-2 ml-4'>
+        <span class='text-sm text-text-secondary'>
+        每页显示：
+    </span>
+<select class='form-input text-sm w-20'>
+        <option >
+        10条
+    </option>
+<option selected>
+        20条
+    </option>
+<option >
+        50条
+    </option>
+<option >
+        100条
+    </option>
+    </select>
+    </div>
+    </div>
+    </div>
+    </div>
+<!-- 新增/编辑排班模态框 -->
+<div id='scheduling-modal' class='modal-mask hidden'>
+        <div class='modal-content'>
+        <div class='p-5 border-b border-neutral-dark flex items-center justify-between'>
+        <h3 class='text-lg font-semibold text-text-primary' id='modal-title'>
+        新增排班
+    </h3>
+<button id='close-modal' class='text-text-secondary hover:text-text-primary transition-colors'>
+        <i class='fas fa-times text-xl'>
+        </i>
+    </button>
+    </div>
+<div class='p-5'>
+        <form id='scheduling-form'>
+        <input type='hidden' id='scheduling-id'/>
+<div class='grid grid-cols-1 md:grid-cols-2 gap-4 mb-4'>
+        <div >
+        <label for='schedule-date' class='block text-sm font-medium text-text-secondary mb-1'>
+        日期
+<span class='text-red-500'>
+        *
+    </span>
+    </label>
+<input type='date' id='schedule-date' class='form-input w-full' required/>
+    </div>
+<div >
+        <label for='hospital-name' class='block text-sm font-medium text-text-secondary mb-1'>
+        医院名称
+<span class='text-red-500'>
+        *
+    </span>
+    </label>
+<input type='text' id='hospital-name' class='form-input w-full' placeholder='请输入医院名称' required/>
+    </div>
+<div >
+        <label for='shift' class='block text-sm font-medium text-text-secondary mb-1'>
+        班次
+<span class='text-red-500'>
+        *
+    </span>
+    </label>
+<select id='shift' class='form-input w-full' required>
+        <option value>
+        请选择班次
+    </option>
+<option value='上午'>
+        上午
+    </option>
+<option value='下午'>
+        下午
+    </option>
+<option value='晚上'>
+        晚上
+    </option>
+<option value='全天'>
+        全天
+    </option>
+    </select>
+    </div>
+<div >
+        <label for='person-name' class='block text-sm font-medium text-text-secondary mb-1'>
+        人员
+<span class='text-red-500'>
+        *
+    </span>
+    </label>
+<input type='text' id='person-name' class='form-input w-full' placeholder='请输入人员姓名' required/>
+    </div>
+<div >
+        <label for='person-phone' class='block text-sm font-medium text-text-secondary mb-1'>
+        电话
+<span class='text-red-500'>
+        *
+    </span>
+    </label>
+<input type='tel' id='person-phone' class='form-input w-full' placeholder='请输入联系电话' required/>
+    </div>
+<div >
+        <label for='person-rank' class='block text-sm font-medium text-text-secondary mb-1'>
+        人员职级
+<span class='text-red-500'>
+        *
+    </span>
+    </label>
+<select id='person-rank' class='form-input w-full' required>
+        <option value>
+        请选择职级
+    </option>
+<option value='主任医师'>
+        主任医师
+    </option>
+<option value='副主任医师'>
+        副主任医师
+    </option>
+<option value='主治医师'>
+        主治医师
+    </option>
+<option value='住院医师'>
+        住院医师
+    </option>
+    </select>
+    </div>
+<div >
+        <label for='department' class='block text-sm font-medium text-text-secondary mb-1'>
+        科室
+<span class='text-red-500'>
+        *
+    </span>
+    </label>
+<input type='text' id='department' class='form-input w-full' placeholder='请输入科室名称' required/>
+    </div>
+<div >
+        <label for='title' class='block text-sm font-medium text-text-secondary mb-1'>
+        职称
+<span class='text-red-500'>
+        *
+    </span>
+    </label>
+<select id='title' class='form-input w-full' required>
+        <option value>
+        请选择职称
+    </option>
+<option value='教授'>
+        教授
+    </option>
+<option value='副教授'>
+        副教授
+    </option>
+<option value='讲师'>
+        讲师
+    </option>
+<option value='助教'>
+        助教
+    </option>
+    </select>
+    </div>
+<div class='md:col-span-2'>
+        <label for='remarks' class='block text-sm font-medium text-text-secondary mb-1'>
+        备注
+    </label>
+<textarea id='remarks' rows='3' class='form-input w-full' placeholder='请输入备注信息（选填）'>
+        </textarea>
+    </div>
+    </div>
+    </form>
+    </div>
+<div class='p-5 border-t border-neutral-dark flex justify-end gap-3'>
+        <button id='cancel-modal' class='btn-secondary'>
+        取消
+    </button>
+<button id='save-scheduling' class='btn-primary'>
+        保存
+    </button>
+    </div>
+    </div>
+    </div>
+<!-- 删除确认模态框 -->
+<div id='delete-modal' class='modal-mask hidden'>
+        <div class='modal-content max-w-md'>
+        <div class='p-5 text-center'>
+        <div class='w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4'>
+        <i class='fas fa-exclamation-triangle text-red-500 text-2xl'>
+        </i>
+    </div>
+<h3 class='text-lg font-semibold text-text-primary mb-2'>
+        确认删除
+    </h3>
+<p class='text-text-secondary mb-6'>
+        您确定要删除这条排班记录吗？此操作不可撤销。
+    </p>
+<input type='hidden' id='delete-id'/>
+<div class='flex justify-center gap-3'>
+        <button id='cancel-delete' class='btn-secondary w-24'>
+        取消
+    </button>
+<button id='confirm-delete' class='btn-danger w-24'>
+        删除
+    </button>
+    </div>
+    </div>
+    </div>
+    </div>
+<script >// 当页面加载完成后执行
+document.addEventListener('DOMContentLoaded', function () {
+  // 通知父页面调整iframe高度
+  ytSendPageSize();
+
+  // 获取DOM元素
+  var addButton = document.getElementById('add-scheduling');
+  var schedulingModal = document.getElementById('scheduling-modal');
+  var deleteModal = document.getElementById('delete-modal');
+  var closeModalBtn = document.getElementById('close-modal');
+  var cancelModalBtn = document.getElementById('cancel-modal');
+  var saveSchedulingBtn = document.getElementById('save-scheduling');
+  var cancelDeleteBtn = document.getElementById('cancel-delete');
+  var confirmDeleteBtn = document.getElementById('confirm-delete');
+  var tableBody = document.getElementById('scheduling-table-body');
+  var modalTitle = document.getElementById('modal-title');
+  var schedulingForm = document.getElementById('scheduling-form');
+  var importExcelInput = document.getElementById('import-excel');
+  var exportExcelBtn = document.getElementById('export-excel');
+  var resetSearchBtn = document.getElementById('reset-search');
+
+  // 打开新增排班模态框
+  addButton.addEventListener('click', function () {
+    modalTitle.textContent = '新增排班';
+    schedulingForm.reset();
+    document.getElementById('scheduling-id').value = '';
+    schedulingModal.classList.remove('hidden');
+    ytSendPageSize();
+  });
+
+  // 关闭模态框
+  function closeModal() {
+    schedulingModal.classList.add('hidden');
+    deleteModal.classList.add('hidden');
+  }
+  closeModalBtn.addEventListener('click', closeModal);
+  cancelModalBtn.addEventListener('click', closeModal);
+  cancelDeleteBtn.addEventListener('click', closeModal);
+
+  // 点击模态框外部关闭
+  schedulingModal.addEventListener('click', function (e) {
+    if (e.target === schedulingModal) closeModal();
+  });
+  deleteModal.addEventListener('click', function (e) {
+    if (e.target === deleteModal) closeModal();
+  });
+
+  // 保存排班信息
+  saveSchedulingBtn.addEventListener('click', function () {
+    if (schedulingForm.checkValidity()) {
+      // 这里只是模拟保存，实际项目中需要发送请求到后端
+      alert('排班信息保存成功！');
+      closeModal();
+      // 刷新表格数据
+      // loadSchedulingData();
+    } else {
+      // 触发表单验证
+      schedulingForm.reportValidity();
+    }
+  });
+
+  // 表格操作按钮事件委托
+  tableBody.addEventListener('click', function (e) {
+    var actionBtn = e.target.closest('[data-action]');
+    if (!actionBtn) return;
+    var action = actionBtn.getAttribute('data-action');
+    var row = actionBtn.closest('tr');
+    var id = row.dataset.id || '1'; // 实际项目中应该从数据属性获取ID
+
+    if (action === 'edit') {
+      // 编辑操作
+      modalTitle.textContent = '编辑排班';
+      document.getElementById('scheduling-id').value = id;
+      // 填充表单数据，这里只是模拟
+      document.getElementById('schedule-date').value = row.children[0].textContent;
+      document.getElementById('hospital-name').value = row.children[1].textContent;
+      document.getElementById('shift').value = row.children[2].textContent;
+      document.getElementById('person-name').value = row.children[3].textContent;
+      document.getElementById('person-phone').value = row.children[4].textContent;
+      document.getElementById('person-rank').value = row.children[5].textContent;
+      document.getElementById('department').value = row.children[6].textContent;
+      document.getElementById('title').value = row.children[7].textContent;
+      document.getElementById('remarks').value = row.children[8].textContent;
+      schedulingModal.classList.remove('hidden');
+      ytSendPageSize();
+    } else if (action === 'delete') {
+      // 删除操作
+      document.getElementById('delete-id').value = id;
+      deleteModal.classList.remove('hidden');
+      ytSendPageSize();
+    }
+  });
+
+  // 确认删除
+  confirmDeleteBtn.addEventListener('click', function () {
+    var id = document.getElementById('delete-id').value;
+    // 这里只是模拟删除，实际项目中需要发送请求到后端
+    alert(&quot;\u6392\u73ED\u8BB0\u5F55\u5DF2\u5220\u9664\uFF0CID:&quot;.concat(id));
+    closeModal();
+    // 刷新表格数据
+    // loadSchedulingData();
+  });
+
+  // 导入Excel
+  importExcelInput.addEventListener('change', function (e) {
+    var file = e.target.files[0];
+    if (file) {
+      // 这里只是模拟导入，实际项目中需要处理文件
+      alert(&quot;\u5DF2\u9009\u62E9\u6587\u4EF6:&quot;.concat(file.name));
+      // 重置input值，以便可以重复选择同一文件
+      importExcelInput.value = '';
+    }
+  });
+
+  // 导出Excel
+  exportExcelBtn.addEventListener('click', function () {
+    // 这里只是模拟导出，实际项目中需要发送请求到后端
+    alert('正在导出Excel文件...');
+  });
+
+  // 重置搜索
+  resetSearchBtn.addEventListener('click', function () {
+    document.getElementById('hospital-search').value = '';
+    document.getElementById('date-search').value = '';
+  });
+
+  // 监听窗口大小变化，调整iframe高度
+  window.addEventListener('resize', ytSendPageSize);
+});</script>
+    </body>
+    </html>"
+        ></iframe>
+        <!-- 移动端遮罩层 -->
+        <div
+          id="sidebar-overlay"
+          class="fixed inset-0 bg-black/50 z-0 lg:hidden hidden"
+          onclick="toggleSidebar()"
+        ></div>
+      </main>
+    </div>
+    <script>
+      // 侧边栏切换
+      function toggleSidebar() {
+        var sidebar = document.getElementById('sidebar');
+        var overlay = document.getElementById('sidebar-overlay');
+        sidebar.classList.toggle('-translate-x-full');
+        overlay.classList.toggle('hidden');
+        overlay.classList.toggle('z-10');
+      }
+      // 移动端菜单按钮点击事件
+      document.getElementById('toggle-sidebar').addEventListener('click', toggleSidebar);
+      // 监听子页面大小变化，调整iframe的高度
+      ytGetIframeResize(document.getElementById('navigation'));
+    </script>
+  </body>
+</html>
