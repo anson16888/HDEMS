@@ -1,23 +1,34 @@
 #!/bin/bash
 
 # HDEMS Docker 镜像构建脚本
-# 使用方法: ./build.sh [镜像名称] [标签]
 
-# 默认配置
-FULL_IMAGE_NAME="hdems-app:dev"
+IMAGE_NAME="hdems-app"
+ARCHIVE_NAME="${IMAGE_NAME}.tar.gz"
 
 echo "=========================================="
 echo "开始构建 Docker 镜像"
-echo "镜像名称: ${FULL_IMAGE_NAME}"
+echo "镜像名称: ${IMAGE_NAME}"
 echo "=========================================="
 
-# 清理旧的构建缓存（可选，取消注释以启用）
-# docker builder prune -f
-
 # 构建 Docker 镜像
-docker build \
-  -t "${FULL_IMAGE_NAME}" \
-  -f Dockerfile \
-  .
+docker build -t "${IMAGE_NAME}" .
 
-docker build -t hdems-app .
+# 检查构建是否成功
+if [ $? -eq 0 ]; then
+    echo ""
+    echo "构建成功，开始导出镜像..."
+    docker save "${IMAGE_NAME}" | gzip > "${ARCHIVE_NAME}"
+
+    if [ $? -eq 0 ]; then
+        echo "=========================================="
+        echo "镜像已保存到: ${ARCHIVE_NAME}"
+        ls -lh "${ARCHIVE_NAME}"
+        echo "=========================================="
+    else
+        echo "导出失败！"
+        exit 1
+    fi
+else
+    echo "构建失败！"
+    exit 1
+fi
