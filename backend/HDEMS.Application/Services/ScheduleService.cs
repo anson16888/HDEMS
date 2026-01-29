@@ -243,6 +243,7 @@ public class ScheduleService : IScheduleService
             .Include(s => s.Shift)
             .Include(s => s.Rank)
             .Include(s => s.Department)
+            .Include(s => s.Hospital)
             .Include(s => s.Title);
 
         // 条件过滤
@@ -266,6 +267,11 @@ public class ScheduleService : IScheduleService
             query = query.Where(s => s.DepartmentId == request.DepartmentId.Value);
         }
 
+        if (request.HospitalId.HasValue)
+        {
+            query = query.Where(s => s.HospitalId == request.HospitalId.Value);
+        }
+
         if (!string.IsNullOrWhiteSpace(request.Keyword))
         {
             query = query.Where(s => s.PersonName.Contains(request.Keyword));
@@ -283,6 +289,7 @@ public class ScheduleService : IScheduleService
         {
             ScheduleDate = s.ScheduleDate,
             DepartmentName = s.Department?.DepartmentName ?? "",
+            HospitalName = s.Hospital?.HospitalName ?? "",
             ScheduleType = s.ScheduleType,
             ScheduleTypeName = s.ScheduleType switch
             {

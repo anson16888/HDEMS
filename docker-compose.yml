@@ -7,11 +7,12 @@ services:
     volumes:
       - ./data:/app/data
       - ./logs:/app/logs
+      - ./hdems/appsettings.json:/app/appsettings.json
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - ConnectionStrings__DefaultConnection=Data Source=/app/data/hdems.db
-      - DatabaseConfig__DbType=Sqlite
-      - DatabaseConfig__AutoSeedData=true
+      #- ConnectionStrings__DefaultConnection=Data Source=/app/data/hdems.db
+      #- DatabaseConfig__DbType=Sqlite
+      #- DatabaseConfig__AutoSeedData=true
       - JwtConfig__SecretKey=YourSuperSecretKeyForJWTTokenGenerationMustBe32CharsOrMore!
     restart: always
     security_opt:

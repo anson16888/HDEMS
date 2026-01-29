@@ -83,6 +83,7 @@ public class ScheduleOverviewItem
 {
     public DateTime ScheduleDate { get; set; }
     public string DepartmentName { get; set; } = string.Empty;
+    public string HospitalName { get; set; } = string.Empty;
     public ScheduleType ScheduleType { get; set; }
     public string ScheduleTypeName { get; set; } = string.Empty;
     public string ShiftName { get; set; } = string.Empty;
