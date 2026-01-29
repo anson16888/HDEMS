@@ -427,9 +427,19 @@ function handleDateRangeChange(dates) {
 async function loadStatistics() {
   statisticsLoading.value = true
   try {
+    // 非管理员用户：使用用户的 hospitalId
+    let queryHospitalId = filters.value.hospitalId
+    if (!queryHospitalId && !isSystemAdmin.value && authStore.user?.hospitalId) {
+      queryHospitalId = authStore.user.hospitalId
+    }
+
     const params = {
       startDate: filters.value.startDate,
       endDate: filters.value.endDate
+    }
+    // 只有当 hospitalId 有值时才添加
+    if (queryHospitalId) {
+      params.hospitalId = queryHospitalId
     }
 
     const response = await getScheduleStatistics(params)
